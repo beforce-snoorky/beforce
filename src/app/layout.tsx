@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import { Toaster } from "react-hot-toast"
 
 export const metadata: Metadata = {
   title: "Relatórios Mensais | Beforce Dashboard",
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <body className="antialiased">
+        <Toaster />
         {children}
       </body>
     </html>

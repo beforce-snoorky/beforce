@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+	--color-accent-dark: oklch(32.749% 0.13359 27.308);
+	--color-accent: oklch(62.197% 0.25019 27.366);
+	--color-accent-light: oklch(94.486% 0.02639 11.633);
+	--color-surface: oklch(92.758% 0.00592 264.656);
+	--color-light: oklch(100% 0.00011 271.152);
+	--color-dark: oklch(17.764% 0.00002 271.152);
+}
+
+@layer base {
+	body {
+		@apply bg-light text-dark;
+	}
+}

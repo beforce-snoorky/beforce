@@ -1,7 +1,21 @@
-export default function Home() {
+import { Login } from "@/components/login"
+import Image from "next/image"
+
+export default async function Home() {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <main className="min-h-svh min-w-svw bg-cover bg-no-repeat flex items-center justify-center" style={{ backgroundImage: "url('/background.svg')" }}>
+      <div className="flex flex-col items-center space-y-4">
+        <Image
+          src="/logo-login.png"
+          alt="Beforce"
+          width={125}
+          height={66}
+          sizes="(max-width: 768px) 125px, 125px"
+          priority
+        />
+        <h1 className="sr-only">Acesse sua conta!</h1>
+        <Login />
+      </div>
+    </main>
   )
 }
