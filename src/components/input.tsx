@@ -1,5 +1,4 @@
-import React from 'react'
-import { InputProps } from '@/types/form'
+import { InputProps } from "@/types/form"
 
 export function Input({ id, name, type, placeholder, autoComplete, className, required = false }: InputProps) {
   return (

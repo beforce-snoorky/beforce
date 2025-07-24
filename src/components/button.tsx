@@ -1,4 +1,3 @@
-import React from "react"
 import { ButtonProps } from "@/types/form"
 
 export function Button({ isPending, type, className, children }: ButtonProps) {

@@ -6,7 +6,7 @@ export default async function Home() {
     <main className="min-h-svh min-w-svw bg-cover bg-no-repeat flex items-center justify-center" style={{ backgroundImage: "url('/background.svg')" }}>
       <div className="flex flex-col items-center space-y-4">
         <Image
-          src="/logo-login.png"
+          src="/logo-light.png"
           alt="Beforce"
           width={125}
           height={66}
