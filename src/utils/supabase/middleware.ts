@@ -19,7 +19,7 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser() // revalidate token
+  await supabase.auth.getUser()
 
   return response
 }

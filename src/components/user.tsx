@@ -3,7 +3,7 @@
 import { logout } from "@/auth/actions"
 import { Company } from "@/types/user"
 import { User } from "@supabase/supabase-js"
-import { ChevronDown, LogOut, User2 } from "lucide-react"
+import { LogOut, User2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 interface UserMenuProps {

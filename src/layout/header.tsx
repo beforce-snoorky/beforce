@@ -1,17 +1,9 @@
 import UserMenu from "@/components/user"
-import { createClient } from "@/utils/supabase/server"
+import { Company } from "@/types/user"
+import { User } from "@supabase/supabase-js"
 import Image from "next/image"
-import { redirect } from "next/navigation"
 
-export default async function Header() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user?.email) redirect("/")
-
-  const domain = user.email.split("@")[1]
-  const { data: company } = await supabase.from('users').select('id, business_name').eq('domain', domain).single()
-
+export default async function Header({ user, company }: { user: User | null, company: Company | null }) {
   return (
     <header className="flex items-center p-4 border-b border-surface bg-light">
       <div className="w-56">
