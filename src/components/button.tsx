@@ -1,4 +1,9 @@
-import { ButtonProps } from "@/types/form"
+interface ButtonProps {
+  isPending: boolean
+  type: "submit" | "reset" | "button"
+  className?: string
+  children: React.ReactNode
+}
 
 export function Button({ isPending, type, className, children }: ButtonProps) {
   return (

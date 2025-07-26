@@ -1,4 +1,12 @@
-import { InputProps } from "@/types/form"
+interface InputProps {
+  id: string
+  name: string
+  type: string
+  placeholder?: string
+  autoComplete?: string
+  className?: string
+  required?: boolean
+}
 
 export function Input({ id, name, type, placeholder, autoComplete, className, required = false }: InputProps) {
   return (
