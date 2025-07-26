@@ -9,7 +9,7 @@ export async function getServerSession() {
   const domain = user.email.split("@")[1]
   const isAdmin = domain === "beforce.com.br"
 
-  const { data: company } = await supabase.from('users').select('id, business_name').eq('domain', domain).single()
+  const { data: company } = await supabase.from("users").select("*").ilike("email", `%@${domain}`).single()
 
   return { user, company, isAdmin }
 }
