@@ -24,7 +24,7 @@ export function NavBar({ company }: { company: Company }) {
     { icon: <Globe2 className="w-5 h-5" />, name: "Website", url: "/dashboard/analytics", visible: company.has_website },
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company.has_management_system },
     { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_mkt_digital },
-  ];
+  ]
 
   return (
     <>

@@ -1,6 +1,5 @@
 import "./globals.css"
 import type { Metadata } from "next"
-import { Toaster } from "react-hot-toast"
 
 export const metadata: Metadata = {
   title: "Relatórios Mensais | Beforce Dashboard",
@@ -44,9 +43,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased">
-        {children}
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   )
 }

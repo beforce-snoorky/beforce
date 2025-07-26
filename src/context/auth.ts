@@ -13,7 +13,7 @@ export async function getServerSession() {
   const { data } = await supabase.from("business").select("id").ilike("email", `%@${domain}`).single()
   if (!data?.id) throw new Error("Empresa não encontrada no banco..")
 
-  const { data: company } = await supabase.rpc('get_user_profile', { business_uuid: data?.id }).single<Company>()
+  const { data: company } = await supabase.rpc("get_user_profile", { business_uuid: data?.id }).single<Company>()
   if (!company) throw new Error("Empresa não retornou perfil..")
 
   return { user, company, isAdmin }
