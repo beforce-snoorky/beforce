@@ -1,40 +1,13 @@
 import DigitalScoreGauge from "@/components/charts/score"
 import Card from "@/components/ui/cards"
-import { SolutionCard, SkeletonSolutionCard } from "@/components/ui/solutionsCard"
+import { SolutionCard } from "@/components/ui/solutionsCard"
 import { getServerSession } from "@/context/auth"
 import { getDigitalScore } from "@/utils/calculateScore"
-import { Brain, Cloud, Gauge, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
-
-const solutions = [
-  { id: "website", style: "bg-purple-100 text-purple-600", icon: <Globe2 className="w-5 h-5" />, title: "Site Profissional", description: "Aumente sua presença online com um domínio profissional." },
-  { id: "email_corp", style: "bg-emerald-100 text-emerald-600", icon: <Mail className="w-5 h-5" />, title: "Email Corporativo", description: "Reforce a credibilidade da sua marca com um e-mail profissional." },
-  { id: "cloud_server", style: "bg-sky-100 text-sky-600", icon: <Cloud className="w-5 h-5" />, title: "Servidor em Nuvem", description: "Proteja e acesse seus dados com segurança, de onde estiver." },
-  { id: "management_system", style: "bg-amber-100 text-amber-600", icon: <Server className="w-5 h-5" />, title: "Sistema de Gestão", description: "Organize processos e tome decisões com base em dados." },
-  { id: "whatsapp", style: "bg-fuchsia-100 text-fuchsia-600", icon: <MessageCircleMore className="w-5 h-5" />, title: "WhatsApp Business", description: "Facilite a comunicação com seus clientes em tempo real." },
-  { id: "ia", style: "bg-rose-100 text-rose-600", icon: <Brain className="w-5 h-5" />, title: "Inteligência Artificial", description: "Automatize tarefas e ganhe eficiência com soluções inteligentes." },
-  { id: "marketing", style: "bg-cyan-100 text-cyan-600", icon: <MonitorSmartphone className="w-5 h-5" />, title: "Marketing Digital", description: "Atraia mais clientes com campanhas online bem direcionadas." },
-]
+import { Gauge } from "lucide-react"
 
 export default async function DashboardPage() {
   const { company } = await getServerSession()
   const { score, activeCount, total } = getDigitalScore(company)
-
-  const solutionsWithActive = solutions.map((item) => {
-    const activeFlags = {
-      website: company.has_website,
-      email_corp: company.has_email_corp,
-      cloud_server: company.has_cloud_server,
-      management_system: company.has_management_system,
-      whatsapp: company.has_whatsapp,
-      ia: company.has_ia,
-      marketing: company.has_mkt_digital
-    }
-
-    return {
-      ...item,
-      isActive: activeFlags[item.id as keyof typeof activeFlags]
-    }
-  })
 
   const getMessage = (percentage: number) => {
     if (percentage >= 100) {
@@ -78,13 +51,17 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold">
             {activeCount == total ? "Seus serviços contratados" : "Vamos ajudar você a alcançar mais pontos"}
           </h2>
-          <div className="flex flex-col gap-3 mt-4 md:mt-6">
-            {solutionsWithActive.length === 0
-              ? Array.from({ length: 7 }).map((_, index) => <SkeletonSolutionCard key={index} />)
-              : solutionsWithActive.map(({ isActive, ...item }) => (
-                <SolutionCard key={item.id} item={item} isActive={isActive} />
-              ))}
-          </div>
+          <SolutionCard
+            active={{
+              website: company.has_website,
+              email_corp: company.has_email_corp,
+              cloud_server: company.has_cloud_server,
+              management_system: company.has_management_system,
+              whatsapp: company.has_whatsapp,
+              ia: company.has_ia,
+              marketing: company.has_mkt_digital
+            }}
+          />
         </Card>
       </section>
     </>
