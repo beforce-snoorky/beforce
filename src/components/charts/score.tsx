@@ -1,12 +1,14 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { useState, useEffect } from "react"
+
 const GaugeComponent = dynamic(() => import("react-gauge-component"), { ssr: false, loading: () => <SkeletonGauge /> })
 
 function SkeletonGauge() {
   return (
-    <div className="relative w-full max-w-lg flex flex-col items-center justify-center animate-pulse min-h-54 p-4">
-      <svg className="w-full h-54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
+    <div className="relative w-full max-w-lg flex flex-col items-center justify-center animate-pulse min-h-32 xl:min-h-54 p-4">
+      <svg className="w-full h-32 xl:h-54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
         <path d="M10,100 A90,90 0 0,1 190,100" fill="none" stroke="#e5e7eb" strokeWidth="20" strokeLinecap="round" />
         <text x="100" y="90" textAnchor="middle" fontSize="48" fill="#d1d5db" dominantBaseline="middle">--</text>
       </svg>
@@ -15,6 +17,13 @@ function SkeletonGauge() {
 }
 
 export default function DigitalScoreGauge({ score }: { score: number }) {
+  const [showLabel, setShowLabel] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowLabel(true), 500)
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
     <GaugeComponent
       type="semicircle"
@@ -30,7 +39,7 @@ export default function DigitalScoreGauge({ score }: { score: number }) {
       pointer={{ color: '#1F2937', length: 0.8, width: 12, type: "arrow" }}
       labels={{
         valueLabel: {
-          formatTextValue: (val) => `${val}%`,
+          formatTextValue: (val) => showLabel ? `${val}%` : '--',
           style: { fontSize: 48, fill: "#1F2937" },
         },
       }}

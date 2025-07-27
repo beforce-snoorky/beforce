@@ -42,7 +42,7 @@ export default async function DashboardPage() {
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <h2 className="text-lg font-semibold">Pontuação Digital</h2>
-          <div className="max-w-xl mx-auto min-h-56">
+          <div className="max-w-xl mx-auto min-h-32 xl:min-h-56">
             <DigitalScoreGauge score={score} />
           </div>
           <div className="text-center">
