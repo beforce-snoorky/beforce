@@ -46,8 +46,12 @@ export function useSession() {
           JSON.stringify({ data, timestamp: Date.now() })
         )
         setLoading(false)
-      } catch (err: any) {
-        setError(err.message || "Erro desconhecido")
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError("Erro desconhecido")
+        }
         setLoading(false)
       }
     }
