@@ -1,4 +1,3 @@
-import DigitalScoreGauge from "@/components/charts/score"
 import Card from "@/components/ui/cards"
 import { SolutionCard } from "@/components/ui/solutionsCard"
 import { getServerSession } from "@/context/auth"
@@ -29,7 +28,7 @@ export default async function DashboardPage() {
       </div>
       <p className="text-sm">Descubra como está sua transformação digital</p>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <h2 className="text-lg font-semibold">Pontuação Digital</h2>
           <div className="max-w-xl mx-auto min-h-32 xl:min-h-56">
@@ -44,7 +43,7 @@ export default async function DashboardPage() {
             </p>
           </div>
         </Card>
-      </section>
+      </section> */}
 
       <section>
         <Card>
