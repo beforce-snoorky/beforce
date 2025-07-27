@@ -1,4 +1,4 @@
-export default async function DigisacPage() {
+export default function DigisacPage() {
   return (
     <div>
       <h1>Digisac..</h1>

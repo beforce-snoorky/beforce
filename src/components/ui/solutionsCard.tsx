@@ -1,5 +1,4 @@
-import { ArrowRight, Brain, Cloud, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
-import Link from "next/link"
+import { Brain, Cloud, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
 import { SolutionCardButton } from "./solutionCardButton"
 
 const solutions = [

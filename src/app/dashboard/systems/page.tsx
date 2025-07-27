@@ -1,4 +1,4 @@
-export default async function SystemsPage() {
+export default function SystemsPage() {
   return (
     <div>
       <h1>Sistemas..</h1>

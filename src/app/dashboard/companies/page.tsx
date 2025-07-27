@@ -1,4 +1,4 @@
-export default async function CompaniesPage() {
+export default function CompaniesPage() {
   return (
     <div>
       <h1>Empresas..</h1>

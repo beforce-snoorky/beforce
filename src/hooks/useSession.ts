@@ -47,11 +47,8 @@ export function useSession() {
         )
         setLoading(false)
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError("Erro desconhecido")
-        }
+        if (err instanceof Error) setError(err.message)
+        else setError("Erro desconhecido")
         setLoading(false)
       }
     }
