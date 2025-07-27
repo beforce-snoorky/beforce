@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react"
+import React from "react"
 
 type SolutionCardProps = {
   item: {
@@ -11,10 +12,10 @@ type SolutionCardProps = {
   isActive: boolean
 }
 
-export default function SolutionCard({ item, isActive }: SolutionCardProps) {
+function SolutionCard({ item, isActive }: SolutionCardProps) {
   return (
     <div className={`p-4 rounded-xl border ${isActive ? "border-emerald-200" : ""}`}>
-      <div className="flex items-center gap-2 justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${item.style}`}>
             {item.icon}
@@ -41,3 +42,5 @@ export default function SolutionCard({ item, isActive }: SolutionCardProps) {
     </div>
   )
 }
+
+export default React.memo(SolutionCard)

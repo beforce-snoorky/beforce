@@ -19,6 +19,23 @@ export default async function DashboardPage() {
   const { company } = await getServerSession()
   const { score, activeCount, total } = getDigitalScore(company)
 
+  const solutionsWithActive = solutions.map((item) => {
+    const activeFlags = {
+      website: company.has_website,
+      email_corp: company.has_email_corp,
+      cloud_server: company.has_cloud_server,
+      management_system: company.has_management_system,
+      whatsapp: company.has_whatsapp,
+      ia: company.has_ia,
+      marketing: company.has_mkt_digital
+    }
+
+    return {
+      ...item,
+      isActive: activeFlags[item.id as keyof typeof activeFlags]
+    }
+  })
+
   const getMessage = (percentage: number) => {
     if (percentage >= 100) {
       return "Parabéns! Você ativou todas as soluções digitais disponíveis."
@@ -62,20 +79,9 @@ export default async function DashboardPage() {
             {activeCount == total ? "Seus serviços contratados" : "Vamos ajudar você a alcançar mais pontos"}
           </h2>
           <div className="flex flex-col gap-3 mt-4 md:mt-6">
-            {solutions.map((item, index) => {
-              const serviceMap: Record<string, boolean> = {
-                website: company.has_website,
-                email_corp: company.has_email_corp,
-                cloud_server: company.has_cloud_server,
-                management_system: company.has_management_system,
-                whatsapp: company.has_whatsapp,
-                ia: company.has_ia,
-                marketing: company.has_mkt_digital,
-              }
-
-              const isActive = serviceMap[item.id]
-              return <Solutions key={index} item={item} isActive={isActive} />
-            })}
+            {solutionsWithActive.map(({ isActive, ...item }) => (
+              <Solutions key={item.id} item={item} isActive={isActive} />
+            ))}
           </div>
         </Card>
       </section>
