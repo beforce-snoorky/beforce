@@ -1,6 +1,6 @@
 import { Company } from "@/types/company"
 
-export function getDigitalScore(company: Company): {
+export function calculateScore(company: Company): {
   score: number
   activeCount: number
   total: number
