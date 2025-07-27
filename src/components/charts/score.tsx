@@ -36,13 +36,8 @@ export default function DigitalScoreGauge({ score }: { score: number }) {
           { color: '#10B981', tooltip: { text: 'Excelente Progresso' } },
         ],
       }}
-      pointer={{ color: '#1F2937', length: 0.8, width: 12, type: "arrow" }}
-      labels={{
-        valueLabel: {
-          formatTextValue: (val) => showLabel ? `${val}%` : '--',
-          style: { fontSize: 48, fill: "#1F2937" },
-        },
-      }}
+      pointer={{ color: '#1F2937', length: 0.8, width: 12 }}
+      labels={{ valueLabel: { hide: true } }}
       minValue={0}
       maxValue={100}
       value={score}
