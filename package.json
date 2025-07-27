@@ -15,7 +15,7 @@
     "next": "15.4.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-gauge-component": "^1.2.64",
+    "react-gauge-component": "^1.2.21",
     "react-hot-toast": "^2.5.2"
   },
   "devDependencies": {

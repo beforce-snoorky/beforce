@@ -1,16 +1,8 @@
+"use client"
+
+import { useSession } from "@/hooks/useSession"
 import { ArrowRight, Brain, Cloud, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
 import Link from "next/link"
-import React from "react"
-
-type ActiveSolutions = {
-  website: boolean
-  email_corp: boolean
-  cloud_server: boolean
-  management_system: boolean
-  whatsapp: boolean
-  ia: boolean
-  marketing: boolean
-}
 
 const solutions = [
   { id: "website", style: "bg-purple-100 text-purple-600", icon: <Globe2 className="w-5 h-5" />, title: "Site Profissional", description: "Aumente sua presença online com um domínio profissional." },
@@ -22,11 +14,27 @@ const solutions = [
   { id: "marketing", style: "bg-cyan-100 text-cyan-600", icon: <MonitorSmartphone className="w-5 h-5" />, title: "Marketing Digital", description: "Atraia mais clientes com campanhas online bem direcionadas." },
 ]
 
-export function SolutionCard({ active }: { active: ActiveSolutions }) {
+export function SolutionCard() {
+  const { session, loading, error } = useSession()
+  const company = session?.company
+
+  if (error) return <p>Erro ao carregar dados</p>
+  if (!company || loading) return null
+
+  const active = {
+    website: company.has_website ?? false,
+    email_corp: company.has_email_corp ?? false,
+    cloud_server: company.has_cloud_server ?? false,
+    management_system: company.has_management_system ?? false,
+    whatsapp: company.has_whatsapp ?? false,
+    ia: company.has_ia ?? false,
+    marketing: company.has_mkt_digital ?? false,
+  }
+
   return (
     <div className="flex flex-col gap-3 mt-4 md:mt-6">
       {solutions.map((item) => {
-        const isActive = active[item.id as keyof ActiveSolutions]
+        const isActive = active[item.id as keyof typeof active]
 
         return (
           <div key={item.id} className={`p-4 rounded-xl border ${isActive ? "border-emerald-200" : ""}`}>
@@ -47,10 +55,10 @@ export function SolutionCard({ active }: { active: ActiveSolutions }) {
                     <div className="absolute left-5 w-4 h-4 rounded-full shadow bg-light" />
                   </div>
                 ) : (
-                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs border border-accent text-accent hover:bg-accent hover:text-light">
+                  <Link href="https://api.whatsapp.com/send?phone=551530420727" className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs border border-accent text-accent hover:bg-accent hover:text-light">
                     Contratar
                     <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </Link>
                 )}
               </div>
             </div>

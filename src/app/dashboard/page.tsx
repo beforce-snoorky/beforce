@@ -1,5 +1,7 @@
 import { Gauge } from "lucide-react"
-import DashboardDataWrapper from "@/app/dashboard/wrapper"
+import Card from "@/components/ui/cards"
+import DigitalScoreGauge from "@/components/charts/score"
+import { SolutionCard } from "@/components/ui/solutionsCard"
 
 export default function DashboardPage() {
   return (
@@ -10,7 +12,21 @@ export default function DashboardPage() {
       </div>
       <p className="text-sm">Descubra como está sua transformação digital</p>
 
-      <DashboardDataWrapper />
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <h2 className="text-lg font-semibold">Pontuação Digital</h2>
+          <div className="max-w-xl mx-auto min-h-32 xl:min-h-56">
+            <DigitalScoreGauge />
+          </div>
+        </Card>
+      </section>
+
+      <section>
+        <Card>
+          <h2 className="text-lg font-semibold">Seus serviços contratados</h2>
+          <SolutionCard />
+        </Card>
+      </section>
     </>
   )
 }

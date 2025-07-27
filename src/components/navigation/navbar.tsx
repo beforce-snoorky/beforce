@@ -1,7 +1,7 @@
 "use client"
 
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { Company } from "@/types/company"
+import { useSession } from "@/hooks/useSession"
 import { Globe2, Headphones, LayoutDashboard, MonitorSmartphone, Server, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -14,11 +14,16 @@ export type NavItemProps = {
   visible: boolean
 }
 
-export function NavBar({ company }: { company: Company }) {
+export function NavBar() {
   const pathname = usePathname()
   const isMobile = useMediaQuery("(max-width: 1280px)")
-
   const shouldShowFilter = ["/dashboard/support", "/dashboard/analytics"].includes(pathname)
+
+  const { session, loading, error } = useSession()
+  const company = session?.company
+
+  if (error) return <p>Erro ao carregar dados</p>
+  if (!isMobile || loading || !company) return null
 
   const routes: NavItemProps[] = [
     { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/dashboard", visible: true },
@@ -27,8 +32,6 @@ export function NavBar({ company }: { company: Company }) {
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company.has_management_system },
     { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_mkt_digital },
   ]
-
-  if (!isMobile) return null
 
   return (
     <>
