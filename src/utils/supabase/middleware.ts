@@ -21,5 +21,10 @@ export async function updateSession(request: NextRequest) {
 
   await supabase.auth.getUser()
 
+  response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, stale-while-revalidate=30"
+  )
+
   return response
 }

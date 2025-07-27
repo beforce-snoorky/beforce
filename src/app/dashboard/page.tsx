@@ -41,7 +41,7 @@ export default async function DashboardPage() {
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <h2 className="text-lg font-semibold">Pontuação Digital</h2>
-          <div className="max-w-xl mx-auto">
+          <div className="max-w-xl mx-auto min-h-56">
             <DigitalScoreGauge score={score} />
           </div>
           <div className="text-center">
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
               Você ativou <strong className="font-semibold text-dark">{activeCount}</strong> de <strong className="font-semibold text-dark">{total}</strong> soluções digitais disponíveis.
             </p>
             <p className="text-xs text-dark/50">
-              {getMessage((activeCount / total) * 100)}
+              {getMessage(score)}
             </p>
           </div>
         </Card>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
               const isActive = serviceMap[item.id]
 
               return (
-                <Card key={index} style={isActive ? "border- border-emerald-200" : ""}>
+                <div key={index} className={`p-4 rounded-xl border ${isActive ? "border- border-emerald-200" : ""}`}>
                   <div className={`flex items-center gap-2 justify-between`}>
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center ${item.style}`}>
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
                       )}
                     </div>
                   </div>
-                </Card>
+                </div>
               )
             })}
           </div>
