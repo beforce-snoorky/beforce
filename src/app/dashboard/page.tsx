@@ -1,6 +1,6 @@
 import DigitalScoreGauge from "@/components/charts/score"
 import Card from "@/components/ui/cards"
-import Solutions from "@/components/ui/solutionsCard"
+import { SolutionCard, SkeletonSolutionCard } from "@/components/ui/solutionsCard"
 import { getServerSession } from "@/context/auth"
 import { getDigitalScore } from "@/utils/calculateScore"
 import { Brain, Cloud, Gauge, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
@@ -79,9 +79,11 @@ export default async function DashboardPage() {
             {activeCount == total ? "Seus serviços contratados" : "Vamos ajudar você a alcançar mais pontos"}
           </h2>
           <div className="flex flex-col gap-3 mt-4 md:mt-6">
-            {solutionsWithActive.map(({ isActive, ...item }) => (
-              <Solutions key={item.id} item={item} isActive={isActive} />
-            ))}
+            {solutionsWithActive.length === 0
+              ? Array.from({ length: 7 }).map((_, index) => <SkeletonSolutionCard key={index} />)
+              : solutionsWithActive.map(({ isActive, ...item }) => (
+                <SolutionCard key={item.id} item={item} isActive={isActive} />
+              ))}
           </div>
         </Card>
       </section>

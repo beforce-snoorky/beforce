@@ -12,7 +12,7 @@ type SolutionCardProps = {
   isActive: boolean
 }
 
-function SolutionCard({ item, isActive }: SolutionCardProps) {
+export function SolutionCard({ item, isActive }: SolutionCardProps) {
   return (
     <div className={`p-4 rounded-xl border ${isActive ? "border-emerald-200" : ""}`}>
       <div className="flex items-center justify-between gap-2">
@@ -21,7 +21,7 @@ function SolutionCard({ item, isActive }: SolutionCardProps) {
             {item.icon}
           </div>
           <div>
-            <p className="font-medium">{item.title}</p>
+            <h3 className="font-medium">{item.title}</h3>
             <p className="text-sm text-dark/60 font-normal leading-tight">{item.description}</p>
           </div>
         </div>
@@ -43,4 +43,19 @@ function SolutionCard({ item, isActive }: SolutionCardProps) {
   )
 }
 
-export default React.memo(SolutionCard)
+export function SkeletonSolutionCard() {
+  return (
+    <div className="p-4 rounded-xl border border-gray-200 animate-pulse">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gray-300" />
+          <div className="space-y-1">
+            <div className="w-32 h-3 rounded bg-gray-300" />
+            <div className="w-40 h-3 rounded bg-gray-200" />
+          </div>
+        </div>
+        <div className="w-16 h-6 rounded-lg bg-gray-200" />
+      </div>
+    </div>
+  )
+}
