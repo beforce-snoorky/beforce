@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
         <Header />
         <div className="flex flex-1 overflow-hidden h-svh">
           <SideBar company={company} />
-          <main className="flex-1 overflow-auto px-4 bg-surface/25">{children}</main>
+          <main className="flex-1 overflow-auto p-6 pb-24 lg:pb-6 space-y-6 bg-surface/25">{children}</main>
         </div>
       </div>
     </>
