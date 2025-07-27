@@ -63,7 +63,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col gap-3 mt-4 md:mt-6">
             {solutions.map((item, index) => {
               const serviceMap: Record<string, boolean> = {
-                website: !company.has_website,
+                website: company.has_website,
                 email_corp: company.has_email_corp,
                 cloud_server: company.has_cloud_server,
                 management_system: company.has_management_system,
