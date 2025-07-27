@@ -1,6 +1,6 @@
 import DigitalScoreGauge from "@/components/charts/score"
 import Card from "@/components/ui/cards"
-// import { SolutionCard } from "@/components/ui/solutionsCard"
+import { SolutionCard } from "@/components/ui/solutionsCard"
 import { getServerSession } from "@/context/auth"
 import { getDigitalScore } from "@/utils/calculateScore"
 import { Gauge } from "lucide-react"
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
         </Card>
       </section>
 
-      {/* <section>
+      <section>
         <Card>
           <h2 className="text-lg font-semibold">
             {activeCount == total ? "Seus serviços contratados" : "Vamos ajudar você a alcançar mais pontos"}
@@ -63,7 +63,7 @@ export default async function DashboardPage() {
             }}
           />
         </Card>
-      </section> */}
+      </section>
     </>
   )
 }

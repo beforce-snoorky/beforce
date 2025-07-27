@@ -1,5 +1,6 @@
 "use client"
 
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Company } from "@/types/company"
 import { Globe2, Headphones, LayoutDashboard, MonitorSmartphone, Server, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
@@ -15,6 +16,7 @@ export type NavItemProps = {
 
 export function NavBar({ company }: { company: Company }) {
   const pathname = usePathname()
+  const isMobile = useMediaQuery("(max-width: 767px)")
 
   const shouldShowFilter = ["/dashboard/support", "/dashboard/analytics"].includes(pathname)
 
@@ -25,6 +27,8 @@ export function NavBar({ company }: { company: Company }) {
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company.has_management_system },
     { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_mkt_digital },
   ]
+
+  if (!isMobile) return null
 
   return (
     <>

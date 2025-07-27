@@ -1,5 +1,6 @@
 "use client"
 
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Company } from "@/types/company"
 import { Globe2, Headphones, LayoutDashboard, LockKeyholeIcon, MonitorSmartphone, Server } from "lucide-react"
 import Link from "next/link"
@@ -15,6 +16,7 @@ export type NavItemProps = {
 
 export function SideBar({ company }: { company: Company }) {
   const pathname = usePathname()
+  const isDesktop = useMediaQuery("(max-width: 1279px)")
 
   const routes: NavItemProps[] = [
     { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/dashboard", visible: true },
@@ -23,6 +25,8 @@ export function SideBar({ company }: { company: Company }) {
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company.has_management_system },
     { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_mkt_digital },
   ]
+
+  if (isDesktop) return null
 
   return (
     <>
