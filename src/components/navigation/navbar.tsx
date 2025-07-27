@@ -16,7 +16,7 @@ export type NavItemProps = {
 
 export function NavBar({ company }: { company: Company }) {
   const pathname = usePathname()
-  const isMobile = useMediaQuery("(max-width: 767px)")
+  const isMobile = useMediaQuery("(max-width: 1280px)")
 
   const shouldShowFilter = ["/dashboard/support", "/dashboard/analytics"].includes(pathname)
 
