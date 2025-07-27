@@ -1,9 +1,29 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { useState, useEffect } from "react"
+
 const GaugeComponent = dynamic(() => import("react-gauge-component"), { ssr: false })
 
 export default function DigitalScoreGauge({ score }: { score: number }) {
+  const [showGauge, setShowGauge] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowGauge(true), 300)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  if (!showGauge) {
+    return (
+      <div className="relative w-full max-w-lg flex flex-col items-center justify-center animate-pulse min-h-[200px] p-4">
+        <svg className="w-full h-54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
+          <path d="M10,100 A90,90 0 0,1 190,100" fill="none" stroke="#e5e7eb" strokeWidth="20" strokeLinecap="round" />
+        </svg>
+        <div className="absolute bottom-10 h-10 w-32 rounded-xl bg-gray-300" />
+      </div>
+    )
+  }
+
   return (
     <GaugeComponent
       type="semicircle"
