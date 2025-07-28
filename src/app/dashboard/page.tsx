@@ -2,10 +2,13 @@ import { Gauge } from "lucide-react"
 import Card from "@/components/ui/cards"
 import DigitalScoreGauge from "@/components/charts/score"
 import { SolutionCard } from "@/components/ui/solutionsCard"
+import { Prefetch } from "@/components/prefetch"
 
 export default function DashboardPage() {
   return (
     <>
+      <Prefetch />
+
       <div className="flex items-center gap-2 mb-1 md">
         <Gauge className="w-6 h-6 text-accent" />
         <h1 className="text-xl md:text-2xl font-bold">Seu Score Digital</h1>
