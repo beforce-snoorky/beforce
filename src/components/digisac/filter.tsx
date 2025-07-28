@@ -7,10 +7,12 @@ import Card from "../ui/cards"
 import { SlidersHorizontal } from "lucide-react"
 import { Select } from "../ui/select"
 import { formatPeriod } from "@/utils/period"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 export function Filters() {
   const reportData = useDigisacData()
   const reportFilters = useReportFilter()
+  const isDesktop = useMediaQuery("(max-width: 1279px)")
 
   const [localPeriod, setLocalPeriod] = useState(reportFilters.selectedPeriod)
   const [localOperator, setLocalOperator] = useState(reportFilters.selectedOperatorDepartment)
@@ -24,6 +26,8 @@ export function Filters() {
     reportFilters.setSelectedPeriod(localPeriod)
     reportFilters.setSelectedOperatorDepartment(localOperator)
   }
+
+  if (isDesktop) return null
 
   return (
     <Card>

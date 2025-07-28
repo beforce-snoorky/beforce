@@ -15,11 +15,11 @@ export default function DigisacPage() {
       </div>
       <p className="text-sm">Acompanhe as métricas de atendimento</p>
 
-      <Filters />
-
       <section className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
         <PerformanceMetrics />
       </section>
+
+      <Filters />
 
       <TableMobile />
 
