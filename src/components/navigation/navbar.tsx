@@ -5,7 +5,9 @@ import { useSession } from "@/hooks/useSession"
 import { Globe2, Headphones, LayoutDashboard, MonitorSmartphone, Server, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
+import { FilterModal } from "../digisac/filterModal"
 
 export type NavItemProps = {
   icon: React.ReactNode
@@ -17,7 +19,12 @@ export type NavItemProps = {
 export function NavBar() {
   const pathname = usePathname()
   const isMobile = useMediaQuery("(max-width: 1280px)")
-  const shouldShowFilter = ["/dashboard/support", "/dashboard/analytics"].includes(pathname)
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isUsersOpen, setIsUsersOpen] = useState(false)
+
+  const shouldShowFilter = ["/dashboard/digisac", "/dashboard/analytics"].includes(pathname)
 
   const { session, loading, error } = useSession()
   const company = session?.company
@@ -27,10 +34,10 @@ export function NavBar() {
 
   const routes: NavItemProps[] = [
     { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/dashboard", visible: true },
-    { icon: <Headphones className="w-5 h-5" />, name: "WhatsApp", url: "/dashboard/support", visible: company.has_whatsapp },
+    { icon: <Headphones className="w-5 h-5" />, name: "Digisac", url: "/dashboard/digisac", visible: company.has_digisac },
     { icon: <Globe2 className="w-5 h-5" />, name: "Website", url: "/dashboard/analytics", visible: company.has_website },
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company.has_management_system },
-    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_mkt_digital },
+    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company.has_marketing },
   ]
 
   return (
@@ -55,7 +62,7 @@ export function NavBar() {
                 href={item.visible ? item.url : "#"}
                 onClick={handleClick}
                 className={`relative z-10 flex items-center justify-center grow gap-2 py-2 px-3 rounded-full font-medium
-                  ${isActive && ("bg-accent text-light")} ${!item.visible && ("cursor-not-allowed bg-gray-200 text-gray-400 mx-1")}
+                  ${isActive && ("bg-accent text-light")} ${!item.visible && ("bg-gray-200 text-gray-400 mx-1 last:mr-0")}
                 `}
                 tabIndex={item.visible ? 0 : -1}
                 aria-disabled={!item.visible}
@@ -69,13 +76,15 @@ export function NavBar() {
         </div>
 
         {shouldShowFilter && (
-          <button className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
+          <button onClick={() => setIsFilterOpen(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
             <span className="w-4.5 h-4.5" aria-label="Filtrar">
               <SlidersHorizontal className="w-4.5 h-4.5" />
             </span>
           </button>
         )}
       </aside>
+
+      {isFilterOpen && <FilterModal onClose={() => setIsFilterOpen(false)} />}
     </>
   )
 }

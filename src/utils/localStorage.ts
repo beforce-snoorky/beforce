@@ -1,3 +1,11 @@
+type CachedItem<T> = {
+  data: T
+  period: string
+  timestamp: number
+}
+
+const EXPIRATION_TIME = 1000 * 60 * 60 * 24
+
 export function setMonthlyCache<T>(key: string, data: T, period: string) {
   const value = {
     data,
@@ -13,7 +21,7 @@ export function getMonthlyCache<T>(key: string, period: string): T | null {
   if (!raw) return null
 
   try {
-    const parsed: { data: T; period: string; timestamp: number } = JSON.parse(raw)
+    const parsed: CachedItem<T> = JSON.parse(raw)
     return parsed.data
   } catch {
     return null

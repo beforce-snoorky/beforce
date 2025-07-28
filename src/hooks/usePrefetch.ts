@@ -1,18 +1,18 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { DigisacReports } from "@/types/support"
 import { useSession } from "./useSession"
-import { Support } from "@/types/support"
-import { createClient } from "@/utils/supabase/client"
-import { getCurrentPeriod } from "@/utils/date"
+import { useEffect, useRef, useState } from "react"
+import { getCurrentPeriod, normalizePeriod } from "@/utils/date"
 import { getMonthlyCache, setMonthlyCache } from "@/utils/localStorage"
+import { createClient } from "@/utils/supabase/client"
 
 type DashboardCache = {
-  reports: Support[]
+  reports: DigisacReports[]
   // websites: WebsiteData[]
 }
 
-export function usePrefetchDashboard() {
+export function usePrefetch() {
   const { session } = useSession()
   const [cache, setCache] = useState<DashboardCache | null>(null)
   const fetchingRef = useRef(false)
@@ -20,10 +20,11 @@ export function usePrefetchDashboard() {
   useEffect(() => {
     if (!session?.company?.id || fetchingRef.current) return
 
-    const period = getCurrentPeriod()
+    const rawPeriod = getCurrentPeriod()
+    const period = normalizePeriod(rawPeriod)
     const businessId = session.company.id
 
-    const cachedReports = getMonthlyCache<Support[]>("reports", period)
+    const cachedReports = getMonthlyCache<DigisacReports[]>("reports", period)
     // const cachedWebsites = getMonthlyCache<WebsiteData[]>("websites", period)
 
     if (cachedReports) {
@@ -43,26 +44,17 @@ export function usePrefetchDashboard() {
 
         setCache({ reports })
       })
-      .catch((err) => {
-        console.error("Erro no prefetch", err)
-      })
-      .finally(() => {
-        fetchingRef.current = false
-      })
+      .catch((err) => { console.error("Erro no prefetch", err) })
+      .finally(() => { fetchingRef.current = false })
   }, [session?.company?.id])
 
   return cache
 }
 
-export async function fetchReports(businessId: string, period: string): Promise<Support[]> {
+export async function fetchReports(businessId: string, rawPeriod: string): Promise<DigisacReports[]> {
   const supabase = createClient()
-
-  const { data, error } = await supabase
-    .from("whatsapp_reports")
-    .select("*")
-    .eq("business_id", businessId)
-    .eq("period", period)
-
+  const period = normalizePeriod(rawPeriod)
+  const { data, error } = await supabase.from("digisac_reports").select("*").eq("business_id", businessId).eq("period", period)
   if (error || !data) throw new Error("Erro ao buscar reports")
   return data
 }

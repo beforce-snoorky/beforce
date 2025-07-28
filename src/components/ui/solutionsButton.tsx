@@ -4,20 +4,20 @@ import { useSession } from "@/hooks/useSession"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
-export function SolutionCardButton({ item }: { item: string }) {
-  const { session, loading, error } = useSession()
+export function SolutionsButton({ item }: { item: string }) {
+  const { session, loading } = useSession()
   const company = session?.company
 
   if (!company || loading) return null
 
   const active = {
+    digisac: company.has_digisac ?? false,
     website: company.has_website ?? false,
-    email_corp: company.has_email_corp ?? false,
+    email_corp: company.has_email_corporate ?? false,
     cloud_server: company.has_cloud_server ?? false,
     management_system: company.has_management_system ?? false,
-    whatsapp: company.has_whatsapp ?? false,
     ia: company.has_ia ?? false,
-    marketing: company.has_mkt_digital ?? false,
+    marketing: company.has_marketing ?? false,
   }
 
   const isActive = active[item as keyof typeof active]

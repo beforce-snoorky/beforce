@@ -1,8 +1,8 @@
 "use client"
 
-import { usePrefetchDashboard } from "@/hooks/usePrefetch"
+import { usePrefetch } from "@/hooks/usePrefetch"
 
 export function Prefetch() {
-  usePrefetchDashboard()
+  usePrefetch()
   return null
 }

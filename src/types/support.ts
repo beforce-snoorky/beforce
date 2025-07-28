@@ -1,4 +1,4 @@
-export type Support = {
+export type DigisacReports = {
   id: string
   business_id: string
   operator_name: string

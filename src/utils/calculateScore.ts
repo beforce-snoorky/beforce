@@ -7,13 +7,13 @@ export function calculateScore(company: Company): {
   inactiveSolutions: string[]
 } {
   const solutionMap: { key: keyof Company; label: string }[] = [
-    { key: "has_email_corp", label: "Email Corporativo" },
+    { key: "has_email_corporate", label: "Email Corporativo" },
     { key: "has_cloud_server", label: "Servidor em Nuvem" },
     { key: "has_management_system", label: "Sistema de Gestão" },
     { key: "has_website", label: "Site" },
-    { key: "has_whatsapp", label: "WhatsApp" },
+    { key: "has_digisac", label: "WhatsApp" },
     { key: "has_ia", label: "Inteligência Artificial" },
-    { key: "has_mkt_digital", label: "Marketing Digital" },
+    { key: "has_marketing", label: "Marketing Digital" },
   ]
 
   const active = solutionMap.filter(({ key }) => company[key])

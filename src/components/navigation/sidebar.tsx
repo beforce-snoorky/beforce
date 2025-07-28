@@ -26,10 +26,10 @@ export function SideBar() {
 
   const routes: NavItemProps[] = [
     { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/dashboard", visible: true },
-    { icon: <Headphones className="w-5 h-5" />, name: "WhatsApp", url: "/dashboard/support", visible: company?.has_whatsapp },
+    { icon: <Headphones className="w-5 h-5" />, name: "Digisac", url: "/dashboard/digisac", visible: company?.has_digisac },
     { icon: <Globe2 className="w-5 h-5" />, name: "Website", url: "/dashboard/analytics", visible: company?.has_website },
     { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/dashboard/systems", visible: company?.has_management_system },
-    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company?.has_mkt_digital },
+    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/dashboard/marketing", visible: company?.has_marketing },
   ]
 
   return (

@@ -3,13 +3,14 @@ export interface Company {
   business_name: string
   email: string
   has_website: boolean
-  has_whatsapp: boolean
+  website_domain: string
+  website_analytics_id: string
+  has_digisac: boolean
+  digisac_token: string
+  digisac_url: string
   has_cloud_server: boolean
-  has_email_corp: boolean
+  has_email_corporate: boolean
   has_ia: boolean
   has_management_system: boolean
-  has_mkt_digital: boolean
-  website_domain: string
-  whatsapp_token: string
-  whatsapp_url: string
+  has_marketing: boolean
 }
