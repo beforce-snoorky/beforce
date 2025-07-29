@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const domain = currentUser.email?.split("@")[1]
       if (!domain) return
 
-      const { data: businessData, error: businessError } = await supabase.from("business").select("id").ilike("email", `%@${domain}`).single()
+      const { data: businessData, error: businessError } = await supabase.from("business").select("id").ilike("email", `%@${domain}`).maybeSingle()
       if (!isMounted || businessError || !businessData) return
 
       const { data: companyData, error: profileError } = await supabase.rpc("get_user_profile", { business_uuid: businessData?.id }).single<Company>()

@@ -2,7 +2,7 @@
 
 import { UserPlus } from "lucide-react"
 import { useState } from "react"
-import { UserFormModal } from "./userModal"
+import { CompanyFormModal } from "./userModal"
 
 export function AddUserButton({ onSuccess }: { onSuccess?: () => void }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,7 +18,7 @@ export function AddUserButton({ onSuccess }: { onSuccess?: () => void }) {
       </button>
 
       {isModalOpen && (
-        <UserFormModal
+        <CompanyFormModal
           mode="create"
           onClose={() => setIsModalOpen(false)}
           onSuccess={() => {

@@ -21,7 +21,7 @@ export async function handleUserAction(action: UserActionType, payload: Payload)
     const res = await fetch("/api/admin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, payload })
+      body: JSON.stringify({ action, payload }),
     })
 
     if (!res.ok) throw new Error()
