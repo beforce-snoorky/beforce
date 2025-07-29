@@ -35,7 +35,7 @@ export function SideBar() {
   return (
     <>
       <Toaster position="bottom-center" />
-      <aside className="max-xl:hidden flex flex-col z-50 p-4 max-w-56 border-r border-surface bg-light">
+      <aside className="max-xl:hidden flex flex-col p-4 max-w-56 border-r border-surface bg-light">
         <nav className="flex flex-col gap-2">
           <span className="text-xs font-semibold pb-1 pt-4 text-dark/75">Geral</span>
           {routes.map((item, index) => {

@@ -3,7 +3,7 @@ export function Modal({ onClose, children }: { onClose: () => void, children: Re
     <>
       <div className="fixed inset-0 bg-dark/50 z-40" onClick={onClose} />
       <div className="fixed inset-0 z-50 pointer-events-none">
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-auto">
+        <div className="absolute inset-0 flex items-end md:items-center justify-center pointer-events-auto">
           {children}
         </div>
       </div>

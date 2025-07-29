@@ -2,12 +2,13 @@
 
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { useSession } from "@/hooks/useSession"
-import { Globe2, Headphones, LayoutDashboard, MonitorSmartphone, Server, SlidersHorizontal } from "lucide-react"
+import { Globe2, Headphones, LayoutDashboard, MonitorSmartphone, Server, SlidersHorizontal, UserPlus } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { FilterModal } from "../digisac/filterModal"
+import { UserFormModal } from "../users/userModal"
 
 export type NavItemProps = {
   icon: React.ReactNode
@@ -25,6 +26,7 @@ export function NavBar() {
   const [isUsersOpen, setIsUsersOpen] = useState(false)
 
   const shouldShowFilter = ["/dashboard/digisac", "/dashboard/analytics"].includes(pathname)
+  const shouldShowAddUser = ["/dashboard/users"].includes(pathname)
 
   const { session, loading, error } = useSession()
   const company = session?.company
@@ -82,9 +84,18 @@ export function NavBar() {
             </span>
           </button>
         )}
+
+        {shouldShowAddUser && (
+          <button onClick={() => setIsUsersOpen(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
+            <span className="w-4.5 h-4.5" aria-label="Filtrar">
+              <UserPlus className="w-4.5 h-4.5" />
+            </span>
+          </button>
+        )}
       </aside>
 
       {isFilterOpen && <FilterModal onClose={() => setIsFilterOpen(false)} />}
+      {isUsersOpen && (<UserFormModal mode="create" onClose={() => setIsUsersOpen(false)} onSuccess={() => setIsUsersOpen(false)} />)}
     </>
   )
 }
