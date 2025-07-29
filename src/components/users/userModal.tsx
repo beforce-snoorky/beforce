@@ -1,17 +1,25 @@
 "use client"
 
-import { UserBase } from "@/types/users"
+import { handleUserAction } from "@/utils/userActions"
 import { useEffect, useState } from "react"
-import toast from "react-hot-toast"
 import { Modal } from "../ui/modal"
 import { X } from "lucide-react"
-import { handleUserAction } from "@/context/actions"
 
 type Props = {
   onClose: () => void
   onSuccess?: () => void
   mode: "create" | "update"
-  user?: UserBase
+  user?: User
+}
+
+export type User = {
+  id: string
+  email: string
+  email_confirmed_at?: string
+  phone: string
+  confirmed_at?: string
+  last_sign_in_at?: string
+  created_at: string
 }
 
 export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {

@@ -1,34 +1,41 @@
 "use client"
 
-import { login } from "@/auth/actions"
-import { useTransition } from "react"
-import toast, { Toaster } from "react-hot-toast"
-import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { Button } from "./ui/button"
+import { useLogin } from "@/hooks/useLogin"
+import { Toaster } from "react-hot-toast"
 
 export function Login() {
-  const [isPending, startTransition] = useTransition()
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-
-    startTransition(async () => {
-      const result = await login(formData)
-      if (result?.error) toast.error(result.error)
-    })
-  }
+  const response = useLogin()
 
   return (
     <>
       <Toaster position="bottom-center" />
-      <form onSubmit={handleSubmit} className="min-w-80 md:w-md p-8 space-y-4 rounded-2xl backdrop-blur-xl border border-surface/10 bg-light/5 text-light">
+      <form onSubmit={response.handleSubmit} className="min-w-80 md:w-md p-8 space-y-4 rounded-2xl backdrop-blur-xl border border-surface/10 bg-light/5 text-light">
         <h1 className="sr-only">Acesse sua conta!</h1>
         <label htmlFor="email" className="block font-medium mb-1">Email</label>
-        <Input id="email" name="email" type="email" placeholder="seu@email.com" autoComplete="username" required />
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="seu@email.com"
+          autoComplete="username"
+          value={response.email}
+          onChange={(e) => response.setEmail(e.target.value)}
+          required
+        />
         <label htmlFor="password" className="block font-medium mb-1">Senha</label>
-        <Input id="password" name="password" type="password" placeholder="••••••••" autoComplete="current-password" required />
-        <Button type="submit" isPending={isPending}>Entrar</Button>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          autoComplete="current-password"
+          value={response.password}
+          onChange={(e) => response.setPassword(e.target.value)}
+          required
+        />
+        <Button type="submit" isPending={response.isLoading}>Entrar</Button>
       </form>
     </>
   )

@@ -1,14 +1,13 @@
 "use client"
 
-import { useSession } from "@/hooks/useSession"
+import { useAuth } from "@/hooks/useAuth"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export function SolutionsButton({ item }: { item: string }) {
-  const { session, loading } = useSession()
-  const company = session?.company
+  const { company } = useAuth()
 
-  if (!company || loading) return null
+  if (!company) return null
 
   const active = {
     digisac: company.has_digisac ?? false,

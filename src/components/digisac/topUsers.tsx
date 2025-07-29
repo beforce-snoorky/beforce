@@ -1,16 +1,15 @@
 "use client"
 
-import { useDigisacData } from "@/hooks/useDigisacData"
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import Card from "../ui/cards"
 import { Clock } from "lucide-react"
+import { DigisacReports } from "@/types/digisac"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
-export default function TopUsers() {
-  const { filteredReports: reports } = useDigisacData()
+export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
 
   const data = useMemo(() => {
     const map = new Map<string, number>()

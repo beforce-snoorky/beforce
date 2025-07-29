@@ -1,18 +1,18 @@
 "use client"
 
-import { getPreviousMonthPeriod } from "@/utils/period"
-import { createContext, ReactNode, useContext, useState } from "react"
+import { getPreviousMonthPeriod } from "@/utils/getMonth"
+import { createContext, useContext, useState } from "react"
 
-type ReportFilterProps = {
+type ReportFilterContextType = {
   selectedPeriod: string
   selectedOperatorDepartment: string
   setSelectedPeriod: (period: string) => void
   setSelectedOperatorDepartment: (value: string) => void
 }
 
-const ReportFilterContext = createContext<ReportFilterProps | undefined>(undefined)
+const ReportFilterContext = createContext<ReportFilterContextType | undefined>(undefined)
 
-export function ReportFilterProvider({ children }: { children: ReactNode }) {
+export function ReportFilterProvider({ children }: { children: React.ReactNode }) {
   const [selectedPeriod, setSelectedPeriod] = useState(getPreviousMonthPeriod())
   const [selectedOperatorDepartment, setSelectedOperatorDepartment] = useState("Todos")
 
@@ -22,13 +22,12 @@ export function ReportFilterProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ReportFilterContext.Provider
-      value={{
-        selectedPeriod,
-        selectedOperatorDepartment,
-        setSelectedPeriod: updateSelectedPeriod,
-        setSelectedOperatorDepartment,
-      }}>
+    <ReportFilterContext.Provider value={{
+      selectedPeriod,
+      selectedOperatorDepartment,
+      setSelectedPeriod: updateSelectedPeriod,
+      setSelectedOperatorDepartment,
+    }}>
       {children}
     </ReportFilterContext.Provider>
   )

@@ -1,18 +1,16 @@
 "use client"
 
-import { useDigisacData } from "@/hooks/useDigisacData"
-import { getAverageTime, toMinutes } from "@/utils/period"
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import Card from "../ui/cards"
 import { Clock } from "lucide-react"
+import { DigisacReports } from "@/types/digisac"
+import { getAverageTime, toMinutes } from "@/utils/data"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
-export default function AverageTime() {
-  const { filteredReports: reports } = useDigisacData()
-
+export default function AverageTime({ reports }: { reports: DigisacReports[] }) {
   const data = useMemo(() => {
     const map = new Map<string, string[]>()
 

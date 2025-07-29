@@ -1,16 +1,11 @@
 "use client"
 
-import { useDigisacData } from "@/hooks/useDigisacData"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { DigisacReports } from "@/types/support"
-import { getAverageTime } from "@/utils/period"
+import { DigisacReports } from "@/types/digisac"
+import { getAverageTime } from "@/utils/data"
 import { Bot, Clock, FileText, Hourglass, MessageCircleMore, MessageSquare, Timer } from "lucide-react"
 import { useMemo } from "react"
 
-export function TableMobile() {
-  const { filteredReports: data } = useDigisacData()
-  const isMobile = useMediaQuery("(max-width: 1280px)")
-
+export function TableMobile({ data }: { data: DigisacReports[] }) {
   const metrics = useMemo(() => ([
     { label: "Tempo médio de chamados", style: "text-sky-600 bg-sky-100", icon: <Hourglass className="w-5 h-5" />, key: "ticket_time", type: "time" },
     { label: "Tempo médio da primeira espera", style: "text-orange-600 bg-orange-100", icon: <Timer className="w-5 h-5" />, key: "waiting_time", type: "time" },
@@ -32,8 +27,6 @@ export function TableMobile() {
       return { ...metric, value }
     })
   }, [data, metrics])
-
-  if (!isMobile) return null
 
   return (
     <section className="md:hidden space-y-2">

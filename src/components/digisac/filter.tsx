@@ -1,33 +1,37 @@
 "use client"
 
-import { useReportFilter } from "@/context/reportFilter"
-import { useDigisacData } from "@/hooks/useDigisacData"
+import { useDigisacData } from "@/hooks/useDigisac"
+import { useReportFilter } from "@/hooks/useFilterContext"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { useEffect, useState } from "react"
 import Card from "../ui/cards"
 import { SlidersHorizontal } from "lucide-react"
 import { Select } from "../ui/select"
-import { formatPeriod } from "@/utils/period"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { formatPeriod } from "@/utils/data"
 
-export function Filters() {
-  const reportData = useDigisacData()
-  const reportFilters = useReportFilter()
-  const isDesktop = useMediaQuery("(max-width: 1279px)")
+type FilterSectionProps = {
+  reportData: ReturnType<typeof useDigisacData>
+  reportFilters: ReturnType<typeof useReportFilter>
+}
 
-  const [localPeriod, setLocalPeriod] = useState(reportFilters.selectedPeriod)
-  const [localOperator, setLocalOperator] = useState(reportFilters.selectedOperatorDepartment)
+export function Filters({ reportData, reportFilters }: FilterSectionProps) {
+  const [localPeriod, setLocalPeriod] = useState(() => {
+    return reportFilters.selectedPeriod || reportData.availablePeriods.at(-1) || ""
+  })
+
+  const [localOperator, setLocalOperator] = useState(() => {
+    return reportFilters.selectedOperatorDepartment || "Todos"
+  })
 
   useEffect(() => {
-    setLocalPeriod(reportFilters.selectedPeriod)
-    setLocalOperator(reportFilters.selectedOperatorDepartment)
-  }, [reportFilters.selectedPeriod, reportFilters.selectedOperatorDepartment])
+    setLocalPeriod(reportFilters.selectedPeriod || reportData.availablePeriods.at(-1) || "")
+    setLocalOperator(reportFilters.selectedOperatorDepartment || "Todos")
+  }, [reportFilters.selectedPeriod, reportFilters.selectedOperatorDepartment, reportData.availablePeriods])
 
   const handleApplyFilters = () => {
     reportFilters.setSelectedPeriod(localPeriod)
     reportFilters.setSelectedOperatorDepartment(localOperator)
   }
-
-  if (isDesktop) return null
 
   return (
     <Card>

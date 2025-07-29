@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession } from "@/hooks/useSession"
+import { useAuth } from "@/hooks/useAuth"
 import { calculateScore } from "@/utils/calculateScore"
 import GaugeComponent from "react-gauge-component"
 
@@ -12,11 +12,8 @@ function getMessage(score: number) {
 }
 
 export default function DigitalScoreGauge() {
-  const { session, loading, error } = useSession()
-  const company = session?.company
-
-  if (error) return <p>Erro ao carregar dados: {error}</p>
-  if (!company || loading) return <SkeletonGauge />
+  const { company, isAdmin } = useAuth()
+  if (!company) return <SkeletonGauge />
 
   const { score, activeCount, total } = calculateScore(company)
 
@@ -55,11 +52,17 @@ export default function DigitalScoreGauge() {
 
 function SkeletonGauge() {
   return (
-    <div className="relative w-full max-w-lg flex flex-col items-center justify-center animate-pulse min-h-32 xl:min-h-54 p-4">
-      <svg className="w-full h-32 xl:h-54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
-        <path d="M10,100 A90,90 0 0,1 190,100" fill="none" stroke="#e5e7eb" strokeWidth="20" strokeLinecap="round" />
-        <text x="100" y="90" textAnchor="middle" fontSize="48" fill="#d1d5db" dominantBaseline="middle">--</text>
-      </svg>
-    </div>
+    <>
+      <div className="relative mx-auto w-full max-w-lg flex flex-col items-center justify-center animate-pulse h-56 p-4">
+        <svg className="w-full 54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
+          <path d="M10,100 A90,90 0 0,1 190,100" fill="none" stroke="#e5e7eb" strokeWidth="20" strokeLinecap="round" />
+          <text x="100" y="90" textAnchor="middle" fontSize="48" fill="#d1d5db" dominantBaseline="middle">--</text>
+        </svg>
+      </div>
+      <div className="text-center mt-4 space-y-2 animate-pulse">
+        <div className="h-4 w-3/4 mx-auto bg-gray-200 rounded" />
+        <div className="h-3 w-1/2 mx-auto bg-gray-200 rounded" />
+      </div>
+    </>
   )
 }

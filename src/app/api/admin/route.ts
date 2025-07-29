@@ -1,15 +1,7 @@
 import supabaseAdmin from "@/utils/supabase/admin"
 import { NextRequest, NextResponse } from "next/server"
 
-const isAdminEmail = (email: string | null) => {
-  return !!email && email.endsWith("@beforce.com.br")
-}
-
 export async function POST(req: NextRequest) {
-  const authHeader = req.headers.get("authorization")
-
-  if (!isAdminEmail(authHeader)) return NextResponse.json({ error: "Acesso negado" }, { status: 401 })
-
   const body = await req.json()
   const { action, payload } = body
 

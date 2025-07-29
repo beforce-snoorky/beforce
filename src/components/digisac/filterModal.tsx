@@ -1,12 +1,12 @@
 "use client"
 
-import { X } from "lucide-react"
-import { Modal } from "../ui/modal"
-import { Select } from "../ui/select"
-import { useReportFilter } from "@/context/reportFilter"
-import { useDigisacData } from "@/hooks/useDigisacData"
+import { useDigisacData } from "@/hooks/useDigisac"
+import { useReportFilter } from "@/hooks/useFilterContext"
 import { useEffect, useState } from "react"
-import { formatPeriod } from "@/utils/period"
+import { Modal } from "../ui/modal"
+import { X } from "lucide-react"
+import { Select } from "../ui/select"
+import { formatPeriod } from "@/utils/data"
 
 export function FilterModal({ onClose }: { onClose: () => void }) {
   const reportFilter = useReportFilter()

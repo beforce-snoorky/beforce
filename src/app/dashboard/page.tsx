@@ -1,8 +1,7 @@
-import { Brain, Cloud, Gauge, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
-import Card from "@/components/ui/cards"
 import DigitalScoreGauge from "@/components/charts/score"
-import { Prefetch } from "@/components/prefetch"
-import { SolutionsButton } from "@/components/ui/solutionsButton"
+import { SolutionsButton } from "@/components/solutions"
+import Card from "@/components/ui/cards"
+import { Brain, Cloud, Gauge, Globe2, Mail, MessageCircleMore, MonitorSmartphone, Server } from "lucide-react"
 
 export default function DashboardPage() {
   const solutions = [
@@ -17,8 +16,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Prefetch />
-
       <div className="flex items-center gap-2 mb-1 md">
         <Gauge className="w-6 h-6 text-accent" />
         <h1 className="text-xl md:text-2xl font-bold">Seu Score Digital</h1>

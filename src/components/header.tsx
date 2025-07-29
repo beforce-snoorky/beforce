@@ -1,11 +1,8 @@
 import Image from "next/image"
-import UserMenu from "./ui/user"
-import { getServerSession } from "@/context/auth"
 import Link from "next/link"
+import UserMenu from "./ui/user"
 
 export async function Header() {
-  const { user, company, isAdmin } = await getServerSession()
-
   return (
     <header className="flex items-center p-4 border-b border-surface bg-light">
       <Link href="/dashboard">
@@ -19,7 +16,7 @@ export async function Header() {
         />
       </Link>
       <div className="ml-auto">
-        <UserMenu user={user} company={company} isAdmin={isAdmin} />
+        <UserMenu />
       </div>
     </header>
   )

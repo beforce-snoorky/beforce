@@ -1,22 +1,29 @@
 "use client"
 
-import { getUsers } from "@/context/users"
-import { UserBase } from "@/types/users"
-import { KeyRound, Trash2, UserRound, UserRoundPen } from "lucide-react"
 import { useEffect, useState } from "react"
+import { User } from "./userModal"
+import { Trash2, UserRound, UserRoundPen } from "lucide-react"
 import { UserActionButton } from "./actions"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function UsersDesktopTable() {
-  const [users, setUsers] = useState<UserBase[]>([])
+  const [users, setUsers] = useState<User[]>([])
+  const { isAdmin } = useAuth()
 
   const refetchUsers = async () => {
-    const data = await getUsers()
-    setUsers(data)
+    if (!isAdmin) return
+
+    const res = await fetch("/api/users", { cache: "no-store" })
+    if (!res.ok) throw new Error("Erro ao carregar usuários")
+    const users = await res.json()
+    setUsers(users)
   }
 
   useEffect(() => {
     refetchUsers()
-  }, [])
+  }, [isAdmin])
+
+  if (!isAdmin) return <p>Acesso negado</p>
 
   return (
     <div className="hidden md:block w-full overflow-auto relative rounded-xl border border-surface bg-light">

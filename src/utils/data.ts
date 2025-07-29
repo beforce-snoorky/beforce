@@ -1,10 +1,3 @@
-export function getPreviousMonthPeriod() {
-  const currentDate = new Date()
-  currentDate.setMonth(currentDate.getMonth() - 1)
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0")
-  return `${currentDate.getFullYear()}-${month}`
-}
-
 export function formatPeriod(period: string): string {
   const [year, month] = period.split("-")
   const monthNames = [
@@ -38,4 +31,9 @@ export function getAverageTime(timeStrings: string[]): string {
   const totalSeconds = validTimes.reduce((sum, timeString) => sum + toSeconds(timeString), 0)
   const avgSeconds = Math.floor(totalSeconds / validTimes.length)
   return toTimeString(avgSeconds)
+}
+
+export function normalizePeriod(input: string): string {
+  if (/^\d{4}-\d{2}$/.test(input)) return `${input}-01`
+  return input
 }

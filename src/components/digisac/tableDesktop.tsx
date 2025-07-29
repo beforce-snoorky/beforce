@@ -1,17 +1,19 @@
 "use client"
 
-import { useReportFilter } from "@/context/reportFilter"
-import { useDigisacData } from "@/hooks/useDigisacData"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { DigisacReports } from "@/types/support"
-import { normalizePeriod } from "@/utils/date"
+import { useDigisacData } from "@/hooks/useDigisac"
+import { useReportFilter } from "@/hooks/useFilterContext"
+import { DigisacReports } from "@/types/digisac"
+import { normalizePeriod } from "@/utils/data"
 import { UsersRound } from "lucide-react"
 import { useMemo } from "react"
 
-export function TableDesktop() {
-  const reportData = useDigisacData()
-  const reportFilters = useReportFilter()
-  const isDesktop = useMediaQuery("(max-width: 1279px)")
+type TableDesktopProps = {
+  reportData: ReturnType<typeof useDigisacData>
+  reportFilters: ReturnType<typeof useReportFilter>
+}
+
+export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
+  const period = normalizePeriod(reportFilters.selectedPeriod)
 
   const metrics = useMemo(() => ([
     { label: "Tempo médio de chamados", key: "ticket_time", type: "time" },
@@ -24,13 +26,14 @@ export function TableDesktop() {
   ]), [])
 
   const data = useMemo(() => {
-    const normalizedPeriod = normalizePeriod(reportFilters.selectedPeriod)
-    const reports = reportData.reportsByPeriod[normalizedPeriod] || []
+    const reports = reportData.reportsByPeriod[period] || []
     const grouped = new Map<string, { operator: string; department: string; report: DigisacReports }>()
 
     for (const report of reports) {
-      const key = `${report.operator_name}||${report.department}`
-      if (!grouped.has(key)) grouped.set(key, { operator: report.operator_name, department: report.department, report })
+      const operator = report.operator_name.trim()
+      const department = report.department.trim()
+      const key = `${operator}||${department}`
+      if (!grouped.has(key)) grouped.set(key, { operator, department, report })
     }
 
     return Array.from(grouped.values()).map(({ operator, department, report }) => {
@@ -41,9 +44,7 @@ export function TableDesktop() {
 
       return { operator, department, key: `${operator}||${department}`, values }
     })
-  }, [reportData.reportsByPeriod, reportFilters.selectedPeriod, metrics])
-
-  if (isDesktop) return null
+  }, [reportData.reportsByPeriod, period, metrics])
 
   return (
     <section className="w-full">
@@ -59,9 +60,10 @@ export function TableDesktop() {
             </tr>
           </thead>
           <tbody>
-            {data.map(({ operator, department, values }, index) => {
-              const key = `${operator}||${department}`
-              const isDimmed = reportFilters.selectedOperatorDepartment !== "Todos" && reportFilters.selectedOperatorDepartment !== key
+            {data.map(({ operator, department, key, values }, index) => {
+              const selectedKey = reportFilters.selectedOperatorDepartment.trim()
+              const currentKey = key.trim()
+              const isDimmed = selectedKey !== "Todos" && selectedKey !== currentKey
 
               return (
                 <tr key={index} className={`border-b last:border-none border-surface even:bg-dark/6 ${isDimmed ? "opacity-40" : "opacity-100"}`}>

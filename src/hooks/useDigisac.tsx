@@ -1,0 +1,80 @@
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
+import { useAuth } from "./useAuth"
+import { useReportFilter } from "./useFilterContext"
+import supabase from "@/utils/supabase/client"
+import { DigisacReports } from "@/types/digisac"
+import { normalizePeriod } from "@/utils/data"
+
+export function useDigisacData() {
+  const { company } = useAuth()
+  const reportFilter = useReportFilter()
+
+  const [availablePeriods, setAvailablePeriods] = useState<string[]>([])
+  const [reportsByPeriod, setReportsByPeriod] = useState<Record<string, DigisacReports[]>>({})
+  const [filteredReports, setFilteredReports] = useState<DigisacReports[]>([])
+
+  const rawPeriod = reportFilter.selectedPeriod
+  const period = normalizePeriod(rawPeriod)
+
+  // Carrega os períodos
+  useEffect(() => {
+    if (!company?.id) return
+
+    async function loadPeriods() {
+      const { data, error } = await supabase.from("digisac_reports").select("period").eq("business_id", company?.id)
+      if (!error && data) setAvailablePeriods(Array.from(new Set(data.map((report) => report.period))))
+    }
+
+    loadPeriods()
+  }, [company?.id])
+
+  // Carrega relatórios do período
+  useEffect(() => {
+    if (!company?.id || reportsByPeriod[period]) return
+
+    async function loadReports() {
+      const { data, error } = await supabase.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
+      if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
+    }
+
+    loadReports()
+  }, [company?.id, period, reportsByPeriod])
+
+  // Filtragem
+  useEffect(() => {
+    const reportsForPeriod = reportsByPeriod[period] || []
+
+    if (reportFilter.selectedOperatorDepartment === "Todos") setFilteredReports(reportsForPeriod)
+    else {
+      const [operator, department] = reportFilter.selectedOperatorDepartment.split("||")
+      setFilteredReports(reportsForPeriod.filter((report) => report.operator_name === operator && report.department === department))
+    }
+  }, [reportFilter.selectedOperatorDepartment, period, reportsByPeriod])
+
+  // Geração de opções do filtro
+  const operatorOptions = useMemo(() => {
+    const reports = reportsByPeriod[period] || []
+    const seen = new Set<string>()
+    const options = []
+
+    for (const report of reports) {
+      const key = `${report.operator_name}||${report.department}`
+
+      if (!seen.has(key)) {
+        seen.add(key)
+        options.push({ label: `${report.operator_name} (${report.department})`, value: key })
+      }
+    }
+
+    return [{ label: "Todos", value: "Todos" }, ...options]
+  }, [reportsByPeriod, period])
+
+  return {
+    availablePeriods,
+    reportsByPeriod,
+    filteredReports,
+    operatorOptions,
+  }
+}

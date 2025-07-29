@@ -5,20 +5,24 @@ interface InputProps {
   placeholder?: string
   autoComplete?: string
   className?: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   required?: boolean
 }
 
-export function Input({ id, name, type, placeholder, autoComplete, className, required = false }: InputProps) {
+export function Input(props: InputProps) {
   return (
     <input
-      id={id}
-      name={name}
-      type={type}
-      placeholder={placeholder}
-      autoComplete={autoComplete}
-      aria-required={required}
-      required={required}
-      className={`w-full p-3 rounded-lg outline-none border focus:border-accent  ${className ? "" : "border-light/25 bg-gray-800"}`}
+      id={props.id}
+      name={props.name}
+      type={props.type}
+      placeholder={props.placeholder}
+      autoComplete={props.autoComplete}
+      value={props.value}
+      className={`w-full p-3 rounded-lg outline-none border focus:border-accent  ${props.className ? "" : "border-light/25 bg-gray-800"}`}
+      onChange={props.onChange}
+      aria-required={props.required}
+      required={props.required}
     />
   )
 }

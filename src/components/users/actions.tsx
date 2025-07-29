@@ -1,17 +1,16 @@
 "use client"
 
-import { UserBase } from "@/types/users";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { UserFormModal } from "./userModal";
-import { handleUserAction } from "@/context/actions";
+import { useState } from "react"
+import { User, UserFormModal } from "./userModal"
+import toast from "react-hot-toast"
+import { handleUserAction } from "@/utils/userActions"
 
 type UserActionButtonProps = {
   icon: React.ReactNode
   label: string
   showLabel?: boolean
   action: "updateUser" | "createUser" | "deleteUser"
-  user?: UserBase
+  user?: User
   onSuccess?: () => void
 }
 

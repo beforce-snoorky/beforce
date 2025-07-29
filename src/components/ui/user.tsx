@@ -1,30 +1,40 @@
 "use client"
 
-import { logout } from "@/auth/actions"
-import { Company } from "@/types/company"
-import { User } from "@supabase/supabase-js"
-import { Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
+import { useAuth } from "@/hooks/useAuth"
+import supabase from "@/utils/supabase/client"
+import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
-type UserMenuProps = {
-  user: User
-  company: Company
-  isAdmin: boolean
-}
+export default function UserMenu() {
+  const { user, company, loading, isAdmin } = useAuth()
+  const router = useRouter()
 
-export default function UserMenu({ user, company, isAdmin }: UserMenuProps) {
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdown = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (loading) return
+
+    if (!company || !user) router.replace("/")
+  }, [user, company, loading, router])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdown.current && !dropdown.current.contains(event.target as Node)) setShowDropdown(false)
     }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    router.push("/")
+  }
+
+  if (loading) return null
+  if (!company || !user) return null
 
   return (
     <div className="relative" ref={dropdown}>
@@ -57,9 +67,13 @@ export default function UserMenu({ user, company, isAdmin }: UserMenuProps) {
                 <Users2 className="w-4 h-4" />
                 <span>Usuários</span>
               </Link>
+              <Link href="/dashboard/chatbot" className="flex items-center py-1 gap-2">
+                <Brain className="w-4 h-4" />
+                <span>Chatbot</span>
+              </Link>
             </>
           )}
-          <form action={logout}>
+          <form action={handleLogout}>
             <button className="w-full flex items-center gap-2 mt-2 pt-2 border-t border-surface text-accent" aria-label="Sair">
               <LogOut className="w-4 h-4" />
               <span className="font-medium">Sair</span>
