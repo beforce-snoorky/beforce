@@ -1,7 +1,7 @@
 import toast from "react-hot-toast"
 
 type AnyAction = string
-type AnyPayload = Record<string, any>
+type AnyPayload = Record<string, unknown>
 
 interface HandleActionParams<ActionType extends AnyAction, PayloadType extends AnyPayload> {
   action: ActionType

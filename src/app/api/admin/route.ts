@@ -1,6 +1,12 @@
 import { supabaseAdmin } from "@/utils/supabase"
 import { NextRequest, NextResponse } from "next/server"
 
+type UserUpdate = {
+  email?: string
+  user_metadata?: Record<string, unknown>
+  password?: string
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const { action, payload } = body
@@ -23,7 +29,7 @@ export async function POST(req: NextRequest) {
 
       case "updateUser": {
         const { id, email, user_metadata, password } = payload
-        const updates: any = {
+        const updates: UserUpdate = {
           ...(email && { email }),
           ...(user_metadata && { user_metadata }),
           ...(password && { password })

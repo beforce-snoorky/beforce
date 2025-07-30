@@ -12,7 +12,7 @@ function getMessage(score: number) {
 }
 
 export default function DigitalScoreGauge() {
-  const { company, isAdmin } = useAuth()
+  const { company } = useAuth()
   if (!company) return <SkeletonGauge />
 
   const { score, activeCount, total } = calculateScore(company)

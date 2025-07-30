@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { User } from "./userModal"
 import { Trash2, UserRound, UserRoundPen } from "lucide-react"
 import { UserActionButton } from "./actions"
@@ -10,18 +10,18 @@ export default function UsersDesktopTable() {
   const [users, setUsers] = useState<User[]>([])
   const { isAdmin } = useAuth()
 
-  const refetchUsers = async () => {
+  const refetchUsers = useCallback(async () => {
     if (!isAdmin) return
 
     const res = await fetch("/api/users", { cache: "no-store" })
     if (!res.ok) throw new Error("Erro ao carregar usuários")
     const users = await res.json()
     setUsers(users)
-  }
+  }, [isAdmin])
 
   useEffect(() => {
     refetchUsers()
-  }, [isAdmin])
+  }, [refetchUsers])
 
   if (!isAdmin) return <p>Acesso negado</p>
 

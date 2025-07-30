@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth"
 import { Company } from "@/types/company"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CompanyActionButton } from "./actions"
 import { Building2, PenLine, Trash2 } from "lucide-react"
 
@@ -10,7 +10,7 @@ export default function UsersDesktopTable() {
   const [companies, setCompanies] = useState<Company[]>([])
   const { isAdmin } = useAuth()
 
-  const refetchCompanies = async () => {
+  const refetchCompanies = useCallback(async () => {
     if (!isAdmin) return
 
     const res = await fetch("/api/companies", {
@@ -22,11 +22,11 @@ export default function UsersDesktopTable() {
     if (!res.ok) throw new Error("Erro ao carregar empresas")
     const { companies } = await res.json()
     setCompanies(companies)
-  }
+  }, [isAdmin])
 
   useEffect(() => {
     refetchCompanies()
-  }, [isAdmin])
+  }, [refetchCompanies])
 
   if (!isAdmin) return
 
