@@ -1,13 +1,14 @@
 "use client"
 
 import { useAuth } from "@/hooks/useAuth"
-import { supabaseAdmin } from "@/utils/supabase/admin"
+import { getSupabaseAdmin } from "@/utils/supabase/admin"
 import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
 export default function UserMenu() {
+  const supabaseAdmin = getSupabaseAdmin()
   const { user, company, loading, isAdmin } = useAuth()
   const router = useRouter()
 

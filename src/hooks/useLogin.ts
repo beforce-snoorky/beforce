@@ -1,11 +1,12 @@
 "use client"
 
-import { supabaseClient } from "@/utils/supabase/client"
+import { getSupabaseClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
 export function useLogin() {
+  const supabaseClient = getSupabaseClient()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)

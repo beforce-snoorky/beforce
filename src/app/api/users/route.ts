@@ -1,8 +1,10 @@
 import { User } from "@/components/users/userModal"
-import { supabaseAdmin } from "@/utils/supabase/admin"
+import { getSupabaseAdmin } from "@/utils/supabase/admin"
 import { NextResponse } from "next/server"
 
 export async function GET() {
+  const supabaseAdmin = getSupabaseAdmin()
+
   try {
     const { data, error } = await supabaseAdmin.auth.admin.listUsers()
     if (error) return NextResponse.json({ error: "Erro ao buscar usuários" }, { status: 500 })

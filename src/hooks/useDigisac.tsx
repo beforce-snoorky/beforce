@@ -5,9 +5,10 @@ import { useAuth } from "./useAuth"
 import { useReportFilter } from "./useFilterContext"
 import { DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
-import { supabaseClient } from "@/utils/supabase/client"
+import { getSupabaseClient } from "@/utils/supabase/client"
 
 export function useDigisacData() {
+  const supabaseClient = getSupabaseClient()
   const { company } = useAuth()
   const reportFilter = useReportFilter()
 
