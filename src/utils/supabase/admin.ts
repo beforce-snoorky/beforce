@@ -16,6 +16,5 @@ export function getSupabaseAdmin(): SupabaseClient {
       }
     )
   }
-
   return adminClient
 }

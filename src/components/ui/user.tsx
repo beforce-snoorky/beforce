@@ -1,14 +1,14 @@
 "use client"
 
 import { useAuth } from "@/hooks/useAuth"
-import { getSupabaseAdmin } from "@/utils/supabase/admin"
+import { getSupabaseClient } from "@/utils/supabase/client"
 import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
 export default function UserMenu() {
-  const supabaseAdmin = getSupabaseAdmin()
+  const supabaseClient = getSupabaseClient()
   const { user, company, loading, isAdmin } = useAuth()
   const router = useRouter()
 
@@ -30,7 +30,7 @@ export default function UserMenu() {
   }, [])
 
   async function handleLogout() {
-    await supabaseAdmin.auth.signOut()
+    await supabaseClient.auth.signOut()
     router.push("/")
   }
 
