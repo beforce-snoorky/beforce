@@ -34,18 +34,15 @@ export default function DigisacPage() {
         </section>
       )}
 
-      {isMobile
-        ? (
-          <section className="md:hidden space-y-2">
-            <TableMobile data={reportsData.filteredReports} />
-          </section>
-        )
-        : (
-          <section className="w-full">
-            <TableDesktop reportData={reportsData} reportFilters={reportFilter} />
-          </section>
-        )
-      }
+      {isMobile ? (
+        <section className="md:hidden space-y-2">
+          <TableMobile data={reportsData.filteredReports} />
+        </section>
+      ) : (
+        <section className="w-full">
+          <TableDesktop reportData={reportsData} reportFilters={reportFilter} />
+        </section>
+      )}
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <AverageTime reports={reportsData.filteredReports} />

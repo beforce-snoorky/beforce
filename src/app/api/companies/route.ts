@@ -33,29 +33,18 @@ export async function POST(req: NextRequest) {
           has_marketing
         } = payload
 
-        const { data: business, error: businessError } = await supabaseAdmin
-          .from("business")
-          .insert([{ business_name, email }])
-          .select()
-          .single()
-
+        const { data: business, error: businessError } = await supabaseAdmin.from("business").insert([{ business_name, email }]).select().single()
         if (businessError) throw businessError
+
         const business_id = business.id
 
-        if (has_website) {
-          await supabaseAdmin.from("website").insert([{ business_id, domain: website_domain, analytics_id: website_analytics_id }])
-        }
-
-        if (has_digisac) {
-          await supabaseAdmin.from("digisac").insert([{ business_id, token: digisac_token, url: digisac_url }])
-        }
-
+        if (has_website) await supabaseAdmin.from("websites").insert([{ business_id, domain: website_domain, analytics_id: website_analytics_id }])
+        if (has_digisac) await supabaseAdmin.from("digisac").insert([{ business_id, token: digisac_token, url: digisac_url }])
         if (has_cloud_server) await supabaseAdmin.from("cloud_server").insert([{ business_id }])
         if (has_email_corporate) await supabaseAdmin.from("email_corporate").insert([{ business_id }])
         if (has_ia) await supabaseAdmin.from("ia").insert([{ business_id }])
         if (has_management_system) await supabaseAdmin.from("management_system").insert([{ business_id }])
         if (has_marketing) await supabaseAdmin.from("marketing").insert([{ business_id }])
-
         return NextResponse.json({ success: true, id: business_id })
       }
 
@@ -81,31 +70,18 @@ export async function POST(req: NextRequest) {
 
         await supabaseAdmin.from("business").update({ business_name, email }).eq("id", id)
 
-        // website
         if (has_website) {
-          const { count } = await supabaseAdmin.from("website").select("*", { count: "exact", head: true }).eq("business_id", id)
-          if (count === 0) {
-            await supabaseAdmin.from("website").insert([{ business_id: id, domain: website_domain, analytics_id: website_analytics_id }])
-          } else {
-            await supabaseAdmin.from("website").update({ domain: website_domain, analytics_id: website_analytics_id }).eq("business_id", id)
-          }
-        } else {
-          await supabaseAdmin.from("website").delete().eq("business_id", id)
-        }
+          const { count } = await supabaseAdmin.from("websites").select("*", { count: "exact", head: true }).eq("business_id", id)
+          if (count === 0) await supabaseAdmin.from("websites").insert([{ business_id: id, domain: website_domain, analytics_id: website_analytics_id }])
+          else await supabaseAdmin.from("websites").update({ domain: website_domain, analytics_id: website_analytics_id }).eq("business_id", id)
+        } else await supabaseAdmin.from("websites").delete().eq("business_id", id)
 
-        // digisac
         if (has_digisac) {
           const { count } = await supabaseAdmin.from("digisac").select("*", { count: "exact", head: true }).eq("business_id", id)
-          if (count === 0) {
-            await supabaseAdmin.from("digisac").insert([{ business_id: id, token: digisac_token, url: digisac_url }])
-          } else {
-            await supabaseAdmin.from("digisac").update({ token: digisac_token, url: digisac_url }).eq("business_id", id)
-          }
-        } else {
-          await supabaseAdmin.from("digisac").delete().eq("business_id", id)
-        }
+          if (count === 0) await supabaseAdmin.from("digisac").insert([{ business_id: id, token: digisac_token, url: digisac_url }])
+          else await supabaseAdmin.from("digisac").update({ token: digisac_token, url: digisac_url }).eq("business_id", id)
+        } else await supabaseAdmin.from("digisac").delete().eq("business_id", id)
 
-        // tabelas booleanas simples
         const toggleTables = [
           { name: "cloud_server", flag: has_cloud_server },
           { name: "email_corporate", flag: has_email_corporate },
@@ -116,12 +92,8 @@ export async function POST(req: NextRequest) {
 
         for (const { name, flag } of toggleTables) {
           const { count } = await supabaseAdmin.from(name).select("*", { count: "exact", head: true }).eq("business_id", id)
-          if (flag && count === 0) {
-            await supabaseAdmin.from(name).insert([{ business_id: id }])
-          }
-          if (!flag && (count ?? 0) > 0) {
-            await supabaseAdmin.from(name).delete().eq("business_id", id)
-          }
+          if (flag && count === 0) await supabaseAdmin.from(name).insert([{ business_id: id }])
+          if (!flag && (count ?? 0) > 0) await supabaseAdmin.from(name).delete().eq("business_id", id)
         }
 
         return NextResponse.json({ success: true })
@@ -140,12 +112,8 @@ export async function POST(req: NextRequest) {
           "marketing"
         ]
 
-        for (const table of tables) {
-          await supabaseAdmin.from(table).delete().eq("business_id", id)
-        }
-
+        for (const table of tables) await supabaseAdmin.from(table).delete().eq("business_id", id)
         await supabaseAdmin.from("business").delete().eq("id", id)
-
         return NextResponse.json({ success: true })
       }
 
