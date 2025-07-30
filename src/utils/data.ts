@@ -1,4 +1,4 @@
-export function formatPeriod(period: string): string {
+export function formatPeriodToMonthYear(period: string): string {
   const [year, month] = period.split("-")
   const monthNames = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -25,7 +25,7 @@ export function toTimeString(totalSeconds: number): string {
   return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, "0")).join(":")
 }
 
-export function getAverageTime(timeStrings: string[]): string {
+export function calculateAverageTime(timeStrings: string[]): string {
   const validTimes = timeStrings.filter((t): t is string => typeof t === "string")
   if (validTimes.length === 0) return "00:00:00"
   const totalSeconds = validTimes.reduce((sum, timeString) => sum + toSeconds(timeString), 0)
@@ -33,7 +33,14 @@ export function getAverageTime(timeStrings: string[]): string {
   return toTimeString(avgSeconds)
 }
 
-export function normalizePeriod(input: string): string {
+export function ensureFullPeriodFormat(input: string): string {
   if (/^\d{4}-\d{2}$/.test(input)) return `${input}-01`
   return input
+}
+
+export function getPreviousMonthAsPeriod() {
+  const currentDate = new Date()
+  currentDate.setMonth(currentDate.getMonth() - 1)
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0")
+  return `${currentDate.getFullYear()}-${month}`
 }

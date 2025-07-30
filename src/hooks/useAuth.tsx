@@ -1,7 +1,7 @@
 "use client"
 
 import { AuthContextType, Company } from "@/types/company"
-import supabase from "@/utils/supabase/client"
+import { supabaseClient } from "@/utils/supabase"
 import { User } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 
@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let isMounted = true
 
     async function loadSession() {
-      const { data } = await supabase.auth.getSession()
+      const { data } = await supabaseClient.auth.getSession()
       const currentUser = data.session?.user ?? null
 
       if (!isMounted) return
@@ -39,16 +39,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const domain = currentUser.email?.split("@")[1]
       if (!domain) return
 
-      const { data: businessData, error: businessError } = await supabase.from("business").select("id").ilike("email", `%@${domain}`).maybeSingle()
+      const { data: businessData, error: businessError } = await supabaseClient.from("business").select("id").ilike("email", `%@${domain}`).single()
       if (!isMounted || businessError || !businessData) return
 
-      const { data: companyData, error: profileError } = await supabase.rpc("get_user_profile", { business_uuid: businessData?.id }).single<Company>()
+      const { data: companyData, error: profileError } = await supabaseClient.rpc("get_user_profile", { business_uuid: businessData?.id }).single<Company>()
       if (!isMounted || profileError || !companyData) return setCompany(null)
 
       setCompany(companyData)
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null
       setUser(currentUser)
 
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ supabase, user, company, isAdmin, loading }}>
+    <AuthContext.Provider value={{ supabaseClient, user, company, isAdmin, loading }}>
       {children}
     </AuthContext.Provider>
   )

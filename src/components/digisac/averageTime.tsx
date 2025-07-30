@@ -6,7 +6,7 @@ import { useMemo } from "react"
 import Card from "../ui/cards"
 import { Clock } from "lucide-react"
 import { DigisacReports } from "@/types/digisac"
-import { getAverageTime, toMinutes } from "@/utils/data"
+import { calculateAverageTime, toMinutes } from "@/utils/data"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
@@ -21,7 +21,7 @@ export default function AverageTime({ reports }: { reports: DigisacReports[] }) 
     }
 
     const items = Array.from(map.entries()).map(([department, times]) => {
-      const avgStr = getAverageTime(times)
+      const avgStr = calculateAverageTime(times)
       const avgMin = toMinutes(avgStr)
       return { department, avgTimeStr: avgStr, avgMin }
     }).sort((a, b) => b.avgMin - a.avgMin)

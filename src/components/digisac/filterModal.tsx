@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { Modal } from "../ui/modal"
 import { X } from "lucide-react"
 import { Select } from "../ui/select"
-import { formatPeriod } from "@/utils/data"
+import { formatPeriodToMonthYear } from "@/utils/data"
 
 export function FilterModal({ onClose }: { onClose: () => void }) {
   const reportFilter = useReportFilter()
@@ -47,7 +47,7 @@ export function FilterModal({ onClose }: { onClose: () => void }) {
           <Select
             id="periods"
             label="Períodos"
-            options={availablePeriods.map(period => ({ label: formatPeriod(period), value: period }))}
+            options={availablePeriods.map(period => ({ label: formatPeriodToMonthYear(period), value: period }))}
             value={localPeriod}
             onChange={setLocalPeriod}
           />

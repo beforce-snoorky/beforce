@@ -33,10 +33,10 @@ export default function UsersDesktopTable() {
   const serviceFlags = [
     { key: "has_website", label: "Site" },
     { key: "has_email_corporate", label: "Email" },
-    { key: "has_ia", label: "IA" },
     { key: "has_cloud_server", label: "Nuvem" },
-    { key: "has_digisac", label: "WhatsApp" },
     { key: "has_management_system", label: "Gestão" },
+    { key: "has_digisac", label: "WhatsApp" },
+    { key: "has_ia", label: "IA" },
     { key: "has_marketing", label: "Marketing" },
   ] as const
 

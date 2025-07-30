@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import UserMenu from "./ui/user"
 
-export async function Header() {
+export function Header() {
   return (
     <header className="flex items-center p-4 border-b border-surface bg-light">
       <Link href="/dashboard">

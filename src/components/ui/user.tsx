@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/hooks/useAuth"
-import supabase from "@/utils/supabase/client"
+import { supabaseAdmin } from "@/utils/supabase"
 import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -29,7 +29,7 @@ export default function UserMenu() {
   }, [])
 
   async function handleLogout() {
-    await supabase.auth.signOut()
+    await supabaseAdmin.auth.signOut()
     router.push("/")
   }
 

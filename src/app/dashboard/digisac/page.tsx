@@ -15,7 +15,6 @@ export default function DigisacPage() {
   const reportFilter = useReportFilter()
   const reportsData = useDigisacData()
   const isMobile = useMediaQuery("(max-width: 767px)")
-  const isDesktop = useMediaQuery("(max-width: 1280px)")
 
   return (
     <>

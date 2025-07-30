@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react"
 import { useAuth } from "./useAuth"
 import { useReportFilter } from "./useFilterContext"
-import supabase from "@/utils/supabase/client"
 import { DigisacReports } from "@/types/digisac"
-import { normalizePeriod } from "@/utils/data"
+import { ensureFullPeriodFormat } from "@/utils/data"
+import { supabaseClient } from "@/utils/supabase"
 
 export function useDigisacData() {
   const { company } = useAuth()
@@ -16,14 +16,14 @@ export function useDigisacData() {
   const [filteredReports, setFilteredReports] = useState<DigisacReports[]>([])
 
   const rawPeriod = reportFilter.selectedPeriod
-  const period = normalizePeriod(rawPeriod)
+  const period = ensureFullPeriodFormat(rawPeriod)
 
   // Carrega os períodos
   useEffect(() => {
     if (!company?.id) return
 
     async function loadPeriods() {
-      const { data, error } = await supabase.from("digisac_reports").select("period").eq("business_id", company?.id)
+      const { data, error } = await supabaseClient.from("digisac_reports").select("period").eq("business_id", company?.id)
       if (!error && data) setAvailablePeriods(Array.from(new Set(data.map((report) => report.period))))
     }
 
@@ -35,7 +35,7 @@ export function useDigisacData() {
     if (!company?.id || reportsByPeriod[period]) return
 
     async function loadReports() {
-      const { data, error } = await supabase.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
+      const { data, error } = await supabaseClient.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
       if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
     }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { DigisacReports } from "@/types/digisac"
-import { getAverageTime } from "@/utils/data"
+import { calculateAverageTime } from "@/utils/data"
 import { Bot, Clock, FileText, Hourglass, MessageCircleMore, MessageSquare, Timer } from "lucide-react"
 import { useMemo } from "react"
 
@@ -21,7 +21,7 @@ export function TableMobile({ data }: { data: DigisacReports[] }) {
 
     return metrics.map(metric => {
       let value: string | undefined
-      if (metric.type === "time") value = getAverageTime(data.map(report => report[metric.key as keyof DigisacReports] as string))
+      if (metric.type === "time") value = calculateAverageTime(data.map(report => report[metric.key as keyof DigisacReports] as string))
       else if (metric.type === "count") value = data.reduce((total, report) => total + Number(report[metric.key as keyof DigisacReports] || 0), 0).toString()
 
       return { ...metric, value }

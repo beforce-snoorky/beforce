@@ -1,6 +1,6 @@
 "use client"
 
-import supabase from "@/utils/supabase/client"
+import { supabaseClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -14,7 +14,7 @@ export function useLogin() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { session } } = await supabaseClient.auth.getSession()
       if (session?.user) router.replace("/dashboard")
     }
     checkSession()
@@ -25,7 +25,7 @@ export function useLogin() {
     setIsLoading(true)
     setError("")
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
 
     if (error) {
       const message = "Credenciais inválidas"

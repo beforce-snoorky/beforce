@@ -18,7 +18,7 @@ export interface Company {
 }
 
 export type AuthContextType = {
-  supabase: SupabaseClient
+  supabaseClient: SupabaseClient
   user: User | null
   company: Company | null
   isAdmin: boolean

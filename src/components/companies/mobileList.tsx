@@ -5,6 +5,7 @@ import { Company } from "@/types/company"
 import { Building2, ChevronDown, PenLine, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { CompanyActionButton } from "./actions"
+import { solutions } from "@/constants/solutions"
 
 export default function UsersMobileList() {
   const [expandedCompanyId, setExpandedCompanyId] = useState<string | null>(null)
@@ -33,16 +34,6 @@ export default function UsersMobileList() {
 
   const toggleExpand = (id: string) => setExpandedCompanyId(prev => (prev === id ? null : id))
 
-  const serviceFlags = [
-    { key: "has_website", label: "Site" },
-    { key: "has_email_corporate", label: "Email Corporativo" },
-    { key: "has_ia", label: "Automações" },
-    { key: "has_cloud_server", label: "Servidor em Nuvem" },
-    { key: "has_digisac", label: "WhatsApp" },
-    { key: "has_management_system", label: "Sistema de Gestão" },
-    { key: "has_marketing", label: "Marketing Digital" },
-  ] as const
-
   return (
     <div className="md:hidden space-y-2">
       {companies.map(company => {
@@ -64,14 +55,14 @@ export default function UsersMobileList() {
               <div className="mt-4 space-y-4">
                 <p><b>Email:</b> {company.email || "—"}</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {serviceFlags.map(flag => (
-                    <div key={flag.key} className="flex items-center gap-1">
+                  {solutions.map(item => (
+                    <div key={item.key} className="flex items-center gap-1">
                       <div className="relative flex items-center">
-                        <div className={`w-10 h-6 rounded-full opacity-50 ${company[flag.key] ? "bg-emerald-400" : "bg-surface"}`} />
-                        <div className={`absolute w-4 h-4 rounded-full shadow ${company[flag.key] ? "left-5" : "left-1"} bg-light`}
+                        <div className={`w-10 h-6 rounded-full opacity-50 ${company[item.key] ? "bg-emerald-400" : "bg-surface"}`} />
+                        <div className={`absolute w-4 h-4 rounded-full shadow ${company[item.key] ? "left-5" : "left-1"} bg-light`}
                         />
                       </div>
-                      <span>{flag.label}</span>
+                      <span>{item.label}</span>
                     </div>
                   ))}
                 </div>

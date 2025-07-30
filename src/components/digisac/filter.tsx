@@ -2,12 +2,11 @@
 
 import { useDigisacData } from "@/hooks/useDigisac"
 import { useReportFilter } from "@/hooks/useFilterContext"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { useEffect, useState } from "react"
 import Card from "../ui/cards"
 import { SlidersHorizontal } from "lucide-react"
 import { Select } from "../ui/select"
-import { formatPeriod } from "@/utils/data"
+import { formatPeriodToMonthYear } from "@/utils/data"
 
 type FilterSectionProps = {
   reportData: ReturnType<typeof useDigisacData>
@@ -52,7 +51,7 @@ export function Filters({ reportData, reportFilters }: FilterSectionProps) {
         <Select
           id="periods"
           label="Períodos"
-          options={reportData.availablePeriods.map((period) => ({ label: formatPeriod(period), value: period }))}
+          options={reportData.availablePeriods.map((period) => ({ label: formatPeriodToMonthYear(period), value: period }))}
           value={localPeriod}
           onChange={(period) => {
             setLocalPeriod(period)

@@ -3,7 +3,7 @@
 import { useDigisacData } from "@/hooks/useDigisac"
 import { useReportFilter } from "@/hooks/useFilterContext"
 import { DigisacReports } from "@/types/digisac"
-import { normalizePeriod } from "@/utils/data"
+import { ensureFullPeriodFormat } from "@/utils/data"
 import { UsersRound } from "lucide-react"
 import { useMemo } from "react"
 
@@ -13,7 +13,7 @@ type TableDesktopProps = {
 }
 
 export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
-  const period = normalizePeriod(reportFilters.selectedPeriod)
+  const period = ensureFullPeriodFormat(reportFilters.selectedPeriod)
 
   const metrics = useMemo(() => ([
     { label: "Tempo médio de chamados", key: "ticket_time", type: "time" },

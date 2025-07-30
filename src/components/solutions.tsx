@@ -10,13 +10,13 @@ export function SolutionsButton({ item }: { item: string }) {
   if (!company) return null
 
   const active = {
-    digisac: company.has_digisac ?? false,
-    website: company.has_website ?? false,
-    email_corp: company.has_email_corporate ?? false,
-    cloud_server: company.has_cloud_server ?? false,
-    management_system: company.has_management_system ?? false,
-    ia: company.has_ia ?? false,
-    marketing: company.has_marketing ?? false,
+    has_digisac: company.has_digisac ?? false,
+    has_website: company.has_website ?? false,
+    has_email_corporate: company.has_email_corporate ?? false,
+    has_cloud_server: company.has_cloud_server ?? false,
+    has_management_system: company.has_management_system ?? false,
+    has_ia: company.has_ia ?? false,
+    has_marketing: company.has_marketing ?? false,
   }
 
   const isActive = active[item as keyof typeof active]
