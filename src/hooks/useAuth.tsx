@@ -1,9 +1,17 @@
 "use client"
 
-import { AuthContextType, Company } from "@/types/company"
+import { Company } from "@/types/company"
 import { supabaseClient } from "@/utils/supabase"
-import { User } from "@supabase/supabase-js"
+import { SupabaseClient, User } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
+
+type AuthContextType = {
+  supabaseClient: SupabaseClient
+  user: User | null
+  company: Company | null
+  isAdmin: boolean
+  loading: boolean
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
