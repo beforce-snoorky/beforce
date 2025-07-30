@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/hooks/useAuth"
-import { supabaseAdmin } from "@/utils/supabase"
+import { supabaseAdmin } from "@/utils/supabase/admin"
 import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"

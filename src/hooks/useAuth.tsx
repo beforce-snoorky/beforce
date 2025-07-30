@@ -1,7 +1,7 @@
 "use client"
 
 import { Company } from "@/types/company"
-import { supabaseClient } from "@/utils/supabase"
+import { supabaseClient } from "@/utils/supabase/client"
 import { SupabaseClient, User } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 

@@ -1,5 +1,5 @@
 import { User } from "@/components/users/userModal"
-import { supabaseAdmin } from "@/utils/supabase"
+import { supabaseAdmin } from "@/utils/supabase/admin"
 import { NextResponse } from "next/server"
 
 export async function GET() {

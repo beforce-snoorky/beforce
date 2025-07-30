@@ -1,6 +1,6 @@
 "use client"
 
-import { supabaseClient } from "@/utils/supabase"
+import { supabaseClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
