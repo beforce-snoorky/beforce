@@ -28,18 +28,23 @@ export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
   }, [reports])
 
   const options: ApexOptions = {
-    chart: { type: "radialBar" },
+    chart: {
+      height: 390,
+      type: "radialBar",
+    },
     plotOptions: {
       radialBar: {
+        offsetY: 0,
         startAngle: 0,
         endAngle: 270,
         hollow: {
-          margin: 10,
-          size: "16%",
+          margin: 5,
+          size: "30%",
+          background: "transparent",
         },
         dataLabels: {
           name: { show: false },
-          value: { show: true },
+          value: { show: false },
         },
         barLabels: {
           enabled: true,
