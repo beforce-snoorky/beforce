@@ -25,7 +25,7 @@ export function NavBar() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isUsersOpen, setIsUsersOpen] = useState(false)
 
-  const shouldShowFilter = ["/dashboard/digisac", "/dashboard/analytics"].includes(pathname)
+  const shouldShowFilter = ["/dashboard/digisac"].includes(pathname)
   const shouldShowAddUser = ["/dashboard/users"].includes(pathname)
 
   if (!isMobile) return null
