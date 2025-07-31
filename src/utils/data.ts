@@ -37,10 +37,3 @@ export function ensureFullPeriodFormat(input: string): string {
   if (/^\d{4}-\d{2}$/.test(input)) return `${input}-01`
   return input
 }
-
-export function getPreviousMonthAsPeriod() {
-  const currentDate = new Date()
-  currentDate.setMonth(currentDate.getMonth() - 1)
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0")
-  return `${currentDate.getFullYear()}-${month}`
-}

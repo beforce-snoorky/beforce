@@ -19,13 +19,17 @@ export function useDigisacData() {
   const rawPeriod = reportFilter.selectedPeriod
   const period = ensureFullPeriodFormat(rawPeriod)
 
-  // Carrega os períodos
+  // Buscar períodos disponíveis
   useEffect(() => {
     if (!company?.id) return
 
     async function loadPeriods() {
       const { data, error } = await supabaseClient.from("digisac_reports").select("period").eq("business_id", company?.id)
-      if (!error && data) setAvailablePeriods(Array.from(new Set(data.map((report) => report.period))))
+      if (!error && data) {
+        const periods = Array.from(new Set(data.map((report) => report.period)))
+        setAvailablePeriods(periods)
+        if (periods.at(0) && !reportFilter.selectedPeriod) reportFilter.setSelectedPeriod(periods.at(0))
+      }
     }
 
     loadPeriods()
@@ -43,7 +47,7 @@ export function useDigisacData() {
     loadReports()
   }, [company?.id, period, reportsByPeriod])
 
-  // Filtragem
+  // Aplica filtro de operador + departamento
   useEffect(() => {
     const reportsForPeriod = reportsByPeriod[period] || []
 
@@ -54,7 +58,7 @@ export function useDigisacData() {
     }
   }, [reportFilter.selectedOperatorDepartment, period, reportsByPeriod])
 
-  // Geração de opções do filtro
+  // Geração de opções únicas de operador/departamento
   const operatorOptions = useMemo(() => {
     const reports = reportsByPeriod[period] || []
     const seen = new Set<string>()
