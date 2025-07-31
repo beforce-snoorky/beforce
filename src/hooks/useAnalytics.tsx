@@ -7,8 +7,9 @@ import { useEffect, useState } from "react"
 import { Websites } from "@/types/analytics"
 import { ensureFullPeriodFormat } from "@/utils/data"
 
+const supabaseClient = getSupabaseClient()
+
 export function useWebsiteReports() {
-  const supabaseClient = getSupabaseClient()
   const { company } = useAuth()
   const reportFilter = useReportFilter()
 

@@ -14,9 +14,9 @@ type AuthContextType = {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const supabaseClient = getSupabaseClient()
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const supabaseClient = getSupabaseClient()
   const [user, setUser] = useState<User | null>(null)
   const [company, setCompany] = useState<Company | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)

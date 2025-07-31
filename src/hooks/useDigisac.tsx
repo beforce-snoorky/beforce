@@ -7,8 +7,9 @@ import { DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { getSupabaseClient } from "@/utils/supabase/client"
 
+const supabaseClient = getSupabaseClient()
+
 export function useDigisacData() {
-  const supabaseClient = getSupabaseClient()
   const { company } = useAuth()
   const reportFilter = useReportFilter()
 
