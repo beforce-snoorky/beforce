@@ -38,7 +38,7 @@ export function useDigisacData() {
 
   // Carrega relatórios do período
   useEffect(() => {
-    if (!company?.id || reportsByPeriod[period]) return
+    if (!company?.id || !period || reportsByPeriod[period]) return
 
     async function loadReports() {
       const { data, error } = await supabaseClient.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
