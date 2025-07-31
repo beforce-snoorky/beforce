@@ -2,10 +2,25 @@
 
 import { useEffect } from "react"
 
+type ChatbotConfig = {
+  key: string
+  email: string
+}
+
+interface ChatbotClientConstructor {
+  new(config: ChatbotConfig): {
+    destroy?: () => void
+    [key: string]: unknown
+  }
+}
+
 declare global {
   interface Window {
-    ChatbotClientInstance?: any
-    ChatbotClient?: new (config: { key: string; email: string }) => unknown
+    ChatbotClientInstance?: {
+      destroy?: () => void
+      [key: string]: unknown
+    }
+    ChatbotClient?: ChatbotClientConstructor
   }
 }
 

@@ -34,7 +34,7 @@ export function useDigisacData() {
     }
 
     loadPeriods()
-  }, [company?.id])
+  }, [company?.id, reportFilter])
 
   // Carrega relatórios do período
   useEffect(() => {
