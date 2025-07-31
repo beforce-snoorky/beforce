@@ -42,7 +42,7 @@ export default function UserMenu() {
       <button className="flex items-center gap-3 cursor-pointer" aria-label="Menu do usuário" onClick={() => setShowDropdown((prev) => !prev)}>
         <div className="text-right leading-tight">
           <p className="font-semibold text-sm">{company.business_name}</p>
-          <p className="text-[10px] md:text-xs text-gray-500">{user.email || "Bem-vindo..."}</p>
+          <p className="text-[10px] md:text-xs text-gray-500">{user.email}</p>
         </div>
         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent">
           <User2 className="w-5 h-5 text-white" />
