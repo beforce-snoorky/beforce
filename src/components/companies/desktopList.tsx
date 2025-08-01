@@ -5,6 +5,7 @@ import { Company } from "@/types/company"
 import { useCallback, useEffect, useState } from "react"
 import { CompanyActionButton } from "./actions"
 import { Building2, PenLine, Trash2 } from "lucide-react"
+import Image from "next/image"
 
 export default function UsersDesktopTable() {
   const [companies, setCompanies] = useState<Company[]>([])
@@ -64,9 +65,19 @@ export default function UsersDesktopTable() {
           {companies.map(company => (
             <tr key={company.id} className="border-b last:border-none border-surface even:bg-dark/6">
               <td className="p-3 flex items-center gap-2 font-medium">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                  <Building2 className="w-4 h-4" />
-                </div>
+                {company.logo ? (
+                  <Image
+                    src={company.logo}
+                    alt={`${company.business_name} logo`}
+                    width={28}
+                    height={28}
+                    sizes="50px"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
+                    <Building2 className="w-4 h-4" />
+                  </div>
+                )}
                 {company.business_name}
               </td>
               <td className="p-3">{company.email}</td>

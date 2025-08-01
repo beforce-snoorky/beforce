@@ -2,6 +2,7 @@ export interface Company {
   id: string
   business_name: string
   email: string
+  logo: string | null
   has_website: boolean
   website_domain: string
   website_analytics_id: string

@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
         const {
           business_name,
           email,
+          logo,
           has_website,
           website_domain,
           website_analytics_id,
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
           has_marketing
         } = payload
 
-        const { data: business, error: businessError } = await supabaseAdmin.from("business").insert([{ business_name, email }]).select().single()
+        const { data: business, error: businessError } = await supabaseAdmin.from("business").insert([{ business_name, email, logo }]).select().single()
         if (businessError) throw businessError
 
         const business_id = business.id
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
           id,
           business_name,
           email,
+          logo,
           has_website,
           website_domain,
           website_analytics_id,
@@ -68,7 +70,7 @@ export async function POST(req: NextRequest) {
 
         if (!id) throw new Error("ID da empresa não fornecido")
 
-        await supabaseAdmin.from("business").update({ business_name, email }).eq("id", id)
+        await supabaseAdmin.from("business").update({ business_name, email, logo }).eq("id", id)
 
         if (has_website) {
           const { count } = await supabaseAdmin.from("websites").select("*", { count: "exact", head: true }).eq("business_id", id)

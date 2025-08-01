@@ -37,3 +37,12 @@ export function ensureFullPeriodFormat(input: string): string {
   if (/^\d{4}-\d{2}$/.test(input)) return `${input}-01`
   return input
 }
+
+export function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD") // remove acentos
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos (parte 2)
+    .replace(/[^a-z0-9]+/g, "-") // troca espaços/símbolos por hífens
+    .replace(/(^-|-$)/g, "") // remove hífen no início/fim
+}

@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/useAuth"
 import { getSupabaseClient } from "@/utils/supabase/client"
 import { Brain, Building2, LogOut, Receipt, User2, Users2 } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -37,6 +38,8 @@ export default function UserMenu() {
   if (loading) return null
   if (!company || !user) return null
 
+  console.log(company)
+
   return (
     <div className="relative" ref={dropdown}>
       <button className="flex items-center gap-3 cursor-pointer" aria-label="Menu do usuário" onClick={() => setShowDropdown((prev) => !prev)}>
@@ -44,9 +47,22 @@ export default function UserMenu() {
           <p className="font-semibold text-sm">{company.business_name}</p>
           <p className="text-[10px] md:text-xs text-gray-500">{user.email}</p>
         </div>
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent">
-          <User2 className="w-5 h-5 text-white" />
-        </div>
+        {company.logo ? (
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border border-surface">
+            <Image
+              src={company.logo}
+              alt={`${company.business_name} logo`}
+              width={28}
+              height={28}
+              style={{ height: "auto" }}
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent">
+            <User2 className="w-5 h-5 text-white" />
+          </div>
+        )}
+
       </button>
 
       {showDropdown && (

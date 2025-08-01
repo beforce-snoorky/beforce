@@ -6,6 +6,7 @@ import { Building2, ChevronDown, PenLine, Trash2 } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { CompanyActionButton } from "./actions"
 import { solutions } from "@/constants/solutions"
+import Image from "next/image"
 
 export default function UsersMobileList() {
   const [expandedCompanyId, setExpandedCompanyId] = useState<string | null>(null)
@@ -43,9 +44,19 @@ export default function UsersMobileList() {
           <div key={company.id} className="p-3 rounded-xl text-sm border border-surface">
             <div className="flex items-center justify-between" onClick={() => toggleExpand(company.id)}>
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                  <Building2 className="w-4 h-4" />
-                </div>
+                {company.logo ? (
+                  <Image
+                    src={company.logo}
+                    alt={`${company.business_name} logo`}
+                    width={28}
+                    height={28}
+                    sizes="50px"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
+                    <Building2 className="w-4 h-4" />
+                  </div>
+                )}
                 <span className="font-semibold">{company.business_name}</span>
               </div>
               <ChevronDown className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
