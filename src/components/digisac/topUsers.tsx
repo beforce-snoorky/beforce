@@ -5,11 +5,11 @@ import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import Card from "../ui/cards"
 import { Clock } from "lucide-react"
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry } from "@/types/digisac"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
-export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
+export default function TopUsers({ reports }: { reports: DigisacReportEntry[] }) {
 
   const data = useMemo(() => {
     const map = new Map<string, number>()
@@ -20,7 +20,6 @@ export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
     }
 
     const sorted = Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5)
-
     const labels = sorted.map(([name]) => name)
     const series = sorted.map(([, value]) => value)
 
@@ -29,36 +28,31 @@ export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
 
   const options: ApexOptions = {
     chart: {
-      height: 390,
+      toolbar: { show: false },
       type: "radialBar",
     },
+    labels: data.labels,
     plotOptions: {
       radialBar: {
-        offsetY: 0,
-        startAngle: 0,
         endAngle: 270,
         hollow: {
-          margin: 5,
+          margin: 8,
           size: "30%",
-          background: "transparent",
         },
-        dataLabels: {
-          name: { show: false },
-          value: { show: false },
-        },
+        dataLabels: { show: false },
         barLabels: {
           enabled: true,
           useSeriesColors: true,
           offsetX: -16,
+          fontWeight: 600,
           fontSize: "14px",
-          formatter: function (seriesName: string) {
-            return `${seriesName}`
-          },
         },
       },
     },
-    labels: data.labels,
-    legend: { show: false },
+    tooltip: {
+      enabled: true,
+      fillSeriesColor: false,
+    }
   }
 
   return (
@@ -68,7 +62,7 @@ export default function TopUsers({ reports }: { reports: DigisacReports[] }) {
         <h2 className="text-lg font-semibold">Melhores Atendentes</h2>
       </div>
       <p className="text-sm mb-2">Distribuição proporcional dos atendimentos</p>
-      <ReactApexChart options={options} series={data.series} type="radialBar" height={350} />
+      <ReactApexChart options={options} series={data.series} type="radialBar" height={410} />
     </Card>
   )
 }

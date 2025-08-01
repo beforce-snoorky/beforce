@@ -3,9 +3,9 @@
 import { MessageCircleMore, MessageCircleOff, MessageCirclePlus, UsersRound } from "lucide-react"
 import { useMemo } from "react"
 import Card from "../ui/cards"
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry } from "@/types/digisac"
 
-export function PerformanceMetrics({ data }: { data: DigisacReports[] }) {
+export function PerformanceMetrics({ data }: { data: DigisacReportEntry[] }) {
   const metricValues = useMemo(() => {
     return {
       opened: data.reduce((acc, report) => acc + Number(report.opened_tickets_count || 0), 0),

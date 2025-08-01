@@ -1,11 +1,11 @@
 "use client"
 
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry } from "@/types/digisac"
 import { calculateAverageTime } from "@/utils/data"
 import { Bot, Clock, FileText, Hourglass, MessageCircleMore, MessageSquare, Timer } from "lucide-react"
 import { useMemo } from "react"
 
-export function TableMobile({ data }: { data: DigisacReports[] }) {
+export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
   const metrics = useMemo(() => ([
     { label: "Tempo médio de chamados", style: "text-sky-600 bg-sky-100", icon: <Hourglass className="w-5 h-5" />, key: "ticket_time", type: "time" },
     { label: "Tempo médio da primeira espera", style: "text-orange-600 bg-orange-100", icon: <Timer className="w-5 h-5" />, key: "waiting_time", type: "time" },
@@ -21,8 +21,8 @@ export function TableMobile({ data }: { data: DigisacReports[] }) {
 
     return metrics.map(metric => {
       let value: string | undefined
-      if (metric.type === "time") value = calculateAverageTime(data.map(report => report[metric.key as keyof DigisacReports] as string))
-      else if (metric.type === "count") value = data.reduce((total, report) => total + Number(report[metric.key as keyof DigisacReports] || 0), 0).toString()
+      if (metric.type === "time") value = calculateAverageTime(data.map(report => report[metric.key as keyof DigisacReportEntry] as string))
+      else if (metric.type === "count") value = data.reduce((total, report) => total + Number(report[metric.key as keyof DigisacReportEntry] || 0), 0).toString()
 
       return { ...metric, value }
     })

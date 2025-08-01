@@ -6,6 +6,7 @@ import { PerformanceMetrics } from "@/components/digisac/performance";
 import { TableDesktop } from "@/components/digisac/tableDesktop";
 import { TableMobile } from "@/components/digisac/tableMobile";
 import TopUsers from "@/components/digisac/topUsers";
+import Card from "@/components/ui/cards";
 import { useDigisacData } from "@/hooks/useDigisac";
 import { useReportFilter } from "@/hooks/useFilterContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -24,9 +25,11 @@ export default function DigisacPage() {
       </div>
       <p className="text-sm">Acompanhe as métricas de atendimento</p>
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-        <PerformanceMetrics data={reportsData.filteredReports} />
-      </section>
+      <Card>
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+          <PerformanceMetrics data={reportsData.filteredReports} />
+        </section>
+      </Card>
 
       {!isMobile && (
         <section className="hidden xl:block">

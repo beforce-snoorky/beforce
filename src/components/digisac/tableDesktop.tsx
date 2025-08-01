@@ -2,7 +2,7 @@
 
 import { useDigisacData } from "@/hooks/useDigisac"
 import { useReportFilter } from "@/hooks/useFilterContext"
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { UsersRound } from "lucide-react"
 import { useMemo } from "react"
@@ -27,7 +27,7 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
 
   const data = useMemo(() => {
     const reports = reportData.reportsByPeriod[period] || []
-    const grouped = new Map<string, { operator: string; department: string; report: DigisacReports }>()
+    const grouped = new Map<string, { operator: string; department: string; report: DigisacReportEntry }>()
 
     for (const report of reports) {
       const operator = report.operator_name.trim()
@@ -38,7 +38,7 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
 
     return Array.from(grouped.values()).map(({ operator, department, report }) => {
       const values = metrics.map(({ key }) => {
-        const val = report[key as keyof DigisacReports]
+        const val = report[key as keyof DigisacReportEntry]
         return val !== undefined && val !== null ? val : "-"
       })
 

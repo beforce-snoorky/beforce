@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { useAuth } from "./useAuth"
 import { useReportFilter } from "./useFilterContext"
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry, DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { getSupabaseClient } from "@/utils/supabase/client"
 
@@ -14,8 +14,8 @@ export function useDigisacData() {
   const reportFilter = useReportFilter()
 
   const [availablePeriods, setAvailablePeriods] = useState<string[]>([])
-  const [reportsByPeriod, setReportsByPeriod] = useState<Record<string, DigisacReports[]>>({})
-  const [filteredReports, setFilteredReports] = useState<DigisacReports[]>([])
+  const [reportsByPeriod, setReportsByPeriod] = useState<Record<string, DigisacReportEntry[]>>({})
+  const [filteredReports, setFilteredReports] = useState<DigisacReportEntry[]>([])
 
   const rawPeriod = reportFilter.selectedPeriod
   const period = ensureFullPeriodFormat(rawPeriod)
@@ -25,7 +25,7 @@ export function useDigisacData() {
     if (!company?.id) return
 
     async function loadPeriods() {
-      const { data, error } = await supabaseClient.from("digisac_report").select("period").eq("business_id", company?.id)
+      const { data, error } = await supabaseClient.from("digisac_reports").select("period").eq("business_id", company?.id)
       if (!error && data) {
         const periods = Array.from(new Set(data.map((report) => report.period)))
         setAvailablePeriods(periods)
@@ -41,8 +41,19 @@ export function useDigisacData() {
     if (!company?.id || !period || reportsByPeriod[period]) return
 
     async function loadReports() {
-      const { data, error } = await supabaseClient.from("digisac_report").select("*").eq("business_id", company?.id).eq("period", period)
-      if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
+      const { data, error } = await supabaseClient.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
+      if (!error && data) {
+        const flatReports: DigisacReportEntry[] = data.flatMap((record: DigisacReports) =>
+          record.data.map((entry) => ({
+            ...entry,
+            department: entry.department ?? "Desconhecido",
+            period: record.period,
+            business_id: record.business_id,
+            created_at: record.created_at,
+          }))
+        )
+        setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: flatReports }))
+      }
     }
 
     loadReports()

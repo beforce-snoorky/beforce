@@ -5,12 +5,12 @@ import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import Card from "../ui/cards"
 import { Clock } from "lucide-react"
-import { DigisacReports } from "@/types/digisac"
+import { DigisacReportEntry } from "@/types/digisac"
 import { calculateAverageTime, toMinutes } from "@/utils/data"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
-export default function AverageTime({ reports }: { reports: DigisacReports[] }) {
+export default function AverageTime({ reports }: { reports: DigisacReportEntry[] }) {
   const data = useMemo(() => {
     const map = new Map<string, string[]>()
 
@@ -38,42 +38,38 @@ export default function AverageTime({ reports }: { reports: DigisacReports[] }) 
   const options: ApexOptions = {
     chart: {
       toolbar: { show: false },
-      zoom: { enabled: false },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        borderRadius: 8,
-        borderRadiusApplication: "end",
-        dataLabels: { position: "top" },
-        distributed: true,
-      },
+      type: "radialBar",
     },
     dataLabels: {
       enabled: true,
-      formatter: (_, options) => { return data.formattedLabels[options.dataPointIndex] || "" },
-      style: {
-        colors: ["#000000"],
-        fontSize: "10px",
-        fontWeight: "bold",
+      formatter: (val: string | number | number[]) => {
+        const numVal = typeof val === "number" ? val : Number(val);
+        if (numVal === 0) return "";
+        return `${numVal.toFixed(0)} min`;
       },
-      offsetY: -24,
+      style: { colors: ["#000000"] },
+      textAnchor: 'middle',
+      distributed: true,
+      background: { enabled: false },
     },
-    xaxis: {
-      categories: data.categories,
-      tickAmount: 6,
-      labels: { style: { fontSize: "8px" } },
-    },
-    yaxis: {
-      labels: {
-        formatter: (val) => `${val.toFixed(0)} min`,
-        style: { fontSize: "12px" },
+    legend: { show: false },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        borderRadius: 16,
+        borderRadiusApplication: "end",
+        distributed: true,
       }
     },
-    tooltip: {
-      y: { formatter: (_, options) => { return data.formattedLabels[options.dataPointIndex] } },
+    tooltip: { enabled: false },
+    xaxis: {
+      type: "category",
+      categories: data.categories,
+      axisTicks: { show: false },
+      tickAmount: 6,
+      tooltip: { enabled: false },
     },
-    legend: { show: true },
+    yaxis: { show: false }
   }
 
   return (
@@ -88,6 +84,6 @@ export default function AverageTime({ reports }: { reports: DigisacReports[] }) 
           <ReactApexChart options={options} series={series} type="bar" height={400} />
         </div>
       </div>
-    </Card >
+    </Card>
   )
 }
