@@ -25,11 +25,11 @@ export function useDigisacData() {
     if (!company?.id) return
 
     async function loadPeriods() {
-      const { data, error } = await supabaseClient.from("digisac_reports").select("period").eq("business_id", company?.id)
+      const { data, error } = await supabaseClient.from("digisac_report").select("period").eq("business_id", company?.id)
       if (!error && data) {
         const periods = Array.from(new Set(data.map((report) => report.period)))
         setAvailablePeriods(periods)
-        if (periods.at(0) && !reportFilter.selectedPeriod) reportFilter.setSelectedPeriod(periods.at(0))
+        if (periods.at(0) && !reportFilter.selectedPeriod) reportFilter.setSelectedPeriod(periods[0])
       }
     }
 
@@ -41,7 +41,7 @@ export function useDigisacData() {
     if (!company?.id || !period || reportsByPeriod[period]) return
 
     async function loadReports() {
-      const { data, error } = await supabaseClient.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
+      const { data, error } = await supabaseClient.from("digisac_report").select("*").eq("business_id", company?.id).eq("period", period)
       if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
     }
 
