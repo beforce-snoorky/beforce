@@ -49,7 +49,7 @@ export function SideBar() {
             return (
               <Link
                 key={index}
-                href={item.url}
+                href={item.visible ? item.url : ""}
                 onClick={handleClick}
                 className={`flex items-center gap-1 w-full rounded-full text-sm
                   ${isActive && ("bg-accent")} ${!item.visible && ("cursor-not-allowed")}`}
