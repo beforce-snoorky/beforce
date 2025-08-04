@@ -61,7 +61,8 @@ export default function TopUsers({ reports }: { reports: DigisacReportEntry[] })
         <Clock className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Melhores Atendentes</h2>
       </div>
-      <p className="text-sm mb-2">Distribuição proporcional dos atendimentos</p>
+      <p className="text-sm mb-4">Distribuição proporcional dos atendimentos</p>
+      <hr className="w-full opacity-25" />
       <ReactApexChart options={options} series={data.series} type="radialBar" height={410} />
     </Card>
   )

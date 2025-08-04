@@ -26,10 +26,14 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       return { department, avgTimeStr: avgStr, avgMin }
     }).sort((a, b) => b.avgMin - a.avgMin)
 
+    const seriesData = items.map((item) => Number(item.avgMin.toFixed(2)))
+    const maxYValue = Math.ceil(Math.max(...seriesData) / 10) * 10
+
     return {
       categories: items.map((item) => item.department),
-      seriesData: items.map((item) => Number(item.avgMin.toFixed(2))),
+      seriesData,
       formattedLabels: items.map((item) => item.avgTimeStr),
+      maxYValue
     }
   }, [reports])
 
@@ -38,20 +42,21 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
   const options: ApexOptions = {
     chart: {
       toolbar: { show: false },
-      type: "radialBar",
+      type: "bar",
     },
     dataLabels: {
       enabled: true,
+      offsetY: 16,
       formatter: (val: string | number | number[]) => {
-        const numVal = typeof val === "number" ? val : Number(val);
-        if (numVal === 0) return "";
-        return `${numVal.toFixed(0)} min`;
+        const numVal = typeof val === "number" ? val : Number(val)
+        return `${numVal.toFixed(0)} min`
       },
       style: { colors: ["#000000"] },
-      textAnchor: 'middle',
-      distributed: true,
       background: { enabled: false },
+      textAnchor: "middle",
+      distributed: true,
     },
+    grid: { show: false },
     legend: { show: false },
     plotOptions: {
       bar: {
@@ -69,7 +74,11 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       tickAmount: 6,
       tooltip: { enabled: false },
     },
-    yaxis: { show: false }
+    yaxis: {
+      show: false,
+      max: data.maxYValue,
+      tickAmount: data.maxYValue,
+    }
   }
 
   return (
@@ -78,10 +87,11 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
         <Clock className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Atendimento por Departamento</h2>
       </div>
-      <p className="text-sm mb-2">Acompanhe as métricas de atendimento</p>
+      <p className="text-sm mb-4">Acompanhe as métricas de atendimento</p>
+      <hr className="w-full opacity-25" />
       <div className="w-full overflow-x-auto">
         <div style={{ minWidth: `${data.categories.length * 80}px` }}>
-          <ReactApexChart options={options} series={series} type="bar" height={400} />
+          <ReactApexChart options={options} series={series} type="bar" height={410} />
         </div>
       </div>
     </Card>

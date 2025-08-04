@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
           <div className="flex flex-1 overflow-hidden h-svh">
             <NavBar />
             <SideBar />
-            <main className="flex-1 overflow-auto p-6 pb-24 lg:pb-6 space-y-6 bg-surface/25">
+            <main className="flex-1 overflow-auto p-6 pb-24 lg:pb-6 space-y-6 bg-background">
               {children}
             </main>
           </div>

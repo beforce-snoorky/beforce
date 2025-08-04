@@ -7,4 +7,5 @@
 	--color-surface: oklch(92.758% 0.00592 264.656);
 	--color-light: oklch(100% 0.00011 271.152);
 	--color-dark: oklch(17.764% 0.00002 271.152);
+	--color-background: oklch(98.212% 0.00011 271.152);
 }

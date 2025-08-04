@@ -38,7 +38,6 @@ export function useWebsiteReports() {
 
     async function loadReports() {
       const { data, error } = await supabaseClient.from("websites_reports").select("*").eq("business_id", company?.id)
-      console.log(data)
       if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
     }
 

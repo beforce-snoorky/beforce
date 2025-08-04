@@ -38,8 +38,6 @@ export default function UserMenu() {
   if (loading) return null
   if (!company || !user) return null
 
-  console.log(company)
-
   return (
     <div className="relative" ref={dropdown}>
       <button className="flex items-center gap-3 cursor-pointer" aria-label="Menu do usuário" onClick={() => setShowDropdown((prev) => !prev)}>
