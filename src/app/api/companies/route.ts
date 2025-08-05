@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
       }
 
       default:
-        return NextResponse.json({ error: "Ação inválida" }, { status: 400 });
+        return NextResponse.json({ error: "Ação inválida" }, { status: 400 })
     }
   } catch (error: unknown) {
     if (error instanceof Error) return NextResponse.json({ error: error.message }, { status: 500 })

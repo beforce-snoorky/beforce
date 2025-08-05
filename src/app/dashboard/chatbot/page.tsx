@@ -1,4 +1,4 @@
-import Chatbot from "@/hooks/useChatbot";
+import Chatbot from "@/hooks/useChatbot"
 
 export default function ChatbotPage() {
   return (

@@ -1,16 +1,16 @@
 "use client"
 
-import AverageTime from "@/components/digisac/averageTime";
-import { Filters } from "@/components/digisac/filter";
-import { PerformanceMetrics } from "@/components/digisac/performance";
-import { TableDesktop } from "@/components/digisac/tableDesktop";
-import { TableMobile } from "@/components/digisac/tableMobile";
-import TopUsers from "@/components/digisac/topUsers";
-import Card from "@/components/ui/cards";
-import { useDigisacData } from "@/hooks/useDigisac";
-import { useReportFilter } from "@/hooks/useFilterContext";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { ChartNoAxesCombined } from "lucide-react";
+import AverageTime from "@/components/digisac/averageTime"
+import { Filters } from "@/components/digisac/filter"
+import { PerformanceMetrics } from "@/components/digisac/performance"
+import { TableDesktop } from "@/components/digisac/tableDesktop"
+import { TableMobile } from "@/components/digisac/tableMobile"
+import TopUsers from "@/components/digisac/topUsers"
+import Card from "@/components/ui/cards"
+import { useDigisacData } from "@/hooks/useDigisac"
+import { useReportFilter } from "@/hooks/useFilterContext"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { ChartNoAxesCombined } from "lucide-react"
 
 export default function DigisacPage() {
   const reportFilter = useReportFilter()

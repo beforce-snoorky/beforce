@@ -1,10 +1,10 @@
 declare module "react-simple-maps" {
-  import * as React from "react";
-  export const ComposableMap: React.FC<any>;
-  export const Geographies: React.FC<any>;
-  export const Geography: React.FC<any>;
+  import * as React from "react"
+  export const ComposableMap: React.FC<Record<string, unknown>>
+  export const Geographies: React.FC<Record<string, unknown>>
+  export const Geography: React.FC<Record<string, unknown>>
 }
 
 declare module "topojson-client" {
-  export function feature(topology: any, object: any): any;
+  export function feature(topology: unknown, object: unknown): unknown
 }

@@ -27,7 +27,11 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
 
   const data = useMemo(() => {
     const reports = reportData.reportsByPeriod[period] || []
-    const grouped = new Map<string, { operator: string; department: string; report: DigisacReportEntry }>()
+    const grouped = new Map<string, {
+      operator: string
+      department: string
+      report: DigisacReportEntry
+    }>()
 
     for (const report of reports) {
       const operator = report.operator_name.trim()

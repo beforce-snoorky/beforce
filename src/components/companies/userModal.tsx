@@ -8,6 +8,7 @@ import { handleCompanyAction } from "@/utils/companyActions"
 import { getSupabaseClient } from "@/utils/supabase/client"
 import { slugify } from "@/utils/data"
 import toast from "react-hot-toast"
+import Image from "next/image"
 
 type Props = {
   onClose: () => void
@@ -140,7 +141,7 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Logo da empresa</label>
             {logoPreview ? (
-              <img src={logoPreview} alt="Logo preview" className="w-20 h-20 object-contain mb-2" />
+              <Image width={80} height={80} src={logoPreview} alt="Logo preview" className="w-20 h-20 object-contain mb-2" />
             ) : (
               <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
                 <Building2 className="w-4 h-4" />

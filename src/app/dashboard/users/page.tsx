@@ -1,7 +1,7 @@
-import { AddUserButton } from "@/components/users/addUserButton";
-import UsersDesktopTable from "@/components/users/desktopList";
-import UsersMobileList from "@/components/users/mobileList";
-import { Users2 } from "lucide-react";
+import { AddUserButton } from "@/components/users/addUserButton"
+import UsersDesktopTable from "@/components/users/desktopList"
+import UsersMobileList from "@/components/users/mobileList"
+import { Users2 } from "lucide-react"
 
 export default function Users() {
   return (

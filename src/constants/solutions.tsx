@@ -1,4 +1,4 @@
-import { Globe2, Mail, Cloud, MessageCircleMore, Brain, MonitorSmartphone, Server } from "lucide-react";
+import { Globe2, Mail, Cloud, MessageCircleMore, Brain, MonitorSmartphone, Server } from "lucide-react"
 
 export const solutions = [
   { key: "has_website", style: "bg-purple-100 text-purple-600", label: "Site Corporativo", icon: <Globe2 className="w-5 h-5" />, description: "Aumente sua presença online com um domínio profissional." },

@@ -1,7 +1,7 @@
-import { AddUserButton } from "@/components/companies/addUserButton";
-import UsersDesktopTable from "@/components/companies/desktopList";
-import UsersMobileList from "@/components/companies/mobileList";
-import { Building2 } from "lucide-react";
+import { AddUserButton } from "@/components/companies/addUserButton"
+import UsersDesktopTable from "@/components/companies/desktopList"
+import UsersMobileList from "@/components/companies/mobileList"
+import { Building2 } from "lucide-react"
 
 export default function CompaniesPage() {
   return (

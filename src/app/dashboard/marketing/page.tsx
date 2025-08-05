@@ -17,5 +17,5 @@ export default function MarketingPage() {
         </p>
       </div>
     </div>
-  );
+  )
 }
