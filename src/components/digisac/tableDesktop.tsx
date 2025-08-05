@@ -16,13 +16,13 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
   const period = ensureFullPeriodFormat(reportFilters.selectedPeriod)
 
   const metrics = useMemo(() => ([
-    { label: "Tempo médio de chamados", key: "ticket_time", type: "time" },
-    { label: "Tempo médio da primeira espera", key: "waiting_time", type: "time" },
-    { label: "Tempo médio após o bot", key: "waiting_time_after_bot", type: "time" },
-    { label: "Tempo médio de espera", key: "waiting_time_avg", type: "time" },
-    { label: "Mensagens enviadas", key: "sent_messages_count", type: "count" },
-    { label: "Mensagens recebidas", key: "received_messages_count", type: "count" },
-    { label: "Total de chamados", key: "total_tickets_count", type: "count" },
+    { label: "Média de chamados", key: "ticket_time", type: "time" },
+    { label: "Média da 1ª Espera", key: "waiting_time", type: "time" },
+    { label: "Média Após BOT", key: "waiting_time_after_bot", type: "time" },
+    { label: "Médio de Espera", key: "waiting_time_avg", type: "time" },
+    { label: "Mensagens Enviadas", key: "sent_messages_count", type: "count" },
+    { label: "Mensagens Recebidas", key: "received_messages_count", type: "count" },
+    { label: "Total Chamados", key: "total_tickets_count", type: "count" },
   ]), [])
 
   const data = useMemo(() => {
@@ -50,12 +50,12 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
     <section className="w-full">
       <div className="w-full overflow-auto max-h-104 relative rounded-xl border border-surface bg-light">
         <table className="min-w-max w-full">
-          <thead className="sticky top-0 bg-gray-50 z-10">
-            <tr className="bg-dark/6">
+          <thead className="sticky top-0 bg-gray-100 z-10">
+            <tr>
               <th className="px-3 py-3 text-sm font-medium text-left">Usuários</th>
-              <th className="px-3 py-3 text-sm font-medium text-left">Departamento</th>
+              <th className="px-3 py-3 text-sm font-medium text-center">Departamento</th>
               {metrics.map((m) => (
-                <th key={m.key} className="px-3 py-3 text-sm font-medium text-left">{m.label}</th>
+                <th key={m.key} className="px-3 py-3 text-sm font-medium text-center">{m.label}</th>
               ))}
             </tr>
           </thead>
@@ -66,16 +66,16 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
               const isDimmed = selectedKey !== "Todos" && selectedKey !== currentKey
 
               return (
-                <tr key={index} className={`border-b last:border-none border-surface even:bg-dark/6 ${isDimmed ? "opacity-40" : "opacity-100"}`}>
-                  <td className="px-3 py-3 text-sm flex items-center gap-2">
+                <tr key={index} className={`border-b last:border-none border-surface even:bg-dark/3 ${isDimmed ? "opacity-40" : "opacity-100"}`}>
+                  <td className="px-3 py-3 text-sm flex items-center gap-2 max-w-xs">
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
                       <UsersRound className="w-4 h-4" />
                     </div>
-                    {operator}
+                    <span className="truncate w-52 max-w-52 block">{operator}</span>
                   </td>
-                  <td className="px-3 py-3 text-sm">{department}</td>
+                  <td className="truncate w-40 max-w-40 px-3 py-3 text-sm text-center">{department}</td>
                   {values.map((value, index) => (
-                    <td key={index} className="px-3 py-3 text-sm text-center">{value}</td>
+                    <td key={index} className="truncate w-48 max-w-48 px-3 py-3 text-sm text-center">{value}</td>
                   ))}
                 </tr>
               )

@@ -3,8 +3,7 @@
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
-import Card from "../ui/cards"
-import { BarChart3 } from "lucide-react"
+import { Network } from "lucide-react"
 import { SourceData } from "@/types/analytics"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
@@ -12,7 +11,6 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 export default function SessionsByOrigin({ origem }: { origem: SourceData[] | undefined }) {
   const data = useMemo(() => {
     if (!origem) return { categories: [], seriesData: [] }
-
     const sorted = [...origem].sort((a, b) => Number(b.sessions) - Number(a.sessions))
 
     return {
@@ -25,24 +23,24 @@ export default function SessionsByOrigin({ origem }: { origem: SourceData[] | un
 
   const options: ApexOptions = {
     chart: {
-      offsetX: -20,
       toolbar: { show: false },
       type: "bar",
+      offsetX: -24,
     },
     dataLabels: {
       enabled: true,
       formatter(val) { return `${val} sessões` },
       style: { colors: ["#000000"] },
       background: { enabled: false },
-      offsetX: 40,
-      textAnchor: "end",
+      offsetX: 16,
+      textAnchor: "middle",
       distributed: true,
     },
     legend: { show: false },
     plotOptions: {
       bar: {
         horizontal: true,
-        borderRadius: 16,
+        borderRadius: 8,
         borderRadiusApplication: "end",
         distributed: true,
       }
@@ -58,17 +56,18 @@ export default function SessionsByOrigin({ origem }: { origem: SourceData[] | un
   }
 
   return (
-    <Card>
+    <div className="order-1 p-4 pb-0 rounded-xl border border-surface bg-light">
       <div className="flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-accent" />
+        <Network className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Sessões por Origem</h2>
       </div>
       <p className="text-sm mb-4">Distribuição das sessões por canal de aquisição</p>
+      <hr className="w-full opacity-25" />
       <div className="w-full overflow-x-auto">
-        <div style={{ minWidth: `${data.categories.length * 80}px` }}>
-          <ReactApexChart options={options} series={series} type="bar" height={410} />
+        <div style={{ minWidth: `${data.categories.length * 100}px` }}>
+          <ReactApexChart options={options} series={series} type="bar" width="100%" height={410} />
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

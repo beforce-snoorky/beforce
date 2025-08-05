@@ -25,7 +25,7 @@ export function NavBar() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isUsersOpen, setIsUsersOpen] = useState(false)
 
-  const shouldShowFilter = ["/dashboard/digisac"].includes(pathname)
+  const shouldShowFilter = ["/dashboard/digisac", "/dashboard/analytics"].includes(pathname)
   const shouldShowAddUser = ["/dashboard/users"].includes(pathname)
 
   if (!isMobile) return null
@@ -42,7 +42,7 @@ export function NavBar() {
     <>
       <Toaster position="bottom-center" />
 
-      <aside className="xl:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 px-4 min-w-sm w-full flex items-center gap-1 text-sm">
+      <aside className="xl:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 px-4 min-w-sm w-full max-w-lg flex items-center gap-1 text-sm">
         <div className="flex flex-1 items-center justify-between p-1 rounded-full shadow-sm border border-surface bg-light">
           {routes.map((item, index) => {
             const isActive = pathname === item.url

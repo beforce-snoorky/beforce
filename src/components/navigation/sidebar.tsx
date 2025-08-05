@@ -83,7 +83,7 @@ export function SideBar() {
             </Link>
           </div>
           <hr className="mt-2 border-t border-surface" />
-          <p className="text-center pt-2 text-xs text-dark/75">© {new Date().getFullYear()} Beforce</p>
+          <p className="text-center pt-2 text-xs text-dark/75">© {new Date().getFullYear()} BEFORCE - V1.0</p>
         </div>
       </aside>
     </>

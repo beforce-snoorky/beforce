@@ -46,13 +46,13 @@ export default function UserMenu() {
           <p className="text-[10px] md:text-xs text-gray-500">{user.email}</p>
         </div>
         {company.logo ? (
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border border-surface">
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-full border border-surface">
             <Image
               src={company.logo}
               alt={`${company.business_name} logo`}
-              width={28}
-              height={28}
-              style={{ height: "auto" }}
+              className="object-contain p-1"
+              sizes="40px"
+              fill
             />
           </div>
         ) : (

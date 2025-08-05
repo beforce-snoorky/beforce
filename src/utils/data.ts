@@ -41,8 +41,8 @@ export function ensureFullPeriodFormat(input: string): string {
 export function slugify(name: string): string {
   return name
     .toLowerCase()
-    .normalize("NFD") // remove acentos
-    .replace(/[\u0300-\u036f]/g, "") // remove acentos (parte 2)
-    .replace(/[^a-z0-9]+/g, "-") // troca espaços/símbolos por hífens
-    .replace(/(^-|-$)/g, "") // remove hífen no início/fim
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
 }

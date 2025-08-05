@@ -3,7 +3,6 @@
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
-import Card from "../ui/cards"
 import { Clock } from "lucide-react"
 import { DigisacReportEntry } from "@/types/digisac"
 
@@ -30,6 +29,7 @@ export default function TopUsers({ reports }: { reports: DigisacReportEntry[] })
     chart: {
       toolbar: { show: false },
       type: "radialBar",
+      offsetY: 16,
     },
     labels: data.labels,
     plotOptions: {
@@ -56,7 +56,7 @@ export default function TopUsers({ reports }: { reports: DigisacReportEntry[] })
   }
 
   return (
-    <Card>
+    <div className="p-4 pb-0 rounded-xl border border-surface bg-light">
       <div className="flex items-center gap-2">
         <Clock className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Melhores Atendentes</h2>
@@ -64,6 +64,6 @@ export default function TopUsers({ reports }: { reports: DigisacReportEntry[] })
       <p className="text-sm mb-4">Distribuição proporcional dos atendimentos</p>
       <hr className="w-full opacity-25" />
       <ReactApexChart options={options} series={data.series} type="radialBar" height={410} />
-    </Card>
+    </div>
   )
 }

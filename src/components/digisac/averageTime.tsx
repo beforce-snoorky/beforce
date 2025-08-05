@@ -3,7 +3,6 @@
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
-import Card from "../ui/cards"
 import { Clock } from "lucide-react"
 import { DigisacReportEntry } from "@/types/digisac"
 import { calculateAverageTime, toMinutes } from "@/utils/data"
@@ -26,14 +25,10 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       return { department, avgTimeStr: avgStr, avgMin }
     }).sort((a, b) => b.avgMin - a.avgMin)
 
-    const seriesData = items.map((item) => Number(item.avgMin.toFixed(2)))
-    const maxYValue = Math.ceil(Math.max(...seriesData) / 10) * 10
-
     return {
       categories: items.map((item) => item.department),
-      seriesData,
+      seriesData: items.map((item) => Number(item.avgMin.toFixed(2))),
       formattedLabels: items.map((item) => item.avgTimeStr),
-      maxYValue
     }
   }, [reports])
 
@@ -43,6 +38,7 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
     chart: {
       toolbar: { show: false },
       type: "bar",
+      offsetX: -16,
     },
     dataLabels: {
       enabled: true,
@@ -56,12 +52,11 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       textAnchor: "middle",
       distributed: true,
     },
-    grid: { show: false },
     legend: { show: false },
     plotOptions: {
       bar: {
         horizontal: false,
-        borderRadius: 16,
+        borderRadius: 8,
         borderRadiusApplication: "end",
         distributed: true,
       }
@@ -71,18 +66,24 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       type: "category",
       categories: data.categories,
       axisTicks: { show: false },
-      tickAmount: 6,
+      labels: {
+        rotate: 0,
+
+        style: {
+          fontSize: "10px",
+        },
+      },
       tooltip: { enabled: false },
     },
     yaxis: {
-      show: false,
-      max: data.maxYValue,
-      tickAmount: data.maxYValue,
+      show: true,
+      labels: { formatter: (val: number) => `${val.toFixed(0)} min` },
+      tickAmount: 10,
     }
   }
 
   return (
-    <Card>
+    <div className="p-4 pb-0 rounded-xl border border-surface bg-light">
       <div className="flex items-center gap-2">
         <Clock className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Atendimento por Departamento</h2>
@@ -90,10 +91,10 @@ export default function AverageTime({ reports }: { reports: DigisacReportEntry[]
       <p className="text-sm mb-4">Acompanhe as métricas de atendimento</p>
       <hr className="w-full opacity-25" />
       <div className="w-full overflow-x-auto">
-        <div style={{ minWidth: `${data.categories.length * 80}px` }}>
-          <ReactApexChart options={options} series={series} type="bar" height={410} />
+        <div style={{ minWidth: `${data.categories.length * 100}px` }}>
+          <ReactApexChart options={options} series={series} type="bar" width="100%" height={410} />
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
