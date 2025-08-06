@@ -4,8 +4,8 @@ import { getSupabaseClient } from "@/utils/supabase/client"
 import { useAuth } from "./useAuth"
 import { useReportFilter } from "./useFilterContext"
 import { useEffect, useState } from "react"
-import { Websites } from "@/types/analytics"
 import { ensureFullPeriodFormat } from "@/utils/data"
+import { Websites } from "@/types/website"
 
 const supabaseClient = getSupabaseClient()
 

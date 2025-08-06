@@ -1,6 +1,6 @@
 "use client"
 
-import { CountryData } from "@/types/analytics"
+import { CountryData } from "@/types/website"
 import { scaleLinear } from "d3"
 import { Feature, FeatureCollection, Geometry } from "geojson"
 import { Globe } from "lucide-react"

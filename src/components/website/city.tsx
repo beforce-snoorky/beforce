@@ -1,4 +1,4 @@
-import { CityData } from "@/types/analytics"
+import { CityData } from "@/types/website"
 import { MapPin } from "lucide-react"
 
 export default function TopCitiesTable({ cities }: { cities: CityData[] | undefined }) {

@@ -7,20 +7,18 @@ import { Gauge } from "lucide-react"
 export default function DashboardPage() {
   return (
     <>
-      <div className="flex items-center gap-2 mb-1 md">
+      <div className="flex items-center gap-2 mb-1">
         <Gauge className="w-6 h-6 text-accent" />
         <h1 className="text-xl md:text-2xl font-bold">Seu Score Digital</h1>
       </div>
       <p className="text-sm">Descubra como está sua transformação digital</p>
 
-      <section className="grid grid-cols-1 gap-6">
-        <Card>
-          <h2 className="text-lg font-semibold">Pontuação Digital</h2>
-          <div className="max-w-xl mx-auto min-h-32 xl:min-h-56">
-            <DigitalScoreGauge />
-          </div>
-        </Card>
-      </section>
+      <Card>
+        <h2 className="text-lg font-semibold">Pontuação Digital</h2>
+        <div className="max-w-xl mx-auto">
+          <DigitalScoreGauge />
+        </div>
+      </Card>
 
       <section>
         <Card>

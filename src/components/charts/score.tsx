@@ -19,7 +19,7 @@ export default function DigitalScoreGauge() {
 
   return (
     <>
-      <div className="max-w-xl mx-auto min-h-32 xl:min-h-56">
+      <div className="max-w-xl mx-auto">
         <GaugeComponent
           type="semicircle"
           arc={{

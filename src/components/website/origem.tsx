@@ -4,7 +4,7 @@ import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import { Network } from "lucide-react"
-import { SourceData } from "@/types/analytics"
+import { SourceData } from "@/types/website"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
 

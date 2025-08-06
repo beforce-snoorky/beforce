@@ -1,4 +1,4 @@
-import { PageData } from "@/types/analytics"
+import { PageData } from "@/types/website"
 import { FileText } from "lucide-react"
 import Link from "next/link"
 

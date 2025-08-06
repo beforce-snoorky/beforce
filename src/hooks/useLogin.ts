@@ -17,7 +17,7 @@ export function useLogin() {
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabaseClient.auth.getSession()
-      if (session?.user) router.replace("/dashboard")
+      if (session?.user) router.replace("/analysis")
     }
     checkSession()
   }, [router])
@@ -33,7 +33,7 @@ export function useLogin() {
       const message = "Credenciais inválidas"
       toast.error(message)
       setError(message)
-    } else router.push("/dashboard")
+    } else router.push("/analysis")
 
     setIsLoading(false)
   }

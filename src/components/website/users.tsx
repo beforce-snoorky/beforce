@@ -1,4 +1,4 @@
-import { UsersData, } from "@/types/analytics"
+import { UsersData, } from "@/types/website"
 import Card from "../ui/cards"
 import { UserCheck, UserPlus, Timer } from "lucide-react"
 

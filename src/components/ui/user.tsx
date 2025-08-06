@@ -65,22 +65,22 @@ export default function UserMenu() {
 
       {showDropdown && (
         <div className="absolute top-full right-0 z-50 p-3 rounded-xl text-sm border border-surface bg-light">
-          <Link href="/dashboard/billing" className="flex items-center py-1 gap-2">
+          <Link href="/analysis/billing" className="flex items-center py-1 gap-2">
             <Receipt className="w-4 h-4" />
             <span>Boletos</span>
           </Link>
 
           {isAdmin && (
             <>
-              <Link href="/dashboard/companies" className="flex items-center py-1 gap-2">
+              <Link href="/analysis/companies" className="flex items-center py-1 gap-2">
                 <Building2 className="w-4 h-4" />
                 <span>Empresas</span>
               </Link>
-              <Link href="/dashboard/users" className="flex items-center py-1 gap-2">
+              <Link href="/analysis/users" className="flex items-center py-1 gap-2">
                 <Users2 className="w-4 h-4" />
                 <span>Usuários</span>
               </Link>
-              <Link href="/dashboard/chatbot" className="flex items-center py-1 gap-2">
+              <Link href="/analysis/chatbot" className="flex items-center py-1 gap-2">
                 <Brain className="w-4 h-4" />
                 <span>Chatbot</span>
               </Link>
