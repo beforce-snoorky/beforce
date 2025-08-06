@@ -3,11 +3,11 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Relatórios Mensais | Beforce Dashboard",
-  description: "Acompanhe relatórios mensais de desempenho de atendimento de forma inteligente e automatizada com a Beforce.",
+  description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
   keywords: ["dashboard", "relatórios", "atendimentos", "Beforce", "automação", "n8n", "Supabase"],
   openGraph: {
-    title: "Relatórios de Atendimento | Beforce",
-    description: "Visualize, compartilhe e imprima seus relatórios mensais com facilidade.",
+    title: "Relatórios Mensais | Beforce Dashboard",
+    description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
     url: "https://dashboard.beforce.com.br",
     siteName: "Beforce Dashboard",
     locale: "pt_BR",
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Relatórios de Atendimento | Beforce",
-    description: "Visualize, compartilhe e imprima seus relatórios mensais com facilidade.",
+    title: "Relatórios Mensais | Beforce Dashboard",
+    description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
     images: [
       {
         url: "https://dashboard.beforce.com.br/beforce.png",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased text-dark">{children}</body>
+      <body>{children}</body>
     </html>
   )
 }

@@ -1,5 +1,5 @@
-import { Login } from "@/components/login"
-import Image from "next/image"
+import { Login } from "@/components/login";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
           alt="Beforce"
           width={125}
           height={66}
-          sizes="(max-width: 768px) 125px, 125px"
+          sizes="125px"
           priority
         />
         <h1 className="sr-only">Acesse sua conta!</h1>
