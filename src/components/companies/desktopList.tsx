@@ -1,36 +1,28 @@
 "use client"
 
-import { useAuth } from "@/hooks/useAuth"
 import { Company } from "@/types/company"
-import { useCallback, useEffect, useState } from "react"
 import { CompanyActionButton } from "./actions"
 import { Building2, PenLine, Trash2 } from "lucide-react"
 import Image from "next/image"
 
-export default function UsersDesktopTable() {
-  const [companies, setCompanies] = useState<Company[]>([])
-  const { isAdmin } = useAuth()
-
-  const refetchCompanies = useCallback(async () => {
-    if (!isAdmin) return
-
-    const res = await fetch("/api/companies", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "listCompanies", payload: {} }),
-    })
-
-    if (!res.ok) throw new Error("Erro ao carregar empresas")
-    const { companies } = await res.json()
-    setCompanies(companies)
-  }, [isAdmin])
-
-  useEffect(() => {
-    refetchCompanies()
-  }, [refetchCompanies])
-
-  if (!isAdmin) return
-
+export function UsersDesktopTable({
+  companies,
+  loading,
+  onSuccess,
+  pagination
+}: {
+  companies: Company[]
+  loading?: boolean
+  onSuccess?: () => void
+  pagination: {
+    page: number
+    perPage: number
+    setPage: (p: number) => void
+    setPerPage: (p: number) => void
+    total: number
+    totalPages: number
+  }
+}) {
   const serviceFlags = [
     { key: "has_website", label: "Website" },
     { key: "has_email_corporate", label: "Email" },
@@ -49,7 +41,7 @@ export default function UsersDesktopTable() {
   )
 
   return (
-    <section className="w-full flex flex-col">
+    <section className="w-full hidden md:flex flex-col mt-4">
       <div className="overflow-auto max-h-130 rounded-xl border border-surface bg-light">
         <div className="min-w-full">
           <div className="max-h-130 overflow-y-auto bg-light">
@@ -64,6 +56,12 @@ export default function UsersDesktopTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
+                {loading && (
+                  <tr>
+                    <td colSpan={9} className="text-center py-4 text-sm text-gray-500">Carregando...</td>
+                  </tr>
+                )}
+
                 {companies.map(company => (
                   <tr key={company.id} className="even:bg-gray-100">
                     <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
@@ -95,7 +93,7 @@ export default function UsersDesktopTable() {
                           label="Atualizar"
                           action="updateCompany"
                           company={company}
-                          onSuccess={refetchCompanies}
+                          onSuccess={onSuccess}
                         />
                       </div>
                       <div className="w-7 h-7 p-2 rounded-lg flex items-center justify-center text-accent bg-accent/10">
@@ -105,14 +103,14 @@ export default function UsersDesktopTable() {
                           label="Excluir"
                           action="deleteCompany"
                           company={company}
-                          onSuccess={refetchCompanies}
+                          onSuccess={onSuccess}
                         />
                       </div>
                     </td>
                   </tr>
                 ))}
 
-                {companies.length === 0 && (
+                {companies.length === 0 && !loading && (
                   <tr>
                     <td colSpan={9} className="text-center py-4 text-sm text-dark/50">
                       Nenhuma empresa encontrada.
@@ -122,6 +120,32 @@ export default function UsersDesktopTable() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* Desktop pagination */}
+      <div className="flex items-center justify-between gap-2 mt-3">
+        <div className="text-sm">
+          Mostrando {(pagination.page - 1) * pagination.perPage + 1} -
+          {Math.min(pagination.total, pagination.page * pagination.perPage)} de {pagination.total}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => pagination.setPage(Math.max(1, pagination.page - 1))}
+            disabled={pagination.page <= 1}
+            className="px-3 py-2 rounded-lg border"
+          >
+            Anterior
+          </button>
+          <div className="px-3 py-2 text-sm">Página {pagination.page} / {pagination.totalPages}</div>
+          <button
+            onClick={() => pagination.setPage(Math.min(pagination.totalPages, pagination.page + 1))}
+            disabled={pagination.page >= pagination.totalPages}
+            className="px-3 py-2 rounded-lg border"
+          >
+            Próxima
+          </button>
         </div>
       </div>
     </section>

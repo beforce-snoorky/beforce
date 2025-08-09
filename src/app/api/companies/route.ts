@@ -6,14 +6,67 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { action, payload } = body
 
-  if (!action || !payload) return NextResponse.json({ error: "Ação não especificada" }, { status: 400 })
+  if (!action || payload === undefined) return NextResponse.json({ error: "Ação não especificada" }, { status: 400 })
 
   try {
     switch (action) {
       case "listCompanies": {
-        const { data: companies, error } = await supabaseAdmin.rpc("get_business_data")
+        // payload: { page, per_page, query }
+        const page = Number(payload.page ?? 1)
+        const per_page = Number(payload.per_page ?? 10)
+        const query = String(payload.query ?? "").trim()
+
+        if (page < 1 || per_page < 1) return NextResponse.json({ error: "Parâmetros inválidos" }, { status: 400 })
+
+        const from = (page - 1) * per_page
+        const to = from + per_page - 1
+
+        // Select business and left-join related tables to determine flags.
+        // Ajuste os nomes dos relacionamentos se o seu schema for diferente.
+        const selectClause = `
+          id,
+          business_name,
+          email,
+          logo,
+          websites (domain, analytics_id),
+          digisac (token, url),
+          cloud_server (id),
+          email_corporate (id),
+          ia (id),
+          management_system (id),
+          marketing (id)
+        `
+
+        let queryBuilder = supabaseAdmin.from("business").select(selectClause, { count: "exact" })
+
+        if (query.length > 0) {
+          // busca simples por nome (ilike)
+          queryBuilder = queryBuilder.ilike("business_name", `%${query}%`)
+        }
+
+        const { data, count, error } = await queryBuilder.range(from, to)
         if (error) throw error
-        return NextResponse.json({ companies })
+
+        const companies = (data || []).map((b: any) => ({
+          id: b.id,
+          business_name: b.business_name,
+          email: b.email,
+          logo: b.logo,
+          // flags derived from joined arrays
+          has_website: (b.websites && b.websites.length > 0) ?? false,
+          website_domain: b.websites && b.websites[0] ? b.websites[0].domain : null,
+          website_analytics_id: b.websites && b.websites[0] ? b.websites[0].analytics_id : null,
+          has_digisac: (b.digisac && b.digisac.length > 0) ?? false,
+          digisac_token: b.digisac && b.digisac[0] ? b.digisac[0].token : null,
+          digisac_url: b.digisac && b.digisac[0] ? b.digisac[0].url : null,
+          has_cloud_server: (b.cloud_server && b.cloud_server.length > 0) ?? false,
+          has_email_corporate: (b.email_corporate && b.email_corporate.length > 0) ?? false,
+          has_ia: (b.ia && b.ia.length > 0) ?? false,
+          has_management_system: (b.management_system && b.management_system.length > 0) ?? false,
+          has_marketing: (b.marketing && b.marketing.length > 0) ?? false
+        }))
+
+        return NextResponse.json({ companies, total: count ?? 0 })
       }
 
       case "createCompany": {
@@ -72,17 +125,23 @@ export async function POST(req: NextRequest) {
 
         await supabaseAdmin.from("business").update({ business_name, email, logo }).eq("id", id)
 
+        // websites
         if (has_website) {
           const { count } = await supabaseAdmin.from("websites").select("*", { count: "exact", head: true }).eq("business_id", id)
           if (count === 0) await supabaseAdmin.from("websites").insert([{ business_id: id, domain: website_domain, analytics_id: website_analytics_id }])
           else await supabaseAdmin.from("websites").update({ domain: website_domain, analytics_id: website_analytics_id }).eq("business_id", id)
-        } else await supabaseAdmin.from("websites").delete().eq("business_id", id)
+        } else {
+          await supabaseAdmin.from("websites").delete().eq("business_id", id)
+        }
 
+        // digisac
         if (has_digisac) {
           const { count } = await supabaseAdmin.from("digisac").select("*", { count: "exact", head: true }).eq("business_id", id)
           if (count === 0) await supabaseAdmin.from("digisac").insert([{ business_id: id, token: digisac_token, url: digisac_url }])
           else await supabaseAdmin.from("digisac").update({ token: digisac_token, url: digisac_url }).eq("business_id", id)
-        } else await supabaseAdmin.from("digisac").delete().eq("business_id", id)
+        } else {
+          await supabaseAdmin.from("digisac").delete().eq("business_id", id)
+        }
 
         const toggleTables = [
           { name: "cloud_server", flag: has_cloud_server },
@@ -103,9 +162,11 @@ export async function POST(req: NextRequest) {
 
       case "deleteCompany": {
         const { id } = payload
+        if (!id) throw new Error("ID não fornecido")
 
+        // Remover relacionamentos nas tabelas corretas (nome plural conforme utilizado no resto do arquivo)
         const tables = [
-          "website",
+          "websites",
           "digisac",
           "cloud_server",
           "email_corporate",

@@ -1,42 +1,38 @@
 "use client"
 
-import { useAuth } from "@/hooks/useAuth"
 import { Company } from "@/types/company"
 import { Building2, ChevronDown, PenLine, Trash2 } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
 import { CompanyActionButton } from "./actions"
 import { solutions } from "@/constants/solutions"
 import Image from "next/image"
 
-export default function UsersMobileList() {
+export function UsersMobileList({
+  companies,
+  loading,
+  onSuccess,
+  pagination
+}: {
+  companies: Company[]
+  loading?: boolean
+  onSuccess?: () => void
+  pagination: {
+    page: number
+    perPage: number
+    setPage: (p: number) => void
+    setPerPage: (p: number) => void
+    total: number
+    totalPages: number
+  }
+}) {
   const [expandedCompanyId, setExpandedCompanyId] = useState<string | null>(null)
-  const [companies, setCompanies] = useState<Company[]>([])
-  const { isAdmin } = useAuth()
-
-  const refetchCompanies = useCallback(async () => {
-    if (!isAdmin) return
-
-    const res = await fetch("/api/companies", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "listCompanies", payload: {} }),
-    })
-
-    if (!res.ok) throw new Error("Erro ao carregar empresas")
-    const { companies } = await res.json()
-    setCompanies(companies)
-  }, [isAdmin])
-
-  useEffect(() => {
-    refetchCompanies()
-  }, [refetchCompanies])
-
-  if (!isAdmin) return
 
   const toggleExpand = (id: string) => setExpandedCompanyId(prev => (prev === id ? null : id))
 
   return (
     <div className="md:hidden space-y-2">
+      {loading && <div className="text-sm text-gray-500 py-4">Carregando...</div>}
+
       {companies.map(company => {
         const isExpanded = expandedCompanyId === company.id
 
@@ -70,8 +66,7 @@ export default function UsersMobileList() {
                     <div key={item.key} className="flex items-center gap-1">
                       <div className="relative flex items-center">
                         <div className={`w-10 h-6 rounded-full opacity-50 ${company[item.key] ? "bg-emerald-400" : "bg-surface"}`} />
-                        <div className={`absolute w-4 h-4 rounded-full shadow ${company[item.key] ? "left-5" : "left-1"} bg-light`}
-                        />
+                        <div className={`absolute w-4 h-4 rounded-full shadow ${company[item.key] ? "left-5" : "left-1"} bg-light`} />
                       </div>
                       <span>{item.label}</span>
                     </div>
@@ -86,7 +81,7 @@ export default function UsersMobileList() {
                       label="Atualizar"
                       action="updateCompany"
                       company={company}
-                      onSuccess={refetchCompanies}
+                      onSuccess={onSuccess}
                     />
                   </div>
                   <div className="flex-1 px-3 py-1.5 rounded-lg border-2 border-accent bg-accent text-light">
@@ -96,7 +91,7 @@ export default function UsersMobileList() {
                       label="Excluir"
                       action="deleteCompany"
                       company={company}
-                      onSuccess={refetchCompanies}
+                      onSuccess={onSuccess}
                     />
                   </div>
                 </div>
@@ -106,11 +101,32 @@ export default function UsersMobileList() {
         )
       })}
 
-      {companies.length === 0 && (
+      {companies.length === 0 && !loading && (
         <div className="flex items-center justify-center min-h-40">
           <p className="text-sm text-dark/50">Nenhuma empresa encontrada.</p>
         </div>
       )}
+
+      {/* Pagination (mobile simple) */}
+      <div className="flex items-center justify-between mt-3">
+        <button
+          onClick={() => pagination.setPage(Math.max(1, pagination.page - 1))}
+          disabled={pagination.page <= 1}
+          className="px-3 py-2 rounded-lg border"
+        >
+          Anterior
+        </button>
+
+        <div className="text-sm">Página {pagination.page} / {pagination.totalPages}</div>
+
+        <button
+          onClick={() => pagination.setPage(Math.min(pagination.totalPages, pagination.page + 1))}
+          disabled={pagination.page >= pagination.totalPages}
+          className="px-3 py-2 rounded-lg border"
+        >
+          Próxima
+        </button>
+      </div>
     </div>
   )
 }
