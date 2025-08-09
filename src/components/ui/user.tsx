@@ -58,7 +58,7 @@ export function UserMenu() {
           </div>
         ) : (
           <div className="flex items-center justify-center size-9.5 rounded-full bg-accent">
-            <User2 className="w-5 h-5 text-white" />
+            <User2 className="size-5 text-white" />
           </div>
         )}
       </button>

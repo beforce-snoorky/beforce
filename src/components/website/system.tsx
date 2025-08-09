@@ -3,6 +3,7 @@
 import { DeviceData, SystemData } from "@/types/website"
 import { MonitorSmartphone } from "lucide-react"
 import { useMemo } from "react"
+import { Icon } from "../ui/icon"
 
 type MergedSystem = {
   label: string
@@ -116,7 +117,7 @@ export default function SystemStatistics({ system, devices }: { system: SystemDa
   return (
     <div className="col-span-8 p-4 md:col-span-4 flex flex-col justify-between rounded-xl border border-surface bg-light">
       <div className="flex items-center gap-2">
-        <MonitorSmartphone className="w-5 h-5 text-accent" />
+        <MonitorSmartphone className="size-5 text-accent" />
         <h2 className="text-md font-medium">Usuários por Plataforma</h2>
       </div>
       <p className="text-xs text-gray-500 mb-4">Dispositivos e sistemas utilizados nas sessões</p>
@@ -126,9 +127,7 @@ export default function SystemStatistics({ system, devices }: { system: SystemDa
         <div className="grid grid-cols-2 md:grid-cols-1 gap-2 mt-6">
           {systemStats.map((os) => (
             <div key={os.label} className="flex items-center gap-2 p-2 md:p-4 rounded-xl border border-surface bg-light">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface/50">
-                {systemsIcons[os.label]}
-              </div>
+              <Icon icon={systemsIcons[os.label]} style="bg-surface/50" />
               <p className="text-sm text-gray-800">{os.label}</p>
               <p className="text-sm font-semibold text-gray-800 ml-auto">{((os.value / totalSystemUsers) * 100).toFixed(1)}%</p>
             </div>

@@ -36,7 +36,7 @@ export function FilterModalWebsite({ onClose }: { onClose: () => void }) {
               className="size-8 inline-flex justify-center items-center rounded-full bg-surface"
               aria-label="Fechar"
             >
-              <X className="w-5 h-5" />
+              <X className="size-5" />
             </button>
           </div>
           <div className="p-4 space-y-4">
@@ -54,7 +54,7 @@ export function FilterModalWebsite({ onClose }: { onClose: () => void }) {
           <div className="flex justify-end items-center gap-2 py-3 px-4 border-t border-gray-200">
             <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
             <Button type="button" variant="primary" onClick={handleApplyFilters}>
-              <SlidersHorizontal className="w-4 h-4 mr-2" />
+              <SlidersHorizontal className="size-4 mr-2" />
               Aplicar Filtros
             </Button>
           </div>

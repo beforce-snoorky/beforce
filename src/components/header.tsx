@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { UserMenu } from "./ui/user";
+import Image from "next/image"
+import Link from "next/link"
+import { UserMenu } from "./ui/user"
 
 export function Header() {
   return (

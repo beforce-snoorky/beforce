@@ -6,19 +6,20 @@ import { Bot, ChevronDown, Clock, FileText, Hourglass, MessageCircleMore, Messag
 import { useMemo, useState } from "react"
 import { Card } from "../ui/cards"
 import { Input } from "../ui/input"
+import { Icon } from "../ui/icon"
 
 export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
 
   const metrics = useMemo(() => ([
-    { label: "Tempo médio de chamados", style: "text-sky-600 bg-sky-100", icon: <Hourglass className="w-4 h-4" />, key: "ticket_time", type: "time" },
-    { label: "Tempo médio da 1ª espera", style: "text-orange-600 bg-orange-100", icon: <Timer className="w-4 h-4" />, key: "waiting_time", type: "time" },
-    { label: "Tempo após BOT", style: "text-amber-600 bg-amber-100", icon: <Bot className="w-4 h-4" />, key: "waiting_time_after_bot", type: "time" },
-    { label: "Tempo médio de espera", style: "text-violet-600 bg-violet-100", icon: <Clock className="w-4 h-4" />, key: "waiting_time_avg", type: "time" },
-    { label: "Mensagens enviadas", style: "text-emerald-600 bg-emerald-100", icon: <MessageSquare className="w-4 h-4" />, key: "sent_messages_count", type: "count" },
-    { label: "Mensagens recebidas", style: "text-cyan-600 bg-cyan-100", icon: <MessageCircleMore className="w-4 h-4" />, key: "received_messages_count", type: "count" },
-    { label: "Total de chamados", style: "text-rose-600 bg-rose-100", icon: <FileText className="w-4 h-4" />, key: "total_tickets_count", type: "count" }
+    { label: "Tempo médio de chamados", style: "text-sky-600 bg-sky-100", icon: <Hourglass className="size-4" />, key: "ticket_time", type: "time" },
+    { label: "Tempo médio da 1ª espera", style: "text-orange-600 bg-orange-100", icon: <Timer className="size-4" />, key: "waiting_time", type: "time" },
+    { label: "Tempo após BOT", style: "text-amber-600 bg-amber-100", icon: <Bot className="size-4" />, key: "waiting_time_after_bot", type: "time" },
+    { label: "Tempo médio de espera", style: "text-violet-600 bg-violet-100", icon: <Clock className="size-4" />, key: "waiting_time_avg", type: "time" },
+    { label: "Mensagens enviadas", style: "text-emerald-600 bg-emerald-100", icon: <MessageSquare className="size-4" />, key: "sent_messages_count", type: "count" },
+    { label: "Mensagens recebidas", style: "text-cyan-600 bg-cyan-100", icon: <MessageCircleMore className="size-4" />, key: "received_messages_count", type: "count" },
+    { label: "Total de chamados", style: "text-rose-600 bg-rose-100", icon: <FileText className="size-4" />, key: "total_tickets_count", type: "count" }
   ]), [])
 
   const groupedData = useMemo(() => {
@@ -69,7 +70,7 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
       <div className="space-y-2">
         <Input
           id="search"
-          icon={<Search className="w-5 h-5 text-gray-500" />}
+          icon={<Search className="size-5 text-gray-500" />}
           name="search"
           type="text"
           placeholder="Buscar por atendente ou departamento.."
@@ -91,15 +92,13 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
               <Card key={key}>
                 <div className="flex items-center justify-between" onClick={() => toggleExpand(key)}>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                      <UsersRound className="w-4 h-4" />
-                    </div>
+                    <Icon icon={<UsersRound className="size-4" />} />
                     <div className="flex flex-col">
                       <span className="text-sm leading-tight">{operator}</span>
                       <span className="text-xs text-gray-500 leading-tight">{department}</span>
                     </div>
                   </div>
-                  <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`size-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                 </div>
 
                 {isExpanded && (
@@ -107,9 +106,7 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
                     {metrics.map((item, index) => (
                       <div key={item.key} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${item.style}`}>
-                            {item.icon}
-                          </div>
+                          <Icon icon={item.icon} style={item.style} />
                           <span className="text-xs">{item.label}</span>
                         </div>
                         <span className="font-medium">{values[index]}</span>

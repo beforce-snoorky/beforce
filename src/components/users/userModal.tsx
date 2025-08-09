@@ -58,10 +58,10 @@ export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
           <p className="text-sm">Informe os dados do usuário.</p>
           <button
             onClick={onClose}
-            className="absolute right-0 top-0 w-8 h-8 flex items-center justify-center"
+            className="absolute right-0 top-0 size-8 flex items-center justify-center"
             aria-label="Fechar"
           >
-            <X className="w-6 h-6" />
+            <X className="size-6" />
           </button>
         </div>
 

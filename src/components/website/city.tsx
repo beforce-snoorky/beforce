@@ -5,6 +5,8 @@ import { CityData } from "@/types/website"
 import { ChevronDown, MapPin, MousePointerClick, UserPlus, UsersRound } from "lucide-react"
 import { useState } from "react"
 import { Card } from "../ui/cards"
+import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
+import { Icon } from "../ui/icon"
 
 export default function CitiesStatistics({ cities }: { cities: CityData[] | undefined }) {
   const isMobile = useMediaQuery("(max-width: 1079px)")
@@ -24,7 +26,7 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
     <div className="col-span-8 md:col-span-4 p-4 rounded-xl border border-surface bg-light">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-accent" />
+          <MapPin className="size-5 text-accent" />
           <h2 className="text-md font-medium">Cidades com Mais Acessos</h2>
         </div>
         <p className="text-xs text-gray-500 mb-4">Distribuição de acessos por localização</p>
@@ -36,21 +38,17 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
             <Card key={index}>
               <div className="flex items-center justify-between" onClick={() => toggleExpand(city.city)}>
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                    <MapPin className="w-4 h-4" />
-                  </div>
+                  <Icon icon={<MapPin className="size-4" />} />
                   <span className="text-sm leading-tight truncate max-w-52">{city.city}</span>
                 </div>
-                <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                <ChevronDown className={`size-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
               </div>
 
               {isExpanded && (
                 <div className="mt-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-sky-600 bg-sky-100">
-                        <UserPlus className="w-4 h-4" />
-                      </div>
+                      <Icon icon={<UserPlus className="size-4" />} style="text-sky-600 bg-sky-100" />
                       <span className="text-xs">Novos Usuários</span>
                     </div>
                     <span className="font-medium">{city.newUsers}</span>
@@ -58,9 +56,7 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-emerald-600 bg-emerald-100">
-                        <UsersRound className="w-4 h-4" />
-                      </div>
+                      <Icon icon={<UsersRound className="size-4" />} style="text-emerald-600 bg-emerald-100" />
                       <span className="text-xs">Usuários Ativos</span>
                     </div>
                     <span className="font-medium">{city.activeUsers}</span>
@@ -68,9 +64,7 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-violet-600 bg-violet-100">
-                        <MousePointerClick className="w-4 h-4" />
-                      </div>
+                      <Icon icon={<MousePointerClick className="size-4" />} style="text-violet-600 bg-violet-100" />
                       <span className="text-xs">Sessões Engajadas</span>
                     </div>
                     <span className="font-medium">{city.engagedSessions}</span>
@@ -89,30 +83,28 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
       <div className="overflow-auto max-h-103 xl:max-h-full rounded-xl border border-surface bg-light">
         <div className="min-w-full">
           <div className="max-h-103 xl:max-h-max overflow-y-auto bg-light">
-            <table className="w-full table-fixed divide-y divide-surface">
-              <thead className="sticky top-0 z-10 bg-gray-50">
-                <tr>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase max-lg:w-40 lg:w-24 text-gray-500">Cidade</th>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-14 text-gray-500">Usuários</th>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-16 text-gray-500">Sessões</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
+            <Table style="w-full table-fixed">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell style="max-lg:w-40 lg:w-24">Cidade</TableHeaderCell>
+                  <TableHeaderCell style="w-14">Usuários</TableHeaderCell>
+                  <TableHeaderCell style="w-16">Sessões</TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {cities.map((city, index) => (
-                  <tr key={index} className="even:bg-gray-100">
-                    <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                        <MapPin className="w-4 h-4" />
-                      </div>
+                  <TableRow key={index} style="even:bg-gray-100">
+                    <TableDataCell style="flex items-center gap-2">
+                      <Icon icon={<MapPin className="size-4" />} />
                       <span className="truncate w-40 max-w-40 block">{city.city}</span>
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap text-sm w-14 text-gray-800">{Number(city.newUsers) + Number(city.activeUsers)}</td>
-                    <td className="py-3 px-4 whitespace-nowrap text-sm w-16 text-gray-800">{city.engagedSessions}</td>
-                  </tr>
+                    </TableDataCell>
+                    <TableDataCell style="w-14">{Number(city.newUsers) + Number(city.activeUsers)}</TableDataCell>
+                    <TableDataCell style="w-16">{city.engagedSessions}</TableDataCell>
+                  </TableRow>
                 )
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>

@@ -4,12 +4,10 @@ import { Company } from "@/types/company"
 import { CompanyActionButton } from "./actions"
 import { Building2, PenLine, Trash2 } from "lucide-react"
 import Image from "next/image"
+import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
+import { Icon } from "../ui/icon"
 
-export function UsersDesktopTable({
-  companies,
-  loading,
-  onSuccess,
-  pagination
+export function UsersDesktopTable({ companies, loading, onSuccess, pagination
 }: {
   companies: Company[]
   loading?: boolean
@@ -36,7 +34,7 @@ export function UsersDesktopTable({
   const ToggleDisplay = ({ active }: { active: boolean }) => (
     <div className="relative flex items-center">
       <div className={`w-10 h-5 rounded-full ${active ? "bg-emerald-400" : "bg-gray-300"} opacity-70`} />
-      <div className={`absolute w-4 h-4 rounded-full shadow bg-light transition-all ${active ? "left-5" : "left-1"}`} />
+      <div className={`absolute size-4 rounded-full shadow bg-light transition-all ${active ? "left-5" : "left-1"}`} />
     </div>
   )
 
@@ -45,50 +43,33 @@ export function UsersDesktopTable({
       <div className="overflow-auto max-h-130 rounded-xl border border-surface bg-light">
         <div className="min-w-full">
           <div className="max-h-130 overflow-y-auto bg-light">
-            <table className="w-full table-fixed divide-y divide-surface">
-              <thead className="sticky top-0 z-10 bg-gray-50">
-                <tr>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-40 text-gray-500">Empresa</th>
-                  {serviceFlags.map(flag => (
-                    <th key={flag.key} className="py-3 px-4 text-start text-xs font-medium uppercase w-12 text-gray-500">{flag.label}</th>
-                  ))}
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-14 text-gray-500">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {loading && (
-                  <tr>
-                    <td colSpan={9} className="text-center py-4 text-sm text-gray-500">Carregando...</td>
-                  </tr>
-                )}
-
+            <Table style="w-full table-fixed">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell style="w-40">Empresa</TableHeaderCell>
+                  {serviceFlags.map(flag => (<TableHeaderCell key={flag.key} style="w-12">{flag.label}</TableHeaderCell>))}
+                  <TableHeaderCell style="w-14">Ações</TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {companies.map(company => (
-                  <tr key={company.id} className="even:bg-gray-100">
-                    <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
-                      {company.logo ? (
-                        <Image
-                          src={company.logo}
-                          alt={`${company.business_name} logo`}
-                          width={28}
-                          height={28}
-                          sizes="50px"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                          <Building2 className="w-4 h-4" />
-                        </div>
-                      )}
+                  <TableRow key={company.id} style="even:bg-gray-100">
+                    <TableDataCell style="flex items-center gap-2">
+                      {company.logo
+                        ? (<Image src={company.logo} alt={`${company.business_name} logo`} width={28} height={28} sizes="50px" />)
+                        : (<Icon icon={<Building2 className="size-4" />} />)
+                      }
                       <span className="truncate w-40 max-w-40 block">{company.business_name}</span>
-                    </td>
+                    </TableDataCell>
                     {serviceFlags.map(flag => (
-                      <td key={flag.key} className="py-3 px-4 whitespace-nowrap text-sm w-12 text-gray-800">
+                      <TableDataCell key={flag.key} style="w-12">
                         <ToggleDisplay active={!!company[flag.key]} />
-                      </td>
+                      </TableDataCell>
                     ))}
-                    <td className="py-3 px-4 flex items-center gap-2 w-14">
-                      <div className="w-7 h-7 p-2 rounded-lg flex items-center justify-center text-blue-500 bg-blue-100">
+                    <TableDataCell style="flex items-center gap-2 w-14">
+                      <div className="size-7 p-2 rounded-lg flex items-center justify-center text-blue-500 bg-blue-100">
                         <CompanyActionButton
-                          icon={<PenLine className="w-4 h-4" />}
+                          icon={<PenLine className="size-4" />}
                           showLabel={false}
                           label="Atualizar"
                           action="updateCompany"
@@ -96,9 +77,9 @@ export function UsersDesktopTable({
                           onSuccess={onSuccess}
                         />
                       </div>
-                      <div className="w-7 h-7 p-2 rounded-lg flex items-center justify-center text-accent bg-accent/10">
+                      <div className="size-7 p-2 rounded-lg flex items-center justify-center text-accent bg-accent/10">
                         <CompanyActionButton
-                          icon={<Trash2 className="w-4 h-4" />}
+                          icon={<Trash2 className="size-4" />}
                           showLabel={false}
                           label="Excluir"
                           action="deleteCompany"
@@ -106,19 +87,11 @@ export function UsersDesktopTable({
                           onSuccess={onSuccess}
                         />
                       </div>
-                    </td>
-                  </tr>
+                    </TableDataCell>
+                  </TableRow>
                 ))}
-
-                {companies.length === 0 && !loading && (
-                  <tr>
-                    <td colSpan={9} className="text-center py-4 text-sm text-dark/50">
-                      Nenhuma empresa encontrada.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>

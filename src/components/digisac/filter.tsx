@@ -61,7 +61,7 @@ export function Filters({ digisacReportData, digisacReportFilters }: FiltersProp
           }}
         />
         <Button className="col-span-2 xl:col-span-1" onClick={handleApplyFilters} variant="primary">
-          <SlidersHorizontal className="w-4 h-4" />
+          <SlidersHorizontal className="size-4" />
           Aplicar Filtros
         </Button>
       </div>

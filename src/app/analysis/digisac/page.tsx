@@ -29,7 +29,7 @@ export default function DigisacPage() {
   return (
     <>
       <div className="flex items-center gap-2 mb-1">
-        <ChartNoAxesCombined className="w-6 h-6 text-accent" />
+        <ChartNoAxesCombined className="size-6 text-accent" />
         <h1 className="text-xl md:text-2xl font-bold">Atendimento</h1>
       </div>
       <p className="text-sm">Acompanhe as métricas de atendimento</p>

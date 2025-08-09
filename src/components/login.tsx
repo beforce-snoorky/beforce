@@ -17,7 +17,7 @@ export function Login() {
         <label htmlFor="email" className="block mb-1">Email</label>
         <Input
           id="email"
-          icon={<User className="w-5 h-5 text-gray-500" />}
+          icon={<User className="size-5 text-gray-500" />}
           name="email"
           type="email"
           placeholder="seu@email.com"
@@ -29,7 +29,7 @@ export function Login() {
         <label htmlFor="password" className="block mb-1">Senha</label>
         <Input
           id="password"
-          icon={<LockKeyhole className="w-5 h-5 text-gray-500" />}
+          icon={<LockKeyhole className="size-5 text-gray-500" />}
           name="password"
           type="password"
           placeholder="••••••••"

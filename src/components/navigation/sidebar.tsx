@@ -22,11 +22,11 @@ export function SideBar() {
   if (isDesktop) return null
 
   const routes: NavItemProps[] = [
-    { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/analysis", visible: true },
-    { icon: <Headphones className="w-5 h-5" />, name: "Digisac", url: "/analysis/digisac", visible: company?.has_digisac || false },
-    { icon: <Globe2 className="w-5 h-5" />, name: "Website", url: "/analysis/website", visible: company?.has_website || false },
-    { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/analysis/systems", visible: company?.has_management_system || false },
-    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/analysis/marketing", visible: company?.has_marketing || false },
+    { icon: <LayoutDashboard className="size-5" />, name: "Painel", url: "/analysis", visible: true },
+    { icon: <Headphones className="size-5" />, name: "Digisac", url: "/analysis/digisac", visible: company?.has_digisac || false },
+    { icon: <Globe2 className="size-5" />, name: "Website", url: "/analysis/website", visible: company?.has_website || false },
+    { icon: <Server className="size-5" />, name: "Sistemas", url: "/analysis/systems", visible: company?.has_management_system || false },
+    { icon: <MonitorSmartphone className="size-5" />, name: "Marketing", url: "/analysis/marketing", visible: company?.has_marketing || false },
   ]
 
   return (
@@ -59,7 +59,7 @@ export function SideBar() {
               >
                 <span className={`p-2 m-1 rounded-full text-accent ${isActive ? "bg-light" : "bg-accent/15"} ${!item.visible && ("bg-gray-200 text-gray-400")}`}>{item.icon}</span>
                 <span className={`${isActive ? "text-light" : "text-dark"} ${!item.visible && ("text-gray-400")}`}>{item.name}</span>
-                {!item.visible && <span className="w-full text-accent"><LockKeyholeIcon className="place-self-end w-4 h-4" /></span>}
+                {!item.visible && <span className="w-full text-accent"><LockKeyholeIcon className="place-self-end size-4" /></span>}
               </Link>
             )
           })}

@@ -25,7 +25,7 @@ export function Button(props: ButtonProps) {
     >
       {props.isPending ? (
         <>
-          <div className="animate-spin w-5 h-5 mr-2 rounded-full border-2 border-white border-r-transparent" />
+          <div className="animate-spin size-5 mr-2 rounded-full border-2 border-white border-r-transparent" />
           <span>Carregando...</span>
         </>
       ) : (

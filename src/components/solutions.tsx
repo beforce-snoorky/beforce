@@ -23,7 +23,7 @@ export function SolutionsButton({ item }: { item: string }) {
   return isActive ? (
     <div className="relative flex items-center">
       <div className="w-10 h-6 rounded-full opacity-50 bg-emerald-400" />
-      <div className="absolute left-5 w-4 h-4 rounded-full shadow bg-light" />
+      <div className="absolute left-5 size-4 rounded-full shadow bg-light" />
     </div>
   ) : (
     <Link href="https://api.whatsapp.com/send?phone=551530420727" className="px-2 py-1.5 rounded-lg text-xs border border-accent text-accent hover:bg-accent hover:text-light">

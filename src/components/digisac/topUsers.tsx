@@ -50,7 +50,7 @@ export function TopUsers({ reports }: { reports: DigisacReportEntry[] }) {
   return (
     <div className="p-4 pb-0 rounded-xl border border-surface bg-light">
       <div className="flex items-center gap-2">
-        <Clock className="w-5 h-5 text-accent" />
+        <Clock className="size-5 text-accent" />
         <h2 className="text-md font-medium">Melhores Atendentes</h2>
       </div>
       <p className="text-xs text-gray-500 mb-4">Distribuição proporcional dos atendimentos</p>

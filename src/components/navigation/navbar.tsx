@@ -34,11 +34,11 @@ export function NavBar() {
   if (!isMobile) return null
 
   const routes: NavItemProps[] = [
-    { icon: <LayoutDashboard className="w-5 h-5" />, name: "Painel", url: "/analysis", visible: true },
-    { icon: <Headphones className="w-5 h-5" />, name: "Digisac", url: "/analysis/digisac", visible: company?.has_digisac || false },
-    { icon: <Globe2 className="w-5 h-5" />, name: "Website", url: "/analysis/website", visible: company?.has_website || false },
-    { icon: <Server className="w-5 h-5" />, name: "Sistemas", url: "/analysis/systems", visible: company?.has_management_system || false },
-    { icon: <MonitorSmartphone className="w-5 h-5" />, name: "Marketing", url: "/analysis/marketing", visible: company?.has_marketing || false },
+    { icon: <LayoutDashboard className="size-5" />, name: "Painel", url: "/analysis", visible: true },
+    { icon: <Headphones className="size-5" />, name: "Digisac", url: "/analysis/digisac", visible: company?.has_digisac || false },
+    { icon: <Globe2 className="size-5" />, name: "Website", url: "/analysis/website", visible: company?.has_website || false },
+    { icon: <Server className="size-5" />, name: "Sistemas", url: "/analysis/systems", visible: company?.has_management_system || false },
+    { icon: <MonitorSmartphone className="size-5" />, name: "Marketing", url: "/analysis/marketing", visible: company?.has_marketing || false },
   ]
 
   return (

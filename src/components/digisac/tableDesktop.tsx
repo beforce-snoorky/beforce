@@ -4,6 +4,8 @@ import { DigisacReportEntry } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { UsersRound } from "lucide-react"
 import { useMemo } from "react"
+import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
+import { Icon } from "../ui/icon"
 
 type TableDesktopProps = {
   reportData: ReturnType<typeof useDigisacData>
@@ -53,43 +55,39 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
       <div className="overflow-auto max-h-107 rounded-xl border border-surface bg-light">
         <div className="min-w-full">
           <div className="max-h-107 overflow-y-auto bg-light">
-            <table className="min-w-full divide-y divide-surface">
-              <thead className="sticky top-0 z-10 bg-gray-50">
-                <tr>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-48 text-gray-500">Usuário</th>
-                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-48 text-gray-500">Departamento</th>
+            <Table style="min-w-full">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell style="w-48">Usuário</TableHeaderCell>
+                  <TableHeaderCell style="w-48">Departamento</TableHeaderCell>
                   {metrics.map((item) => (
-                    <th key={item.key} className="py-3 px-4 text-center text-xs font-medium uppercase w-24 text-gray-500">
-                      <div className="w-24">{item.label}</div>
-                    </th>
+                    <TableHeaderCell key={item.key} style="w-24"><div className="w-24">{item.label}</div></TableHeaderCell>
                   ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {data.map(({ operator, department, key, values }, index) => {
                   const selectedKey = reportFilters.selectedOperatorDepartment.trim()
                   const currentKey = key.trim()
                   const isDimmed = selectedKey !== "Todos" && selectedKey !== currentKey
 
                   return (
-                    <tr key={index} className={`${isDimmed ? "opacity-40" : "opacity-100"} even:bg-gray-100`}>
-                      <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                          <UsersRound className="w-4 h-4" />
-                        </div>
+                    <TableRow key={index} style={`${isDimmed ? "opacity-40" : "opacity-100"} even:bg-gray-100`}>
+                      <TableDataCell style="flex items-center gap-2">
+                        <Icon icon={<UsersRound className="size-4" />} />
                         <span className="truncate w-48 max-w-48 block">{operator}</span>
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 w-48 max-w-48">{department}</td>
+                      </TableDataCell>
+                      <TableDataCell style="w-48 max-w-48">{department}</TableDataCell>
                       {values.map((value, index) => (
-                        <td key={index} className="py-3 px-4 whitespace-nowrap text-sm text-center text-gray-800 w-24">
+                        <TableDataCell key={index} style="w-24">
                           <div className="w-24">{value}</div>
-                        </td>
+                        </TableDataCell>
                       ))}
-                    </tr>
+                    </TableRow>
                   )
                 })}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>

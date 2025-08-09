@@ -42,7 +42,7 @@ export default function AnalyticsPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Globe2 className="w-6 h-6 text-accent" />
+            <Globe2 className="size-6 text-accent" />
             <h1 className="text-xl md:text-2xl font-bold">Site Corporativo</h1>
           </div>
           <p className="text-sm">Acompanhe as métricas do seu site</p>
@@ -65,7 +65,7 @@ export default function AnalyticsPage() {
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center text-sm font-medium px-4 py-3 rounded-lg gap-2 bg-accent text-light"
           >
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="size-4" />
             Ver site
           </Link>
         </div>

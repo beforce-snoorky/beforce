@@ -38,7 +38,7 @@ export function Select(props: SelectProps) {
         className="py-3 px-4 inline-flex items-center justify-between gap-x-2 text-sm rounded-lg border border-surface bg-light text-gray-800"
       >
         <span className="">{displayLabel}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (

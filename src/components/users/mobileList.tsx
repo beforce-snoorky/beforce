@@ -5,6 +5,7 @@ import { UserRound, ChevronDown, UserRoundPen, Trash2 } from "lucide-react"
 import { UserActionButton } from "./actions"
 import { useAuth } from "@/hooks/useAuth"
 import { User } from "./userModal"
+import { Icon } from "../ui/icon"
 
 export default function UsersMobileList() {
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null)
@@ -37,9 +38,7 @@ export default function UsersMobileList() {
           <div key={user.id} className="p-3 rounded-xl text-sm border border-surface">
             <div className="flex items-center justify-between" onClick={() => toggleExpand(user.id)}>
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                  <UserRound className="w-4 h-4" />
-                </div>
+                <Icon icon={<UserRound className="size-4" />} />
                 <span className="font-semibold">{user.email}</span>
               </div>
               <ChevronDown className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
@@ -54,7 +53,7 @@ export default function UsersMobileList() {
                 <div className="flex gap-2">
                   <div className="flex-1 px-3 py-1.5 rounded-lg border-2 border-surface">
                     <UserActionButton
-                      icon={<UserRoundPen className="w-4 h-4" />}
+                      icon={<UserRoundPen className="size-4" />}
                       showLabel={true}
                       label="Atualizar"
                       action="updateUser"
@@ -64,7 +63,7 @@ export default function UsersMobileList() {
                   </div>
                   <div className="flex-1 px-3 py-1.5 rounded-lg border-2 border-accent bg-accent text-light">
                     <UserActionButton
-                      icon={<Trash2 className="w-4 h-4" />}
+                      icon={<Trash2 className="size-4" />}
                       showLabel={true}
                       label="Excluir"
                       action="deleteUser"
