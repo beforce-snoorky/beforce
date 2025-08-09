@@ -1,104 +1,95 @@
 "use client"
 
+import { countryNameToCode } from "@/types/countries"
 import { CountryData } from "@/types/website"
-import { scaleLinear } from "d3"
-import { Feature, FeatureCollection, Geometry } from "geojson"
-import { Globe } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
-import { ComposableMap, Geographies, Geography } from "react-simple-maps"
-import { Tooltip } from "react-tooltip"
-import { feature } from "topojson-client"
+import { Network } from "lucide-react"
+import { useEffect, useState } from "react"
 
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
+export default function WorldMap({ country }: { country: CountryData[] }) {
+  const [svgContent, setSvgContent] = useState<string>("")
 
-const countryNameAliasMap: Record<string, string> = {
-  "united states": "united states of america",
-  "usa": "united states of america",
-  "russia": "russian federation",
-  "south korea": "korea, republic of",
-  "north korea": "korea, democratic people's republic of",
-  "iran": "iran, islamic republic of",
-  "vietnam": "viet nam",
-  "venezuela": "venezuela, bolivarian republic of",
-  "syria": "syrian arab republic",
-  "moldova": "moldova, republic of",
-  "laos": "lao people's democratic republic",
-  "tanzania": "tanzania, united republic of",
-  "bolivia": "bolivia, plurinational state of",
-  "brunei": "brunei darussalam",
-  "macedonia": "north macedonia",
-  "palestine": "palestine, state of",
-  "czech republic": "czechia",
-}
-
-export default function WorldMapChart({ country }: { country: CountryData[] }) {
-  const [geographiesData, setGeographiesData] = useState<Feature<Geometry>[]>([])
+  const activeCountries = country.map((c) => countryNameToCode[c.country]).filter(Boolean)
+  // const activeCountries = [
+  //   "ARG", "AGO", "AUT", "ALB", "ARE", "ARM", "AZE", "AFG", "AUS", "ATF",
+  //   "BHS", "BLZ", "BOL", "BRA", "BEL", "BFA", "BEN", "BWA", "BDI", "BIH", "BGR", "BLR", "BTN", "BGD", "BRN",
+  //   "CAN", "CUB", "CRI", "COL", "CHL", "CIV", "CMR", "CAF", "CHE", "CZE", "CHN", "COG", "COD", "CYP",
+  //   "DOM", "DNK", "DEU", "DZA", "DJI",
+  //   "ECU", "ESP", "ESH", "ETH", "ERI", "EGY", "EST",
+  //   "FLK", "FRA", "FIN", "FJI",
+  //   "GRL", "GTM", "GUY", "GUF", "GBR", "GNB", "GIN", "GHA", "GNQ", "GAB", "GRC", "GEO", "GMB",
+  //   "HND", "HTI", "HUN", "HRV",
+  //   "ISL", "IRL", "ITA", "ISR", "IRQ", "IRN", "IND", "IDN",
+  //   "JAM", "JOR", "JPN",
+  //   "KEN", "KWT", "KAZ", "KGZ", "KHM", "KOR",
+  //   "LBR", "LSO", "LBY", "LTU", "LVA", "LKA", "LAO", "LBN",
+  //   "MEX", "MAR", "MRT", "MLI", "MOZ", "MWI", "MDG", "MNE", "MKD", "MDA", "MNG", "MMR", "MYS",
+  //   "NIC", "NOR", "NLD", "NGA", "NER", "NAM", "NPL", "NZL", "NCL",
+  //   "OMN",
+  //   "PRI", "PAN", "PER", "PRY", "PRT", "POL", "PSE", "PAK", "PNG", "PHL", "PRK",
+  //   "QAT",
+  //   "RWA", "ROU", "RUS",
+  //   "SLV", "SUR", "SWE", "SEN", "SLE", "SWZ", "SSD", "SOM", "SDN", "SVK", "SVN", "SRB", "SYR", "SAU", "SLB",
+  //   "TGO", "TZA", "TCD", "TUN", "TUR", "TKM", "TJK", "THA", "TWN", "TLS", "TTO",
+  //   "USA", "URY", "UGA", "UKR", "UZB",
+  //   "VEN", "VNM", "VUT",
+  //   "W",
+  //   "XKX",
+  //   "YEM",
+  //   "ZAF", "ZWE", "ZMB",
+  // ]
 
   useEffect(() => {
-    fetch(geoUrl).then(res => res.json()).then((topology) => {
-      const geojson = feature(topology, topology.objects.countries) as FeatureCollection
-      setGeographiesData(geojson.features)
-    })
-      .catch(console.error)
+    const fetchSvg = async () => {
+      const res = await fetch("/world.svg")
+      const text = await res.text()
+      setSvgContent(text)
+    }
+
+    fetchSvg()
   }, [])
 
-  const countryMap = useMemo(() => {
-    const map = new Map<string, CountryData>()
-    country?.forEach((d) => {
-      const originalName = d.country.toLowerCase()
-      const normalizedName = countryNameAliasMap[originalName] || originalName
-      map.set(normalizedName, d)
-    })
-    return map
-  }, [country])
+  useEffect(() => {
+    if (!svgContent) return
 
-  const maxValue = Math.max(...country.map((c) => Number(c.newUsers) || 0))
-  const colorScale = scaleLinear<string>().domain([0, maxValue || 1]).range(["#ffe5e7", "#fa0d1d"])
+    const timeout = setTimeout(() => {
+      activeCountries.forEach((code) => {
+        const el = document.querySelector(`.${code}`)
+        if (el) {
+          (el as HTMLElement).style.fill = "#fa0d1d";
+          (el as HTMLElement).style.stroke = "#fa0d1d";
+        }
+      })
+    }, 0)
+
+    return () => clearTimeout(timeout)
+  }, [svgContent, activeCountries])
 
   return (
-    <div className="order-7 md:col-span-2 lg:col-span-3 xl:col-span-2 p-4 pb-4 rounded-xl border border-surface bg-light">
-      <Tooltip id="world-map" style={{ fontSize: "14px", zIndex: 9999 }} />
-      <div className="flex items-center gap-2">
-        <Globe className="w-5 h-5 text-accent" />
-        <h2 className="text-lg font-semibold">Usuários por País</h2>
-      </div>
-      <p className="text-sm mb-4">Distribuição de usuários por localização geográfica</p>
-      <hr className="w-full opacity-25" />
-      <div className="relative w-full aspect-[2/1]">
-        <ComposableMap
-          projection="geoEqualEarth"
-          projectionConfig={{ scale: 150 }}
-          width={800}
-          height={400}
-          style={{ width: "100%", height: "100%" }}
-        >
-          <Geographies geography={geographiesData}>
-            {({ geographies }: { geographies: Feature<Geometry>[] }) =>
-              geographies.map((geo, index) => {
-                const name = (geo.properties?.name as string)?.toLowerCase()
-                const data = name && countryMap.get(name)
-                const fill = data ? colorScale(Number(data.newUsers)) : "#e5e7eb"
-
-                return (
-                  <Geography
-                    key={index}
-                    geography={geo}
-                    fill={fill}
-                    data-tooltip-id="world-map"
-                    data-tooltip-html={
-                      data
-                        ? `<strong>${geo.properties?.name}</strong><br/>
-                           Novos: ${data.newUsers}<br/>
-                           Ativos: ${data.activeUsers}<br/>
-                           Engajados: ${data.engagedSessions}`
-                        : undefined
-                    }
-                  />
-                )
-              })
-            }
-          </Geographies>
-        </ComposableMap>
+    <div className="col-span-8 xl:col-span-5 rounded-xl border border-surface bg-light">
+      <div className="relative">
+        <div className="w-full xl:h-76 overflow-hidden">
+          <div dangerouslySetInnerHTML={{ __html: svgContent }} className="xl:ml-25 w-full h-full" />
+        </div>
+        {country.length > 0 && (
+          <div className="max-xl:w-full max-xl:mt-3.5 xl:absolute xl:left-2 xl:bottom-2 xl:rounded-xl overflow-hidden border border-surface">
+            <table className="w-full text-xs bg-light">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="py-3 px-4 text-start font-medium uppercase w-32 text-gray-500">País</th>
+                  <th className="py-3 px-4 text-start font-medium uppercase w-10 text-gray-500">Usuários</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {country.slice(0, 6).map((item) => (
+                  <tr key={item.country} className="even:bg-gray-100">
+                    <td className="py-3 px-4 whitespace-nowrap w-32 max-w-32 truncate text-gray-800">{item.country}</td>
+                    <td className="py-3 px-4 whitespace-nowrap text-gray-800">{Number(item.activeUsers) + Number(item.newUsers)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   )

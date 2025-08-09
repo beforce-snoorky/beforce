@@ -7,8 +7,9 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
-import { FilterModal } from "../digisac/filterModal"
+import { FilterModalDigisac } from "../digisac/filterModal"
 import { UserFormModal } from "../users/userModal"
+import { FilterModalWebsite } from "../website/filterModal"
 
 export type NavItemProps = {
   icon: React.ReactNode
@@ -22,10 +23,12 @@ export function NavBar() {
   const pathname = usePathname()
   const isMobile = useMediaQuery("(max-width: 1280px)")
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isFilterOpenDigisac, setIsFilterOpenDigisac] = useState(false)
+  const [isFilterOpenWebsite, setIsFilterOpenWebsite] = useState(false)
   const [isUsersOpen, setIsUsersOpen] = useState(false)
 
-  const shouldShowFilter = ["/analysis/digisac", "/analysis/website"].includes(pathname)
+  const shouldShowFilterDigisac = ["/analysis/digisac"].includes(pathname)
+  const shouldShowFilterWebsite = ["/analysis/website"].includes(pathname)
   const shouldShowAddUser = ["/analysis/users"].includes(pathname)
 
   if (!isMobile) return null
@@ -73,8 +76,16 @@ export function NavBar() {
           })}
         </div>
 
-        {shouldShowFilter && (
-          <button onClick={() => setIsFilterOpen(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
+        {shouldShowFilterDigisac && (
+          <button onClick={() => setIsFilterOpenDigisac(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
+            <span className="w-4.5 h-4.5" aria-label="Filtrar">
+              <SlidersHorizontal className="w-4.5 h-4.5" />
+            </span>
+          </button>
+        )}
+
+        {shouldShowFilterWebsite && (
+          <button onClick={() => setIsFilterOpenWebsite(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
             <span className="w-4.5 h-4.5" aria-label="Filtrar">
               <SlidersHorizontal className="w-4.5 h-4.5" />
             </span>
@@ -90,7 +101,8 @@ export function NavBar() {
         )}
       </aside>
 
-      {isFilterOpen && <FilterModal onClose={() => setIsFilterOpen(false)} />}
+      {isFilterOpenDigisac && <FilterModalDigisac onClose={() => setIsFilterOpenDigisac(false)} />}
+      {isFilterOpenWebsite && <FilterModalWebsite onClose={() => setIsFilterOpenWebsite(false)} />}
       {isUsersOpen && (<UserFormModal mode="create" onClose={() => setIsUsersOpen(false)} onSuccess={() => setIsUsersOpen(false)} />)}
     </>
   )

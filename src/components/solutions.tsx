@@ -1,7 +1,6 @@
 "use client"
 
 import { useAuth } from "@/hooks/useAuth"
-import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export function SolutionsButton({ item }: { item: string }) {
@@ -27,9 +26,8 @@ export function SolutionsButton({ item }: { item: string }) {
       <div className="absolute left-5 w-4 h-4 rounded-full shadow bg-light" />
     </div>
   ) : (
-    <Link href="https://api.whatsapp.com/send?phone=551530420727" className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs border border-accent text-accent hover:bg-accent hover:text-light">
+    <Link href="https://api.whatsapp.com/send?phone=551530420727" className="px-2 py-1.5 rounded-lg text-xs border border-accent text-accent hover:bg-accent hover:text-light">
       Contratar
-      <ArrowRight className="w-4 h-4" />
     </Link>
   )
 }

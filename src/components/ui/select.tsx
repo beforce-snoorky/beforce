@@ -30,31 +30,32 @@ export function Select(props: SelectProps) {
   }, [isOpen])
 
   return (
-    <div className="relative" ref={ref}>
-      <label htmlFor={props.id} className="block text-sm font-medium mb-1">{props.label}</label>
+    <div className="relative w-full inline-flex flex-col" ref={ref}>
       <button
         id={props.id}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="text-sm w-full max-h-11 flex items-center justify-between p-3 rounded-lg border border-surface bg-dark/4"
+        className="py-3 px-4 inline-flex items-center justify-between gap-x-2 text-sm rounded-lg border border-surface bg-light text-gray-800"
       >
         <span className="">{displayLabel}</span>
-        <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 max-h-36 bottom-0 xl:bottom-auto xl:top-full left-0 right-0 xl:mt-1 rounded-lg shadow-lg text-sm overflow-auto border border-surface bg-light">
-          {props.options.map((option) => (
-            <button key={option.value}
-              className="block w-full text-left px-4 py-2 border-b last:border-b-0 border-surface"
-              onClick={() => {
-                props.onChange(option.value)
-                setIsOpen(false)
-              }}
-            >
-              <span>{option.label}</span>
-            </button>
-          ))}
+        <div className="absolute bottom-0 lg:bottom-auto lg:top-full z-50 mt-2 min-w-full shadow-md rounded-lg overflow-hidden border border-surface bg-light">
+          <div className="p-1 space-y-0.5 max-h-40 overflow-y-auto">
+            {props.options.map((option) => (
+              <button key={option.value}
+                className="w-full text-left flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                onClick={() => {
+                  props.onChange(option.value)
+                  setIsOpen(false)
+                }}
+              >
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

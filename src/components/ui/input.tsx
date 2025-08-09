@@ -24,7 +24,7 @@ export function Input(props: InputProps) {
         placeholder={props.placeholder}
         autoComplete={props.autoComplete}
         value={props.value}
-        className="w-full p-3 ps-12 rounded-lg outline-none border border-surface/25 bg-gray-800 text-gray-400"
+        className={`w-full p-3 ps-12 rounded-lg outline-none border ${props.className ? `${props.className}` : "border-surface/25 bg-gray-800 text-gray-400"}`}
         onChange={props.onChange}
         aria-required={props.required}
         required={props.required}

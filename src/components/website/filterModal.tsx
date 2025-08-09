@@ -1,36 +1,25 @@
 "use client"
 
-import { useDigisacData } from "@/hooks/useDigisac"
-import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
+import { useWebsiteReports } from "@/hooks/useWebsite"
+import { useWebsiteFilter } from "@/hooks/useWebsiteFilterContext"
+import { SlidersHorizontal, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Select } from "../ui/select"
 import { formatPeriodToMonthYear } from "@/utils/data"
 import { Button } from "../ui/button"
-import { SlidersHorizontal, X } from "lucide-react"
 
-export function FilterModalDigisac({ onClose }: { onClose: () => void }) {
-  const digisacReportFilters = useDigisacFilter()
-  const { availablePeriods, operatorOptions } = useDigisacData()
+export function FilterModalWebsite({ onClose }: { onClose: () => void }) {
+  const reportFilter = useWebsiteFilter()
+  const { availablePeriods } = useWebsiteReports()
 
-  const [selectedPeriodLocal, setSelectedPeriodLocal] = useState(digisacReportFilters.selectedPeriod)
-  const [selectedOperatorDepartmentLocal, setSelectedOperatorDepartmentLocal] = useState(digisacReportFilters.selectedOperatorDepartment)
+  const [localPeriod, setLocalPeriod] = useState(reportFilter.selectedPeriod)
 
   useEffect(() => {
-    setSelectedPeriodLocal(digisacReportFilters.selectedPeriod)
-    setSelectedOperatorDepartmentLocal(digisacReportFilters.selectedOperatorDepartment)
-  }, [
-    digisacReportFilters.selectedPeriod,
-    digisacReportFilters.selectedOperatorDepartment
-  ])
-
-  const availablePeriodOptions = availablePeriods.map((period) => ({
-    label: formatPeriodToMonthYear(period),
-    value: period
-  }))
+    setLocalPeriod(reportFilter.selectedPeriod)
+  }, [reportFilter.selectedPeriod])
 
   const handleApplyFilters = () => {
-    digisacReportFilters.setSelectedPeriod(selectedPeriodLocal)
-    digisacReportFilters.setSelectedOperatorDepartment(selectedOperatorDepartmentLocal)
+    reportFilter.setSelectedPeriod(localPeriod)
     onClose()
   }
 
@@ -40,7 +29,7 @@ export function FilterModalDigisac({ onClose }: { onClose: () => void }) {
       <div className="fixed inset-0 bottom-6 z-50 flex items-end md:items-center justify-center pointer-events-none">
         <div className="w-full sm:max-w-lg mx-4 sm:mx-auto rounded-xl shadow-xl pointer-events-auto transition-all duration-300 ease-out animate-slide-up border border-surface bg-light">
           <div className="flex justify-between items-center py-3 px-4 border-b border-surface">
-            <h3 className="font-bold text-lg">Filtrar Atendimento</h3>
+            <h3 className="font-bold text-lg">Filtrar Métricas do Site</h3>
             <button
               type="button"
               onClick={onClose}
@@ -52,18 +41,14 @@ export function FilterModalDigisac({ onClose }: { onClose: () => void }) {
           </div>
           <div className="p-4 space-y-4">
             <Select
-              id="operators"
-              label="Funcionários"
-              options={operatorOptions}
-              value={selectedOperatorDepartmentLocal}
-              onChange={setSelectedOperatorDepartmentLocal}
-            />
-            <Select
               id="periods"
               label="Períodos"
-              options={availablePeriodOptions}
-              value={selectedPeriodLocal}
-              onChange={setSelectedPeriodLocal}
+              options={availablePeriods.map(period => ({
+                label: formatPeriodToMonthYear(period),
+                value: period,
+              }))}
+              value={localPeriod}
+              onChange={setLocalPeriod}
             />
           </div>
           <div className="flex justify-end items-center gap-2 py-3 px-4 border-t border-gray-200">

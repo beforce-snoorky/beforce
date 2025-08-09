@@ -38,7 +38,7 @@ export function Login() {
           onChange={(e) => response.setPassword(e.target.value)}
           required
         />
-        <Button type="submit" isPending={response.isLoading}>Entrar</Button>
+        <Button isPending={response.isLoading} type="submit" variant="primary">Entrar</Button>
       </form>
     </>
   )

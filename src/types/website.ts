@@ -3,41 +3,22 @@ export interface Websites {
   business_id: string
   period: string
   data: {
-    city: CityData[]
-    country: CountryData[]
-    devices: DeviceData[]
-    language: LanguageData[]
-    origem: SourceData[]
-    pages: PageData[]
-    system: SystemData[]
     users: UsersData
+    source: SourceData[]
+    system: SystemData[]
+    devices: DeviceData[]
+    pages: PageData[]
+    country: CountryData[]
+    city: CityData[]
   }
   created_at: string
 }
 
-export interface CityData {
-  city: string
-  activeUsers: string
-  engagedSessions: string
+export interface UsersData {
+  totalUsers: string
   newUsers: string
-}
-
-export interface CountryData {
-  country: string
-  activeUsers: string
-  engagedSessions: string
-  newUsers: string
-}
-
-export interface DeviceData {
-  deviceCategory: string
-  activeUsers: string
-}
-
-export interface LanguageData {
-  language: string
-  activeUsers: string
-  newUsers: string
+  averageSessionDuration: string
+  engagementRate: string
 }
 
 export interface SourceData {
@@ -45,20 +26,34 @@ export interface SourceData {
   sessions: string
 }
 
-export interface PageData {
-  pagePath: string
-  activeUsers: string
-  screenPageViews: string
-  screenPageViewsPerUser: string
-}
-
 export interface SystemData {
   operatingSystem: string
   activeUsers: string
 }
 
-export interface UsersData {
-  averageSessionDuration: string
+export interface DeviceData {
+  deviceCategory: string
+  activeUsers: string
+}
+
+export interface PageData {
+  pagePath: string
+  screenPageViews: string
+  activeUsers: string
+  screenPageViewsPerUser: string
+}
+
+export interface CountryData {
+  countryId: string
+  country: string
+  activeUsers: string
   newUsers: string
-  totalUsers: string
+  engagedSessions: string
+}
+
+export interface CityData {
+  city: string
+  activeUsers: string
+  newUsers: string
+  engagedSessions: string
 }

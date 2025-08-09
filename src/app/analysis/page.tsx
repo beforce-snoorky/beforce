@@ -1,6 +1,6 @@
-import DigitalScoreGauge from "@/components/charts/score"
+import { DigitalScoreGauge } from "@/components/charts/score"
 import { SolutionsButton } from "@/components/solutions"
-import Card from "@/components/ui/cards"
+import { Card } from "@/components/ui/cards"
 import { solutions } from "@/constants/solutions"
 import { Gauge } from "lucide-react"
 
@@ -13,32 +13,25 @@ export default function DashboardPage() {
       </div>
       <p className="text-sm">Descubra como está sua transformação digital</p>
 
-      <Card>
-        <h2 className="text-lg font-semibold">Pontuação Digital</h2>
-        <div className="max-w-xl mx-auto">
-          <DigitalScoreGauge />
-        </div>
-      </Card>
+      <DigitalScoreGauge />
 
       <section>
         <Card>
           <h2 className="text-lg font-semibold">Seus serviços contratados</h2>
           <div className="flex flex-col gap-3 mt-4 md:mt-6">
             {solutions.map((item, index) => (
-              <div key={index} className="p-4 rounded-xl border border-surface">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${item.style}`}>
+              <div key={index} className="p-4 rounded-xl border border-surface bg-light">
+                <div className="flex justify-between gap-2">
+                  <div className="space-y-2 md:space-y-0 md:flex md:items-center md:gap-2">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${item.style}`}>
                       {item.icon}
                     </div>
                     <div>
-                      <p className="font-medium">{item.label}</p>
-                      <p className="text-sm text-dark/60 leading-tight">{item.description}</p>
+                      <h3 className="font-medium">{item.label}</h3>
+                      <p className="text-sm leading-tight text-gray-500">{item.description}</p>
                     </div>
                   </div>
-                  <div className="ml-auto">
-                    <SolutionsButton item={item.key} />
-                  </div>
+                  <SolutionsButton item={item.key} />
                 </div>
               </div>
             ))}

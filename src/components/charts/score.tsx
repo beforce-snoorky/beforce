@@ -2,7 +2,12 @@
 
 import { useAuth } from "@/hooks/useAuth"
 import { calculateScore } from "@/utils/calculateScore"
-import GaugeComponent from "react-gauge-component"
+import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
+import { Card } from "../ui/cards"
+import { EChartsOption } from "echarts-for-react"
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false })
 
 function getMessage(score: number) {
   if (score >= 100) return "Parabéns! Você ativou todas as soluções digitais disponíveis."
@@ -11,58 +16,90 @@ function getMessage(score: number) {
   return "Você está só começando. Há muito espaço para crescimento com as soluções BEFORCE!"
 }
 
-export default function DigitalScoreGauge() {
+export function DigitalScoreGauge() {
   const { company } = useAuth()
-  if (!company) return <SkeletonGauge />
+  const [height, setHeight] = useState(150)
+
+  useEffect(() => {
+    function updateHeight() {
+      const width = window.innerWidth
+      if (width >= 1280) setHeight(275)
+      else if (width >= 1024) setHeight(275)
+      else if (width >= 768) setHeight(275)
+      else setHeight(150)
+    }
+
+    updateHeight()
+    window.addEventListener("resize", updateHeight)
+    return () => window.removeEventListener("resize", updateHeight)
+  }, [])
+
+  if (!company) return (
+    <div className="w-full h-full flex items-center justify-center px-4">
+      <div className="animate-spin size-8 mr-2 rounded-full border-4 border-accent-light border-r-accent" />
+    </div>
+  )
 
   const { score, activeCount, total } = calculateScore(company)
+  const gaugeValue = Math.min(Math.max(score, 0), 100)
+
+  const option: EChartsOption = {
+    series: [{
+      type: "gauge",
+      startAngle: 180,
+      endAngle: 0,
+      min: 0,
+      max: 100,
+      center: ["50%", "75%"],
+      radius: "150%",
+      splitNumber: 0,
+      axisLine: {
+        lineStyle: {
+          width: 16,
+          color: [[0.25, "#EF4444"], [0.5, "#F59E0B"], [0.75, "#EAB308"], [1, "#10B981"]],
+          shadowColor: "rgba(0,138,255,0.45)",
+          shadowBlur: 0,
+        },
+        roundCap: true,
+      },
+      pointer: {
+        length: "75%",
+        width: 8,
+        offsetCenter: [0, "5%"],
+        itemStyle: {
+          color: "#fa0d1d"
+        }
+      },
+      progress: { show: false },
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      title: { show: false },
+      detail: { show: false },
+      data: [{ value: gaugeValue }]
+    }]
+  }
 
   return (
-    <>
+    <Card>
+      <h2 className="text-lg font-semibold">Pontuação Digital</h2>
       <div className="max-w-xl mx-auto">
-        <GaugeComponent
-          type="semicircle"
-          arc={{
-            width: 0.1, padding: 0.02, cornerRadius: 16,
-            subArcs: [
-              { limit: 25, color: '#EF4444', tooltip: { text: 'Potencial Inexplorado' } },
-              { limit: 50, color: '#F59E0B', tooltip: { text: 'Progresso Inicial' } },
-              { limit: 75, color: '#EAB308', tooltip: { text: 'Bom Desenvolvimento' } },
-              { color: '#10B981', tooltip: { text: 'Excelente Progresso' } },
-            ],
-          }}
-          pointer={{ color: '#1F2937', length: 0.8, width: 12 }}
-          labels={{ valueLabel: { hide: true } }}
-          minValue={0}
-          maxValue={100}
-          value={score}
-        />
+        <div className="w-full max-w-4xl mx-auto mt-6 px-4">
+          <ReactECharts
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            style={{ width: "100%", height }}
+          />
+        </div>
+        <div className="text-center">
+          <p className="text-sm leading-relaxed text-dark/75">
+            Você ativou <strong className="font-semibold text-dark">{activeCount}</strong> de <strong className="font-semibold text-dark">{total}</strong> soluções digitais disponíveis.
+          </p>
+          <p className="text-xs text-dark/50">
+            {getMessage(score)}
+          </p>
+        </div>
       </div>
-      <div className="text-center">
-        <p className="text-sm leading-relaxed text-dark/75">
-          Você ativou <strong className="font-semibold text-dark">{activeCount}</strong> de <strong className="font-semibold text-dark">{total}</strong> soluções digitais disponíveis.
-        </p>
-        <p className="text-xs text-dark/50">
-          {getMessage(score)}
-        </p>
-      </div>
-    </>
-  )
-}
-
-function SkeletonGauge() {
-  return (
-    <>
-      <div className="relative mx-auto w-full max-w-lg flex flex-col items-center justify-center animate-pulse h-56 p-4">
-        <svg className="w-full 54" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
-          <path d="M10,100 A90,90 0 0,1 190,100" fill="none" stroke="#e5e7eb" strokeWidth="20" strokeLinecap="round" />
-          <text x="100" y="90" textAnchor="middle" fontSize="48" fill="#d1d5db" dominantBaseline="middle">--</text>
-        </svg>
-      </div>
-      <div className="text-center mt-4 space-y-2 animate-pulse">
-        <div className="h-4 w-3/4 mx-auto bg-gray-200 rounded" />
-        <div className="h-3 w-1/2 mx-auto bg-gray-200 rounded" />
-      </div>
-    </>
+    </Card>
   )
 }

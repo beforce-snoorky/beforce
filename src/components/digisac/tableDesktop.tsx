@@ -1,7 +1,5 @@
-"use client"
-
 import { useDigisacData } from "@/hooks/useDigisac"
-import { useReportFilter } from "@/hooks/useFilterContext"
+import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
 import { DigisacReportEntry } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { UsersRound } from "lucide-react"
@@ -9,7 +7,7 @@ import { useMemo } from "react"
 
 type TableDesktopProps = {
   reportData: ReturnType<typeof useDigisacData>
-  reportFilters: ReturnType<typeof useReportFilter>
+  reportFilters: ReturnType<typeof useDigisacFilter>
 }
 
 export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
@@ -36,8 +34,8 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
     for (const report of reports) {
       const operator = report.operator_name.trim()
       const department = report.department.trim()
-      const key = `${operator}||${department}`
-      if (!grouped.has(key)) grouped.set(key, { operator, department, report })
+      const rowKey = `${operator}||${department}`
+      if (!grouped.has(rowKey)) grouped.set(rowKey, { operator, department, report })
     }
 
     return Array.from(grouped.values()).map(({ operator, department, report }) => {
@@ -51,41 +49,49 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
   }, [reportData.reportsByPeriod, period, metrics])
 
   return (
-    <section className="w-full">
-      <div className="w-full overflow-auto max-h-104 relative rounded-xl border border-surface bg-light">
-        <table className="min-w-max w-full">
-          <thead className="sticky top-0 bg-gray-100 z-10">
-            <tr>
-              <th className="px-3 py-3 text-sm font-medium text-left">Usuários</th>
-              <th className="px-3 py-3 text-sm font-medium text-center">Departamento</th>
-              {metrics.map((m) => (
-                <th key={m.key} className="px-3 py-3 text-sm font-medium text-center">{m.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(({ operator, department, key, values }, index) => {
-              const selectedKey = reportFilters.selectedOperatorDepartment.trim()
-              const currentKey = key.trim()
-              const isDimmed = selectedKey !== "Todos" && selectedKey !== currentKey
-
-              return (
-                <tr key={index} className={`border-b last:border-none border-surface even:bg-dark/3 ${isDimmed ? "opacity-40" : "opacity-100"}`}>
-                  <td className="px-3 py-3 text-sm flex items-center gap-2 max-w-xs">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
-                      <UsersRound className="w-4 h-4" />
-                    </div>
-                    <span className="truncate w-52 max-w-52 block">{operator}</span>
-                  </td>
-                  <td className="truncate w-40 max-w-40 px-3 py-3 text-sm text-center">{department}</td>
-                  {values.map((value, index) => (
-                    <td key={index} className="truncate w-48 max-w-48 px-3 py-3 text-sm text-center">{value}</td>
+    <section className="flex flex-col">
+      <div className="overflow-auto max-h-107 rounded-xl border border-surface bg-light">
+        <div className="min-w-full">
+          <div className="max-h-107 overflow-y-auto bg-light">
+            <table className="min-w-full divide-y divide-surface">
+              <thead className="sticky top-0 z-10 bg-gray-50">
+                <tr>
+                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-48 text-gray-500">Usuário</th>
+                  <th className="py-3 px-4 text-start text-xs font-medium uppercase w-48 text-gray-500">Departamento</th>
+                  {metrics.map((item) => (
+                    <th key={item.key} className="py-3 px-4 text-center text-xs font-medium uppercase w-24 text-gray-500">
+                      <div className="w-24">{item.label}</div>
+                    </th>
                   ))}
                 </tr>
-              )
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {data.map(({ operator, department, key, values }, index) => {
+                  const selectedKey = reportFilters.selectedOperatorDepartment.trim()
+                  const currentKey = key.trim()
+                  const isDimmed = selectedKey !== "Todos" && selectedKey !== currentKey
+
+                  return (
+                    <tr key={index} className={`${isDimmed ? "opacity-40" : "opacity-100"} even:bg-gray-100`}>
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-accent bg-accent/10">
+                          <UsersRound className="w-4 h-4" />
+                        </div>
+                        <span className="truncate w-48 max-w-48 block">{operator}</span>
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-800 w-48 max-w-48">{department}</td>
+                      {values.map((value, index) => (
+                        <td key={index} className="py-3 px-4 whitespace-nowrap text-sm text-center text-gray-800 w-24">
+                          <div className="w-24">{value}</div>
+                        </td>
+                      ))}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
   )

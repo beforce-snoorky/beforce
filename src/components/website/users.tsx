@@ -1,27 +1,29 @@
-import { UsersData, } from "@/types/website"
-import Card from "../ui/cards"
-import { UserCheck, UserPlus, Timer } from "lucide-react"
+import { UsersData } from "@/types/website"
+import { MousePointerClick, Timer, UserCheck, UserPlus } from "lucide-react"
 
 export function UsersStatistics({ users }: { users: UsersData }) {
-  const performanceMetrics = [
-    { label: "Total de Usuários", style: "text-accent bg-accent-light", icon: <UserCheck className="w-5 h-5" />, value: users.totalUsers },
-    { label: "Novos Usuários", style: "text-blue-600 bg-blue-100", icon: <UserPlus className="w-5 h-5" />, value: users.newUsers },
-    { label: "Tempo por sessão", style: "text-purple-600 bg-purple-100", icon: <Timer className="w-5 h-5" />, value: users.averageSessionDuration }
+  const metrics = [
+    { label: "Total de Usuários", style: "text-blue-600 bg-blue-100", icon: <UserCheck className="w-5 h-5" />, value: users.totalUsers },
+    { label: "Novos Usuários", style: "text-green-600 bg-green-100", icon: <UserPlus className="w-5 h-5" />, value: users.newUsers },
+    { label: "Tempo por sessão", style: "text-purple-600 bg-purple-100", icon: <Timer className="w-5 h-5" />, value: users.averageSessionDuration },
+    { label: "Taxa de Engajamento", style: "text-pink-600 bg-pink-100", icon: <MousePointerClick className="w-5 h-5" />, value: users.engagementRate }
   ]
 
   return (
     <>
-      {performanceMetrics.map((metric, index) => (
-        <div key={index} className="cols-span-1 last:col-span-2">
-          <Card style={metric.style}>
-            <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 bg-light/75`}>
-                {metric.icon}
+      {metrics.map((metric, index) => (
+        <div key={index} className="col-span-4 md:col-span-2 p-4 rounded-xl border border-surface bg-light">
+          <div className="flex max-lg:flex-col justify-between lg:items-center lg:gap-4">
+            <div className="w-full">
+              <div className="flex items-center gap-2 mb-1">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${metric.style}`}>
+                  {metric.icon}
+                </div>
+                <span className="text-xl font-medium text-gray-900">{metric.value}</span>
               </div>
-              <span className="text-xl font-bold">{metric.value}</span>
+              <span className="text-sm text-gray-500 whitespace-nowrap">{metric.label}</span>
             </div>
-            <span className="text-sm text-dark/75">{metric.label}</span>
-          </Card>
+          </div>
         </div>
       ))}
     </>

@@ -1,47 +1,53 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { getSupabaseClient } from "@/utils/supabase/client"
 import { useAuth } from "./useAuth"
-import { useReportFilter } from "./useFilterContext"
+import { useDigisacFilter } from "./useDigisacFilterContext"
+import { useEffect, useMemo, useState } from "react"
 import { DigisacReportEntry, DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
-import { getSupabaseClient } from "@/utils/supabase/client"
 
 const supabaseClient = getSupabaseClient()
 
 export function useDigisacData() {
   const { company } = useAuth()
-  const reportFilter = useReportFilter()
+  const reportFilter = useDigisacFilter()
 
   const [availablePeriods, setAvailablePeriods] = useState<string[]>([])
   const [reportsByPeriod, setReportsByPeriod] = useState<Record<string, DigisacReportEntry[]>>({})
   const [filteredReports, setFilteredReports] = useState<DigisacReportEntry[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const rawPeriod = reportFilter.selectedPeriod
-  const period = ensureFullPeriodFormat(rawPeriod)
+  const period = ensureFullPeriodFormat(reportFilter.selectedPeriod)
 
-  // Buscar períodos disponíveis
   useEffect(() => {
     if (!company?.id) return
 
+    setLoading(true)
+
     async function loadPeriods() {
       const { data, error } = await supabaseClient.from("digisac_reports").select("period").eq("business_id", company?.id)
+
       if (!error && data) {
         const periods = Array.from(new Set(data.map((report) => report.period)))
         setAvailablePeriods(periods)
         if (periods.at(0) && !reportFilter.selectedPeriod) reportFilter.setSelectedPeriod(periods[0])
       }
+
+      setLoading(false)
     }
 
     loadPeriods()
   }, [company?.id, reportFilter])
 
-  // Carrega relatórios do período
   useEffect(() => {
     if (!company?.id || !period || reportsByPeriod[period]) return
 
+    setLoading(true)
+
     async function loadReports() {
       const { data, error } = await supabaseClient.from("digisac_reports").select("*").eq("business_id", company?.id).eq("period", period)
+
       if (!error && data) {
         const flatReports: DigisacReportEntry[] = data.flatMap((record: DigisacReports) =>
           record.data.map((entry) => ({
@@ -54,12 +60,13 @@ export function useDigisacData() {
         )
         setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: flatReports }))
       }
+
+      setLoading(false)
     }
 
     loadReports()
   }, [company?.id, period, reportsByPeriod])
 
-  // Aplica filtro de operador + departamento
   useEffect(() => {
     const reportsForPeriod = reportsByPeriod[period] || []
 
@@ -70,7 +77,6 @@ export function useDigisacData() {
     }
   }, [reportFilter.selectedOperatorDepartment, period, reportsByPeriod])
 
-  // Geração de opções únicas de operador/departamento
   const operatorOptions = useMemo(() => {
     const reports = reportsByPeriod[period] || []
     const seen = new Set<string>()
@@ -93,5 +99,6 @@ export function useDigisacData() {
     reportsByPeriod,
     filteredReports,
     operatorOptions,
+    loading
   }
 }

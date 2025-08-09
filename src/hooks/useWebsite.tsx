@@ -2,49 +2,58 @@
 
 import { getSupabaseClient } from "@/utils/supabase/client"
 import { useAuth } from "./useAuth"
-import { useReportFilter } from "./useFilterContext"
+import { useWebsiteFilter } from "./useWebsiteFilterContext"
 import { useEffect, useState } from "react"
-import { ensureFullPeriodFormat } from "@/utils/data"
 import { Websites } from "@/types/website"
+import { ensureFullPeriodFormat } from "@/utils/data"
 
 const supabaseClient = getSupabaseClient()
 
 export function useWebsiteReports() {
   const { company } = useAuth()
-  const reportFilter = useReportFilter()
+  const reportFilter = useWebsiteFilter()
 
   const [availablePeriods, setAvailablePeriods] = useState<string[]>([])
   const [reportsByPeriod, setReportsByPeriod] = useState<Record<string, Websites[]>>({})
   const [filteredReports, setFilteredReports] = useState<Websites[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const rawPeriod = reportFilter.selectedPeriod
-  const period = ensureFullPeriodFormat(rawPeriod)
+  const period = ensureFullPeriodFormat(reportFilter.selectedPeriod)
 
-  // Buscar períodos disponíveis
   useEffect(() => {
     if (!company?.id) return
 
+    setLoading(true)
+
     async function loadPeriods() {
       const { data, error } = await supabaseClient.from("websites_reports").select("period").eq("business_id", company?.id)
-      if (!error && data) setAvailablePeriods(Array.from(new Set(data.map(report => report.period))))
+
+      if (!error && data) {
+        const periods = Array.from(new Set(data.map((report) => report.period)))
+        setAvailablePeriods(periods)
+        if (periods.at(0) && !reportFilter.selectedPeriod) reportFilter.setSelectedPeriod(periods[0])
+      }
+
+      setLoading(false)
     }
 
     loadPeriods()
-  }, [company?.id])
+  }, [company?.id, reportFilter])
 
-  // Carregar relatórios por período
   useEffect(() => {
-    if (!company?.id || reportsByPeriod[period]) return
+    if (!company?.id || !period || reportsByPeriod[period]) return
+
+    setLoading(true)
 
     async function loadReports() {
-      const { data, error } = await supabaseClient.from("websites_reports").select("*").eq("business_id", company?.id)
+      const { data, error } = await supabaseClient.from("websites_reports").select("*").eq("business_id", company?.id).eq("period", period)
       if (!error && data) setReportsByPeriod((prevCache) => ({ ...prevCache, [period]: data }))
+      setLoading(false)
     }
 
     loadReports()
   }, [company?.id, period, reportsByPeriod])
 
-  // Atualizar os dados filtrados com base no período
   useEffect(() => {
     setFilteredReports(reportsByPeriod[period] || [])
   }, [period, reportsByPeriod])
@@ -53,5 +62,6 @@ export function useWebsiteReports() {
     availablePeriods,
     reportsByPeriod,
     filteredReports,
+    loading
   }
 }

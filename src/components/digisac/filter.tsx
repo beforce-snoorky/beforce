@@ -1,70 +1,69 @@
 "use client"
 
 import { useDigisacData } from "@/hooks/useDigisac"
-import { useReportFilter } from "@/hooks/useFilterContext"
+import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
 import { useEffect, useState } from "react"
-import Card from "../ui/cards"
-import { SlidersHorizontal } from "lucide-react"
+import { Card } from "../ui/cards"
 import { Select } from "../ui/select"
+import { Button } from "../ui/button"
 import { formatPeriodToMonthYear } from "@/utils/data"
+import { SlidersHorizontal } from "lucide-react"
 
-type FilterSectionProps = {
-  reportData: ReturnType<typeof useDigisacData>
-  reportFilters: ReturnType<typeof useReportFilter>
+interface FiltersProps {
+  digisacReportData: ReturnType<typeof useDigisacData>
+  digisacReportFilters: ReturnType<typeof useDigisacFilter>
 }
 
-export function Filters({ reportData, reportFilters }: FilterSectionProps) {
-  const [localPeriod, setLocalPeriod] = useState(() => {
-    return reportFilters.selectedPeriod || reportData.availablePeriods.at(-1) || ""
-  })
+const allOperators = "Todos"
 
-  const [localOperator, setLocalOperator] = useState(() => {
-    return reportFilters.selectedOperatorDepartment || "Todos"
-  })
+export function Filters({ digisacReportData, digisacReportFilters }: FiltersProps) {
+  const [selectedPeriodLocal, setSelectedPeriodLocal] = useState(() =>
+    digisacReportFilters.selectedPeriod || digisacReportData.availablePeriods.at(-1) || ""
+  )
+
+  const [selectedOperatorDepartmentLocal, setSelectedOperatorDepartmentLocal] = useState(() =>
+    digisacReportFilters.selectedOperatorDepartment || allOperators
+  )
 
   useEffect(() => {
-    setLocalPeriod(reportFilters.selectedPeriod || reportData.availablePeriods.at(-1) || "")
-    setLocalOperator(reportFilters.selectedOperatorDepartment || "Todos")
-  }, [reportFilters.selectedPeriod, reportFilters.selectedOperatorDepartment, reportData.availablePeriods])
+    setSelectedPeriodLocal(digisacReportFilters.selectedPeriod || digisacReportData.availablePeriods.at(-1) || "")
+    setSelectedOperatorDepartmentLocal(digisacReportFilters.selectedOperatorDepartment || allOperators)
+  }, [digisacReportFilters.selectedPeriod, digisacReportFilters.selectedOperatorDepartment, digisacReportData.availablePeriods])
+
+  const availablePeriodOptions = digisacReportData.availablePeriods.map((period) => ({
+    label: formatPeriodToMonthYear(period),
+    value: period,
+  }))
 
   const handleApplyFilters = () => {
-    reportFilters.setSelectedPeriod(localPeriod)
-    reportFilters.setSelectedOperatorDepartment(localOperator)
+    digisacReportFilters.setSelectedPeriod(selectedPeriodLocal)
+    digisacReportFilters.setSelectedOperatorDepartment(selectedOperatorDepartmentLocal)
   }
 
   return (
     <Card>
-      <div className="flex items-center gap-2">
-        <SlidersHorizontal className="w-5 h-5 text-accent" />
-        <h2 className="text-lg font-semibold">Filtros e Métricas</h2>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
         <Select
           id="operators"
           label="Funcionários"
-          options={reportData.operatorOptions}
-          value={localOperator}
-          onChange={setLocalOperator}
+          options={digisacReportData.operatorOptions}
+          value={selectedOperatorDepartmentLocal}
+          onChange={setSelectedOperatorDepartmentLocal}
         />
-
         <Select
           id="periods"
           label="Períodos"
-          options={reportData.availablePeriods.map((period) => ({ label: formatPeriodToMonthYear(period), value: period }))}
-          value={localPeriod}
+          options={availablePeriodOptions}
+          value={selectedPeriodLocal}
           onChange={(period) => {
-            setLocalPeriod(period)
-            setLocalOperator("Todos")
+            setSelectedPeriodLocal(period)
+            setSelectedOperatorDepartmentLocal(allOperators)
           }}
         />
-
-        <button
-          onClick={handleApplyFilters}
-          className="self-end w-full max-h-11 flex text-sm justify-center items-center p-3 rounded-lg disabled:cursor-not-allowed transition-colors duration-200 bg-accent text-light"
-        >
+        <Button className="col-span-2 xl:col-span-1" onClick={handleApplyFilters} variant="primary">
+          <SlidersHorizontal className="w-4 h-4" />
           Aplicar Filtros
-        </button>
+        </Button>
       </div>
     </Card>
   )

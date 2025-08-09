@@ -2,16 +2,16 @@
 
 import { createContext, useContext, useState } from "react"
 
-type ReportFilterContextType = {
+type DigisacFilterContextType = {
   selectedPeriod: string
   selectedOperatorDepartment: string
   setSelectedPeriod: (period: string) => void
   setSelectedOperatorDepartment: (value: string) => void
 }
 
-const ReportFilterContext = createContext<ReportFilterContextType | undefined>(undefined)
+const DigisacFilterContext = createContext<DigisacFilterContextType | undefined>(undefined)
 
-export function ReportFilterProvider({ children }: { children: React.ReactNode }) {
+export function DigisacFilterProvider({ children }: { children: React.ReactNode }) {
   const [selectedPeriod, setSelectedPeriod] = useState("")
   const [selectedOperatorDepartment, setSelectedOperatorDepartment] = useState("Todos")
 
@@ -21,19 +21,19 @@ export function ReportFilterProvider({ children }: { children: React.ReactNode }
   }
 
   return (
-    <ReportFilterContext.Provider value={{
+    <DigisacFilterContext.Provider value={{
       selectedPeriod,
       selectedOperatorDepartment,
       setSelectedPeriod: updateSelectedPeriod,
       setSelectedOperatorDepartment,
     }}>
       {children}
-    </ReportFilterContext.Provider>
+    </DigisacFilterContext.Provider>
   )
 }
 
-export function useReportFilter() {
-  const context = useContext(ReportFilterContext)
-  if (!context) throw new Error("useReportFilter must be used inside ReportFilterProvider")
+export function useDigisacFilter() {
+  const context = useContext(DigisacFilterContext)
+  if (!context) throw new Error("useDigisacFilter must be used inside DigisacFilterProvider")
   return context
 }
