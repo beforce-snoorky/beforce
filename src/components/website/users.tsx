@@ -1,4 +1,4 @@
-import { UsersData } from "@/types/website"
+import type { UsersData } from "@/types/website"
 import { MousePointerClick, Timer, UserCheck, UserPlus } from "lucide-react"
 
 export function UsersStatistics({ users }: { users: UsersData }) {

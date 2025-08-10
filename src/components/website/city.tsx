@@ -1,7 +1,7 @@
 "use client"
 
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { CityData } from "@/types/website"
+import type { CityData } from "@/types/website"
 import { ChevronDown, MapPin, MousePointerClick, UserPlus, UsersRound } from "lucide-react"
 import { useState } from "react"
 import { Card } from "../ui/cards"

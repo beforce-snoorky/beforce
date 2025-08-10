@@ -1,8 +1,8 @@
 "use client"
 
-import { Company } from "@/types/company"
+import type { Company } from "@/types/company"
 import { getSupabaseClient } from "@/utils/supabase/client"
-import { SupabaseClient, User } from "@supabase/supabase-js"
+import type { SupabaseClient, User } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type AuthContextType = {

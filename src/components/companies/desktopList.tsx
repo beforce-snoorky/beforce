@@ -1,6 +1,6 @@
 "use client"
 
-import { Company } from "@/types/company"
+import type { Company } from "@/types/company"
 import { CompanyActionButton } from "./actions"
 import { Building2, PenLine, Trash2 } from "lucide-react"
 import Image from "next/image"

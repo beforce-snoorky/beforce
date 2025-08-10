@@ -1,8 +1,7 @@
 "use client"
 
-import { countryNameToCode } from "@/types/countries"
+import { countryNameToCode } from "@/utils/countries"
 import { CountryData } from "@/types/website"
-import { Network } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export default function WorldMap({ country }: { country: CountryData[] }) {

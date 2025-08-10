@@ -1,6 +1,6 @@
 "use client"
 
-import { DigisacReportEntry } from "@/types/digisac"
+import type { DigisacReportEntry } from "@/types/digisac"
 import { calculateAverageTime } from "@/utils/data"
 import { Bot, ChevronDown, Clock, FileText, Hourglass, MessageCircleMore, MessageSquare, Search, Timer, UsersRound } from "lucide-react"
 import { useMemo, useState } from "react"

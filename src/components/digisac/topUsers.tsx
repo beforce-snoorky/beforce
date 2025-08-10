@@ -1,7 +1,7 @@
 "use client"
 
-import { DigisacReportEntry } from "@/types/digisac"
-import { EChartsOption } from "echarts-for-react"
+import type { DigisacReportEntry } from "@/types/digisac"
+import type { EChartsOption } from "echarts-for-react"
 import { Clock } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"

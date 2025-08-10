@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Modal } from "../ui/modal"
 import { Building2, X } from "lucide-react"
-import { Company } from "@/types/company"
+import type { Company } from "@/types/company"
 import { handleCompanyAction } from "@/utils/companyActions"
 import { getSupabaseClient } from "@/utils/supabase/client"
 import { slugify } from "@/utils/data"

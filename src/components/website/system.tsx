@@ -1,6 +1,6 @@
 "use client"
 
-import { DeviceData, SystemData } from "@/types/website"
+import type { DeviceData, SystemData } from "@/types/website"
 import { MonitorSmartphone } from "lucide-react"
 import { useMemo } from "react"
 import { Icon } from "../ui/icon"

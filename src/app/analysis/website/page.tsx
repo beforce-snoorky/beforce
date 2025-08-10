@@ -3,7 +3,7 @@
 import { Select } from "@/components/ui/select"
 import CitiesStatistics from "@/components/website/city"
 import WorldMap from "@/components/website/country"
-import OriginStatistics from "@/components/website/source"
+import SourceStatistics from "@/components/website/source"
 import PagesStatistics from "@/components/website/pages"
 import SystemStatistics from "@/components/website/system"
 import { UsersStatistics } from "@/components/website/users"
@@ -73,7 +73,7 @@ export default function AnalyticsPage() {
 
       <section className="grid grid-cols-8 gap-4">
         <UsersStatistics users={currentWebsiteReport.data.users} />
-        <OriginStatistics origem={currentWebsiteReport.data.source} />
+        <SourceStatistics origem={currentWebsiteReport.data.source} />
         <SystemStatistics system={currentWebsiteReport.data.system} devices={currentWebsiteReport.data.devices} />
         <PagesStatistics site={company.website_domain} pages={currentWebsiteReport.data.pages} />
         <CitiesStatistics cities={currentWebsiteReport.data?.city} />

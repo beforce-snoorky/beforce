@@ -1,6 +1,6 @@
 "use client"
 
-import { Company } from "@/types/company"
+import type { Company } from "@/types/company"
 import { Building2, ChevronDown, PenLine, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { CompanyActionButton } from "./actions"

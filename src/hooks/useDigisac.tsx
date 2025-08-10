@@ -4,7 +4,7 @@ import { getSupabaseClient } from "@/utils/supabase/client"
 import { useAuth } from "./useAuth"
 import { useDigisacFilter } from "./useDigisacFilterContext"
 import { useEffect, useMemo, useState } from "react"
-import { DigisacReportEntry, DigisacReports } from "@/types/digisac"
+import type { DigisacReportEntry, DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 
 const supabaseClient = getSupabaseClient()

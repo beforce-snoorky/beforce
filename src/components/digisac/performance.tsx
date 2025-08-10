@@ -1,6 +1,6 @@
 "use client"
 
-import { DigisacReportEntry } from "@/types/digisac"
+import type { DigisacReportEntry } from "@/types/digisac"
 import { EChartsOption } from "echarts-for-react"
 import { MessageCircleMore, MessageCircleOff, MessageCirclePlus, UsersRound } from "lucide-react"
 import { Card } from "../ui/cards"

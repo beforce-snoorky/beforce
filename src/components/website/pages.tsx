@@ -1,7 +1,7 @@
 "use client"
 
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { PageData } from "@/types/website"
+import type { PageData } from "@/types/website"
 import { BarChart2, ChevronDown, ExternalLink, Eye, FileText, UsersRound } from "lucide-react"
 import { useState } from "react"
 import { Card } from "../ui/cards"
