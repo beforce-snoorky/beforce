@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 export default function WorldMap({ country }: { country: CountryData[] }) {
   const [svgContent, setSvgContent] = useState<string>("")
 
-  const activeCountries = country.map((c) => countryNameToCode[c.country]).filter(Boolean)
+  const activeCountryCodes = country.map((countryItem) => countryNameToCode[countryItem.country]).filter(Boolean)
   // const activeCountries = [
   //   "ARG", "AGO", "AUT", "ALB", "ARE", "ARM", "AZE", "AFG", "AUS", "ATF",
   //   "BHS", "BLZ", "BOL", "BRA", "BEL", "BFA", "BEN", "BWA", "BDI", "BIH", "BGR", "BLR", "BTN", "BGD", "BRN",
@@ -51,17 +51,18 @@ export default function WorldMap({ country }: { country: CountryData[] }) {
     if (!svgContent) return
 
     const timeout = setTimeout(() => {
-      activeCountries.forEach((code) => {
-        const el = document.querySelector(`.${code}`)
-        if (el) {
-          (el as HTMLElement).style.fill = "#fa0d1d";
-          (el as HTMLElement).style.stroke = "#fa0d1d";
+      activeCountryCodes.forEach((countryCode) => {
+        const countryElement = document.querySelector(`.${countryCode}`)
+        if (countryElement) {
+          const element = countryElement as HTMLElement
+          element.style.fill = "#fa0d1d"
+          element.style.stroke = "#fa0d1d"
         }
       })
     }, 0)
 
     return () => clearTimeout(timeout)
-  }, [svgContent, activeCountries])
+  }, [svgContent, activeCountryCodes])
 
   return (
     <div className="col-span-8 xl:col-span-5 rounded-xl border border-surface bg-light">
