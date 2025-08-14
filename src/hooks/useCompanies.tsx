@@ -55,11 +55,11 @@ export function useCompanies(initialPerPage = 10): UseCompaniesReturn {
       else fetchCompanies(1, perPage, search)
     }, 350)
     return () => clearTimeout(t)
-  }, [search, perPage, fetchCompanies])
+  }, [search, perPage, fetchCompanies, page])
 
   useEffect(() => {
     fetchCompanies(page, perPage, search)
-  }, [page, perPage, fetchCompanies])
+  }, [page, perPage, search, fetchCompanies])
 
   const refetch = useCallback(() => {
     fetchCompanies(page, perPage, search)

@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import type { User as UiUser } from "@/components/users/userModal"
+import { User } from "@supabase/supabase-js"
 import { getSupabaseAdmin } from "@/utils/supabase/admin"
 
-// ————————————————————————————————————————
-// Tipos de payload
-// ————————————————————————————————————————
 type ListUsersPayload = {
   page?: number | string
   per_page?: number | string
@@ -30,14 +27,11 @@ type UpdateUserPayload = {
 
 type DeleteUserPayload = { id: string }
 
-// ————————————————————————————————————————
-// Helpers
-// ————————————————————————————————————————
-function mapSupabaseUser(u: any): UiUser {
+function mapSupabaseUser(u: User) {
   return {
     id: u.id,
-    email: u.email,
-    email_confirmed_at: u.email_confirmed_at ?? u.user_metadata?.email_confirmed_at,
+    email: u.email ?? undefined,
+    email_confirmed_at: u.email_confirmed_at ?? (u.user_metadata as any)?.email_confirmed_at, // se você tiver meta tipado, troque esse `as any`
     phone: u.phone ?? "",
     confirmed_at: u.confirmed_at ?? undefined,
     last_sign_in_at: u.last_sign_in_at ?? undefined,
@@ -50,14 +44,10 @@ function norm(v: unknown) {
   return s.toLowerCase()
 }
 
-// Fallback para total quando não temos count direto.
-// Se a próxima página tiver pelo menos 1 usuário, sabemos que existe “mais uma” página.
-// Isso mantém o “Próximo” funcionando corretamente.
-// Para total exato, veja a seção “(Opcional) total exato via RPC” abaixo.
+// Removi o per_page porque não era usado aqui
 async function estimateTotal(
   supabaseAdmin: ReturnType<typeof getSupabaseAdmin>,
-  page: number,
-  per_page: number
+  page: number
 ) {
   const next = await supabaseAdmin.auth.admin.listUsers({ page: page + 1, perPage: 1 })
   const hasNext = (next?.data?.users?.length ?? 0) > 0
@@ -78,9 +68,6 @@ export async function POST(req: NextRequest) {
     }
 
     switch (action) {
-      // ————————————————————————————————————
-      // LIST
-      // ————————————————————————————————————
       case "listUsers": {
         const { page: pageRaw, per_page: perPageRaw, query: queryRaw } = payload as ListUsersPayload
 
@@ -88,28 +75,25 @@ export async function POST(req: NextRequest) {
         const per_page = Math.max(1, Number(perPageRaw ?? 10))
         const query = String(queryRaw ?? "").trim()
 
-        // Quando tem busca, carregamos um “lote grande” e filtramos por email server-side.
-        // Isso nos permite devolver total/totalPages corretos sem depender de count nativo.
         if (query.length > 0) {
-          const MAX_PER_PAGE = 1000 // limite grande por página do GoTrue
-          let acc: any[] = []
+          const MAX_PER_PAGE = 1000
+          let acc: User[] = []
           let cur = 1
 
-          // Busca paginando até esgotar (com um limite de segurança)
           while (cur <= 10) {
             const { data, error } = await supabaseAdmin.auth.admin.listUsers({
               page: cur,
               perPage: MAX_PER_PAGE
             })
             if (error) throw error
-            const batch = data?.users ?? []
+            const batch: User[] = (data?.users ?? []) as User[]
             acc = acc.concat(batch)
             if (batch.length < MAX_PER_PAGE) break
             cur += 1
           }
 
           const q = norm(query)
-          const filtered = acc.filter((u) => norm(u.email).includes(q))
+          const filtered = acc.filter((u: User) => norm(u.email).includes(q))
 
           const total = filtered.length
           const totalPages = Math.max(1, Math.ceil(total / per_page))
@@ -120,25 +104,17 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ users: pageItems, total, totalPages })
         }
 
-        // Sem busca: usamos a paginação nativa e estimamos se existe próxima página.
         const { data, error } = await supabaseAdmin.auth.admin.listUsers({
           page,
           perPage: per_page
-        }) // params oficiais: page / perPage
+        })
         if (error) throw error
 
-        const usersRaw = data?.users ?? []
+        const usersRaw: User[] = (data?.users ?? []) as User[]
         const users = usersRaw.map(mapSupabaseUser)
 
-        // (Opcional) se você criar a RPC count_auth_users, descomente:
-        // const { data: countData } = await supabaseAdmin.rpc("count_auth_users")
-        // const total = Number(countData?.count ?? 0)
-        // const totalPages = Math.max(1, Math.ceil(total / per_page))
-
-        // Fallback sem RPC: estimamos se existe próxima página para manter o “Próximo” correto.
-        const { hasNext } = await estimateTotal(supabaseAdmin, page, per_page)
-        const totalApprox =
-          (page - 1) * per_page + users.length + (hasNext ? per_page : 0)
+        const { hasNext } = await estimateTotal(supabaseAdmin, page)
+        const totalApprox = (page - 1) * per_page + users.length + (hasNext ? per_page : 0)
         const totalPagesApprox = hasNext ? page + 1 : page
 
         return NextResponse.json({
@@ -148,9 +124,6 @@ export async function POST(req: NextRequest) {
         })
       }
 
-      // ————————————————————————————————————
-      // CREATE
-      // ————————————————————————————————————
       case "createUser": {
         const { email, password, phone, email_confirm, phone_confirm } = payload as CreateUserPayload
 
@@ -170,9 +143,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, id: data.user?.id })
       }
 
-      // ————————————————————————————————————
-      // UPDATE
-      // ————————————————————————————————————
       case "updateUser": {
         const { id, email, password, phone, email_confirm, phone_confirm } = payload as UpdateUserPayload
         if (!id) return NextResponse.json({ error: "ID do usuário não fornecido" }, { status: 400 })
@@ -184,14 +154,11 @@ export async function POST(req: NextRequest) {
           ...(email_confirm !== undefined ? { email_confirm } : {}),
           ...(phone_confirm !== undefined ? { phone_confirm } : {})
         })
-        if (error) throw error // update de email/senha/confirm flags são suportados oficialmente
+        if (error) throw error
 
         return NextResponse.json({ success: true })
       }
 
-      // ————————————————————————————————————
-      // DELETE
-      // ————————————————————————————————————
       case "deleteUser": {
         const { id } = payload as DeleteUserPayload
         if (!id) return NextResponse.json({ error: "ID não fornecido" }, { status: 400 })

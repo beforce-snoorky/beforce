@@ -7,7 +7,7 @@ import Image from "next/image"
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
 import { Icon } from "../ui/icon"
 
-export function UsersDesktopTable({ companies, loading, onSuccess, pagination }:
+export function UsersDesktopTable({ companies, onSuccess, pagination }:
   {
     companies: Company[]
     loading?: boolean

@@ -64,11 +64,11 @@ export function useUsers(initialPerPage = 10): UseUsersReturn {
       else fetchUsers(1, perPage, search)
     }, 350)
     return () => clearTimeout(t)
-  }, [search, perPage, fetchUsers])
+  }, [search, perPage, fetchUsers, page])
 
   useEffect(() => {
     fetchUsers(page, perPage, search)
-  }, [page, perPage, fetchUsers])
+  }, [page, perPage, search, fetchUsers])
 
   const refetch = useCallback(() => {
     fetchUsers(page, perPage, search)

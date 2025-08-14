@@ -23,6 +23,18 @@ export type User = {
   created_at: string
 }
 
+type CreatePayload = {
+  email: string
+  phone?: string
+  password: string
+}
+type UpdatePayload = {
+  id: string
+  email: string
+  phone?: string
+  password?: string
+}
+
 export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -39,15 +51,20 @@ export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
   const handleSubmit = async () => {
     setIsLoading(true)
 
-    const payload: Record<string, any> = {
-      ...(mode === "update" && user?.id ? { id: user.id } : {}),
-      email,
-      phone
+    if (mode === "update" && !user?.id) {
+      setIsLoading(false)
+      return
     }
 
-    // No update a senha é opcional
-    if (mode === "create") payload.password = password
-    if (mode === "update" && password) payload.password = password
+    const payload: CreatePayload | UpdatePayload =
+      mode === "create"
+        ? { email, phone: phone || undefined, password }
+        : {
+          id: user!.id,
+          email,
+          phone: phone || undefined,
+          ...(password ? { password } : {})
+        }
 
     const success = await handleUserAction(
       mode === "create" ? "createUser" : "updateUser",
@@ -63,19 +80,13 @@ export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
   }
 
   const canSubmit =
-    !!email &&
-    (mode === "create" ? !!password : true) &&
-    !isLoading
+    !!email && (mode === "create" ? !!password : true) && !isLoading
 
   return (
     <>
-      {/* Overlay */}
       <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-
-      {/* Container (mesmo padrão do Companies) */}
       <div className="fixed inset-0 bottom-6 z-50 flex items-end md:items-center justify-center pointer-events-none">
         <div className="w-full sm:max-w-xl mx-4 sm:mx-auto rounded-xl shadow-xl pointer-events-auto transition-all duration-300 ease-out animate-slide-up border border-surface bg-light">
-          {/* Header */}
           <div className="flex justify-between items-center py-3 px-4 border-b border-surface">
             <div>
               <h3 className="font-bold text-lg">
@@ -93,7 +104,6 @@ export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
             </button>
           </div>
 
-          {/* Conteúdo */}
           <div className="p-4 space-y-4">
             <div className="space-y-4">
               <Input
@@ -147,6 +157,7 @@ export function UserFormModal({ onClose, onSuccess, mode, user }: Props) {
               onClick={handleSubmit}
               isPending={isLoading}
               className="min-w-32"
+              aria-disabled={!canSubmit}
             >
               {isLoading ? "Salvando..." : "Salvar"}
             </Button>
