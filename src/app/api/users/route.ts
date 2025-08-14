@@ -25,13 +25,20 @@ type UpdateUserPayload = {
   phone_confirm?: boolean
 }
 
+type UserMetadata = {
+  email_confirmed_at?: string
+  [key: string]: unknown
+}
+
 type DeleteUserPayload = { id: string }
 
 function mapSupabaseUser(u: User) {
+  const meta = u.user_metadata as UserMetadata
+
   return {
     id: u.id,
     email: u.email ?? undefined,
-    email_confirmed_at: u.email_confirmed_at ?? (u.user_metadata as any)?.email_confirmed_at, // se você tiver meta tipado, troque esse `as any`
+    email_confirmed_at: u.email_confirmed_at ?? meta.email_confirmed_at,
     phone: u.phone ?? "",
     confirmed_at: u.confirmed_at ?? undefined,
     last_sign_in_at: u.last_sign_in_at ?? undefined,
