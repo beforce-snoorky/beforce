@@ -4,11 +4,11 @@ export interface Company {
   email: string
   logo: string | null
   has_website: boolean
-  website_domain: string
-  website_analytics_id: string
+  website_domain: string | null
+  website_analytics_id: string | null
   has_digisac: boolean
-  digisac_token: string
-  digisac_url: string
+  digisac_token: string | null
+  digisac_url: string | null
   has_cloud_server: boolean
   has_email_corporate: boolean
   has_ia: boolean

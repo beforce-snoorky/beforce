@@ -2,25 +2,25 @@
 
 import type { Company } from "@/types/company"
 import { CompanyActionButton } from "./actions"
-import { Building2, PenLine, Trash2 } from "lucide-react"
+import { Building2, ChevronLeft, ChevronRight, PenLine, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
 import { Icon } from "../ui/icon"
 
-export function UsersDesktopTable({ companies, loading, onSuccess, pagination
-}: {
-  companies: Company[]
-  loading?: boolean
-  onSuccess?: () => void
-  pagination: {
-    page: number
-    perPage: number
-    setPage: (p: number) => void
-    setPerPage: (p: number) => void
-    total: number
-    totalPages: number
-  }
-}) {
+export function UsersDesktopTable({ companies, loading, onSuccess, pagination }:
+  {
+    companies: Company[]
+    loading?: boolean
+    onSuccess?: () => void
+    pagination: {
+      page: number
+      perPage: number
+      setPage: (p: number) => void
+      setPerPage: (p: number) => void
+      total: number
+      totalPages: number
+    }
+  }) {
   const serviceFlags = [
     { key: "has_website", label: "Website" },
     { key: "has_email_corporate", label: "Email" },
@@ -39,10 +39,10 @@ export function UsersDesktopTable({ companies, loading, onSuccess, pagination
   )
 
   return (
-    <section className="w-full hidden md:flex flex-col mt-4">
-      <div className="overflow-auto max-h-130 rounded-xl border border-surface bg-light">
+    <section className="w-full flex-col mt-4">
+      <div className="overflow-auto max-h-116 rounded-xl border border-surface bg-light">
         <div className="min-w-full">
-          <div className="max-h-130 overflow-y-auto bg-light">
+          <div className="max-h-116 overflow-y-auto bg-light">
             <Table style="w-full table-fixed">
               <TableHead>
                 <TableRow>
@@ -96,28 +96,32 @@ export function UsersDesktopTable({ companies, loading, onSuccess, pagination
         </div>
       </div>
 
-      {/* Desktop pagination */}
-      <div className="flex items-center justify-between gap-2 mt-3">
-        <div className="text-sm">
-          Mostrando {(pagination.page - 1) * pagination.perPage + 1} -
-          {Math.min(pagination.total, pagination.page * pagination.perPage)} de {pagination.total}
-        </div>
+      <div className="flex items-center justify-between mt-4">
+        <span className="text-sm text-gray-500">Mostrando {Math.min(pagination.total, pagination.page * pagination.perPage)} de {pagination.total}</span>
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => pagination.setPage(Math.max(1, pagination.page - 1))}
             disabled={pagination.page <= 1}
-            className="px-3 py-2 rounded-lg border"
+            className="size-9 rounded-lg inline-flex justify-center items-center text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+            aria-label="Previous"
           >
-            Anterior
+            <ChevronLeft className="shrink-0 size-3.5" />
           </button>
-          <div className="px-3 py-2 text-sm">Página {pagination.page} / {pagination.totalPages}</div>
+          <div className="flex items-center gap-x-1">
+            <span className="text-sm size-9 rounded-lg inline-flex justify-center items-center border border-gray-200 text-gray-800">{pagination.page}</span>
+            <span className="text-sm rounded-lg inline-flex justify-center items-center text-gray-500">de</span>
+            <span className="text-sm size-9 rounded-lg inline-flex justify-center items-center text-gray-500">{pagination.totalPages}</span>
+          </div>
           <button
+            type="button"
             onClick={() => pagination.setPage(Math.min(pagination.totalPages, pagination.page + 1))}
             disabled={pagination.page >= pagination.totalPages}
-            className="px-3 py-2 rounded-lg border"
+            className="size-9 rounded-lg inline-flex justify-center items-center text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+            aria-label="Next"
           >
-            Próxima
+            <ChevronRight className="shrink-0 size-3.5" />
           </button>
         </div>
       </div>

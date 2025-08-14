@@ -8,6 +8,7 @@ interface InputProps {
   className?: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  disabled?: boolean
   required?: boolean
 }
 
@@ -24,9 +25,10 @@ export function Input(props: InputProps) {
         placeholder={props.placeholder}
         autoComplete={props.autoComplete}
         value={props.value}
-        className={`w-full p-3 ps-12 rounded-lg outline-none border ${props.className ? `${props.className}` : "border-surface/25 bg-gray-800 text-gray-400"}`}
+        className={`text-sm w-full p-3 ps-12 outline-none rounded-lg border ${props.className ? `${props.className}` : "border-surface/25 bg-gray-800 text-gray-400"}`}
         onChange={props.onChange}
         aria-required={props.required}
+        disabled={false || props.disabled}
         required={props.required}
       />
     </div>

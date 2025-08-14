@@ -3,86 +3,67 @@
 import { AddUserButton } from "@/components/companies/addUserButton"
 import { UsersDesktopTable } from "@/components/companies/desktopList"
 import { UsersMobileList } from "@/components/companies/mobileList"
-import { Building2 } from "lucide-react"
+import { Building2, Search } from "lucide-react"
 import { useCompanies } from "@/hooks/useCompanies"
 import { useMemo } from "react"
+import { Input } from "@/components/ui/input"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 export default function CompaniesPage() {
-  const {
-    companies,
-    total,
-    page,
-    perPage,
-    setPage,
-    setPerPage,
-    search,
-    setSearch,
-    loading,
-    refetch,
-    totalPages
-  } = useCompanies()
+  const isMobileViewport = useMediaQuery("(max-width: 767px)")
+  const { companies, total, page, perPage, search, loading, totalPages,
+    setPage, setPerPage, setSearch, refetch } = useCompanies()
 
   const onSuccessRefetch = () => refetch()
 
-  const paginationProps = useMemo(() => ({
-    page, perPage, setPage, setPerPage, total, totalPages
-  }), [page, perPage, total, totalPages, setPage, setPerPage])
+  const paginationProps = useMemo(() => ({ page, perPage, total, totalPages, setPage, setPerPage }),
+    [page, perPage, total, totalPages, setPage, setPerPage])
 
   return (
     <>
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-1 md">
+          <div className="flex items-center gap-2 mb-1">
             <Building2 className="size-6 text-accent" />
             <h1 className="text-xl md:text-2xl font-bold">Empresas</h1>
           </div>
           <p className="text-sm">Gerencie as empresas cadastradas</p>
         </div>
-        <AddUserButton onSuccess={onSuccessRefetch} />
+
+        {!isMobileViewport && <AddUserButton onSuccess={onSuccessRefetch} />}
       </div>
 
-      {/* Search + pagination controls */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 my-4">
-        <div className="flex items-center gap-2 w-full md:w-1/2">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar empresas por nome..."
-            className="w-full border border-surface rounded-lg px-3 py-2 text-sm"
-            aria-label="Buscar empresas"
+      <Input
+        id="search"
+        icon={<Search className="size-5 text-gray-500" />}
+        name="search"
+        type="text"
+        placeholder="Buscar empresas por nome..."
+        autoComplete="search"
+        className="placeholder:text-sm border border-surface bg-light text-gray-800"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <section>
+
+
+        {isMobileViewport ? (
+          <UsersMobileList
+            companies={companies}
+            loading={loading}
+            onSuccess={onSuccessRefetch}
+            pagination={paginationProps}
           />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-sm">Por página</label>
-          <select
-            value={perPage}
-            onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1) }}
-            className="border border-surface rounded-lg px-2 py-1 text-sm"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Mobile (single-column) */}
-      <UsersMobileList
-        companies={companies}
-        loading={loading}
-        onSuccess={onSuccessRefetch}
-        pagination={paginationProps}
-      />
-
-      {/* Desktop (table) */}
-      <UsersDesktopTable
-        companies={companies}
-        loading={loading}
-        onSuccess={onSuccessRefetch}
-        pagination={paginationProps}
-      />
+        ) : (
+          <UsersDesktopTable
+            companies={companies}
+            loading={loading}
+            onSuccess={onSuccessRefetch}
+            pagination={paginationProps}
+          />
+        )}
+      </section>
     </>
   )
 }

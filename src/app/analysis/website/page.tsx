@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
         <UsersStatistics users={currentWebsiteReport.data.users} />
         <SourceStatistics origem={currentWebsiteReport.data.source} />
         <SystemStatistics system={currentWebsiteReport.data.system} devices={currentWebsiteReport.data.devices} />
-        <PagesStatistics site={company.website_domain} pages={currentWebsiteReport.data.pages} />
+        <PagesStatistics site={company.website_domain ?? ""} pages={currentWebsiteReport.data.pages} />
         <CitiesStatistics cities={currentWebsiteReport.data?.city} />
         <WorldMap country={currentWebsiteReport.data?.country} />
       </section>

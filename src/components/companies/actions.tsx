@@ -27,7 +27,7 @@ export function CompanyActionButton(props: CompanyActionButtonProps) {
           <span>Tem certeza que deseja excluir a empresa?</span>
           <div className="flex items-center justify-center gap-2">
             <button
-              className="flex-1 p-2 font-medium rounded-lg bg-accent text-light"
+              className="flex-1 py-2 px-4 font-medium rounded-lg bg-accent text-light"
               onClick={async () => {
                 toast.dismiss(t.id)
                 const success = await handleCompanyAction("deleteCompany", { id: props.company!.id })
@@ -37,7 +37,7 @@ export function CompanyActionButton(props: CompanyActionButtonProps) {
               Confirmar
             </button>
             <button
-              className="flex-1 p-2 font-medium rounded-lg bg-gray-200"
+              className="flex-1 py-2 px-4 font-medium rounded-lg bg-gray-200"
               onClick={() => toast.dismiss(t.id)}
             >
               Cancelar

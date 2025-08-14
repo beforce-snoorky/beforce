@@ -6,6 +6,8 @@ type CompanyPayload = {
   id?: string
   business_name?: string
   email?: string
+  logo?: string | null
+  remove_logo?: boolean
   has_website?: boolean
   website_domain?: string
   website_analytics_id?: string

@@ -8,8 +8,9 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { FilterModalDigisac } from "./digisac/filterModal"
-import { UserFormModal } from "./users/userModal"
 import { FilterModalWebsite } from "./website/filterModal"
+import { CompanyFormModal } from "./companies/userModal"
+import { UserFormModal } from "./users/userModal"
 
 export type NavItemProps = {
   icon: React.ReactNode
@@ -22,14 +23,15 @@ export function NavBar() {
   const { company } = useAuth()
   const pathname = usePathname()
   const isMobile = useMediaQuery("(max-width: 1280px)")
-  const isDesktop = useMediaQuery("(max-width: 1279px)")
 
   const [isFilterOpenDigisac, setIsFilterOpenDigisac] = useState(false)
   const [isFilterOpenWebsite, setIsFilterOpenWebsite] = useState(false)
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false)
   const [isUsersOpen, setIsUsersOpen] = useState(false)
 
   const shouldShowFilterDigisac = ["/analysis/digisac"].includes(pathname)
   const shouldShowFilterWebsite = ["/analysis/website"].includes(pathname)
+  const shouldShowAddCompany = ["/analysis/companies"].includes(pathname)
   const shouldShowAddUser = ["/analysis/users"].includes(pathname)
 
   if (!company) return null
@@ -93,6 +95,14 @@ export function NavBar() {
           </button>
         )}
 
+        {shouldShowAddCompany && (
+          <button onClick={() => setIsCompanyOpen(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
+            <span className="w-4.5 h-4.5" aria-label="Filtrar">
+              <UserPlus className="w-4.5 h-4.5" />
+            </span>
+          </button>
+        )}
+
         {shouldShowAddUser && (
           <button onClick={() => setIsUsersOpen(true)} className="py-3 px-3 rounded-full shadow-sm border border-surface bg-accent text-light">
             <span className="w-4.5 h-4.5" aria-label="Filtrar">
@@ -104,6 +114,7 @@ export function NavBar() {
 
       {isFilterOpenDigisac && <FilterModalDigisac onClose={() => setIsFilterOpenDigisac(false)} />}
       {isFilterOpenWebsite && <FilterModalWebsite onClose={() => setIsFilterOpenWebsite(false)} />}
+      {isCompanyOpen && (<CompanyFormModal mode="create" onClose={() => setIsCompanyOpen(false)} onSuccess={() => setIsCompanyOpen(false)} />)}
       {isUsersOpen && (<UserFormModal mode="create" onClose={() => setIsUsersOpen(false)} onSuccess={() => setIsUsersOpen(false)} />)}
     </>
   )
