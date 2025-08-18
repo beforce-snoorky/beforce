@@ -6,7 +6,7 @@ export function UsersStatistics({ users }: { users: UsersData }) {
     { label: "Total de Usuários", style: "text-blue-600 bg-blue-100", icon: <UserCheck className="size-5" />, value: users.totalUsers },
     { label: "Novos Usuários", style: "text-green-600 bg-green-100", icon: <UserPlus className="size-5" />, value: users.newUsers },
     { label: "Tempo por sessão", style: "text-purple-600 bg-purple-100", icon: <Timer className="size-5" />, value: users.averageSessionDuration },
-    { label: "Taxa de Engajamento", style: "text-pink-600 bg-pink-100", icon: <MousePointerClick className="size-5" />, value: users.engagementRate }
+    { label: "Taxa de Retenção", style: "text-pink-600 bg-pink-100", icon: <MousePointerClick className="size-5" />, value: users.engagementRate }
   ]
 
   return (
