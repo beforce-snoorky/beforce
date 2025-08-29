@@ -5,7 +5,7 @@ import { useMemo } from "react"
 import { BarChart } from "../charts/bars"
 import { Network } from "lucide-react"
 
-export default function SourceStatistics({ origem }: { origem: SourceData[] | undefined }) {
+export function SourceStatistics({ origem }: { origem: SourceData[] | undefined }) {
   const chartData = useMemo(() => {
     if (!origem) return { categories: [], values: [] }
 
@@ -42,14 +42,12 @@ export default function SourceStatistics({ origem }: { origem: SourceData[] | un
         <h2 className="text-md font-medium">Sessões por Origem</h2>
       </div>
       <p className="text-xs text-gray-500 mb-4">Distribuição das sessões por canal de aquisição</p>
-      <div className="w-full overflow-x-auto">
-        <BarChart
-          categories={chartData.categories}
-          values={chartData.values}
-          tooltipFormatter={(item) => `${item.value} sessões`}
-          labelFormatter={(item) => `${item.value} sessões`}
-        />
-      </div>
+      <BarChart
+        categories={chartData.categories}
+        values={chartData.values}
+        tooltipFormatter={(item) => `${item.value} sessões`}
+        labelFormatter={(item) => `${item.value} sessões`}
+      />
     </div>
   )
 }

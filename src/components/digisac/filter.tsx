@@ -1,9 +1,8 @@
 "use client"
 
 import { useDigisacData } from "@/hooks/useDigisac"
-import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
+import { useDigisacFilter } from "@/context/digisacContext"
 import { useEffect, useState } from "react"
-import { Card } from "../ui/cards"
 import { Select } from "../ui/select"
 import { Button } from "../ui/button"
 import { formatPeriodToMonthYear } from "@/utils/data"
@@ -41,7 +40,7 @@ export function Filters({ digisacReportData, digisacReportFilters }: FiltersProp
   }
 
   return (
-    <Card>
+    <div className="p-4 rounded-xl border border-surface bg-light">
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
         <Select
           id="operators"
@@ -50,6 +49,7 @@ export function Filters({ digisacReportData, digisacReportFilters }: FiltersProp
           value={selectedOperatorDepartmentLocal}
           onChange={setSelectedOperatorDepartmentLocal}
         />
+
         <Select
           id="periods"
           label="Períodos"
@@ -60,11 +60,12 @@ export function Filters({ digisacReportData, digisacReportFilters }: FiltersProp
             setSelectedOperatorDepartmentLocal(allOperators)
           }}
         />
+
         <Button className="col-span-2 xl:col-span-1" onClick={handleApplyFilters} variant="primary">
           <SlidersHorizontal className="size-4" />
           Aplicar Filtros
         </Button>
       </div>
-    </Card>
+    </div>
   )
 }

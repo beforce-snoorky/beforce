@@ -1,6 +1,5 @@
 import { DigitalScoreGauge } from "@/components/charts/score"
 import { SolutionsButton } from "@/components/solutions"
-import { Card } from "@/components/ui/cards"
 import { Icon } from "@/components/ui/icon"
 import { solutions } from "@/constants/solutions"
 import { Gauge } from "lucide-react"
@@ -17,12 +16,12 @@ export default function DashboardPage() {
       <DigitalScoreGauge />
 
       <section>
-        <Card>
+        <div className="p-4 rounded-xl border border-surface bg-light">
           <h2 className="text-lg font-semibold">Seus serviços contratados</h2>
           <div className="flex flex-col gap-3 mt-4 md:mt-6">
             {solutions.map((item, index) => (
-              <div key={index} className="p-4 rounded-xl border border-surface bg-light">
-                <div className="flex justify-between gap-2">
+              <div key={index} className="p-4 rounded-xl border border-surface">
+                <div className="flex items-start md:items-center justify-between gap-2">
                   <div className="space-y-2 md:space-y-0 md:flex md:items-center md:gap-2">
                     <Icon icon={item.icon} style={item.style} />
                     <div>
@@ -35,7 +34,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       </section>
     </>
   )

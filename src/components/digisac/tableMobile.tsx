@@ -4,7 +4,6 @@ import type { DigisacReportEntry } from "@/types/digisac"
 import { calculateAverageTime } from "@/utils/data"
 import { Bot, ChevronDown, Clock, FileText, Hourglass, MessageCircleMore, MessageSquare, Search, Timer, UsersRound } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Card } from "../ui/cards"
 import { Input } from "../ui/input"
 import { Icon } from "../ui/icon"
 
@@ -66,7 +65,7 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
   }
 
   return (
-    <Card>
+    <div className="p-4 rounded-xl border border-surface bg-light">
       <div className="space-y-2">
         <Input
           id="search"
@@ -89,7 +88,7 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
             const isExpanded = expandedKey === key
 
             return (
-              <Card key={key}>
+              <div className="p-4 rounded-xl border border-surface bg-light" key={key}>
                 <div className="flex items-center justify-between" onClick={() => toggleExpand(key)}>
                   <div className="flex items-center gap-2">
                     <Icon icon={<UsersRound className="size-4" />} />
@@ -114,11 +113,11 @@ export function TableMobile({ data }: { data: DigisacReportEntry[] }) {
                     ))}
                   </div>
                 )}
-              </Card>
+              </div>
             )
           })
         )}
       </div>
-    </Card>
+    </div>
   )
 }

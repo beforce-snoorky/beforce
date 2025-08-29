@@ -1,10 +1,9 @@
 "use client"
 
-import { useAuth } from "@/hooks/useAuth"
+import { useAuth } from "@/context/authContext"
 import { calculateScore } from "@/utils/calculateScore"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
-import { Card } from "../ui/cards"
 import type { EChartsOption } from "echarts-for-react"
 
 const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false })
@@ -80,7 +79,7 @@ export function DigitalScoreGauge() {
   }
 
   return (
-    <Card>
+    <div className="p-4 rounded-xl border border-surface bg-light">
       <h2 className="text-lg font-semibold">Pontuação Digital</h2>
       <div className="max-w-xl mx-auto">
         <div className="w-full max-w-4xl mx-auto mt-6 px-4">
@@ -100,6 +99,6 @@ export function DigitalScoreGauge() {
           </p>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

@@ -1,8 +1,8 @@
 "use client"
 
 import { getSupabaseClient } from "@/utils/supabase/client"
-import { useAuth } from "./useAuth"
-import { useWebsiteFilter } from "./useWebsiteFilterContext"
+import { useAuth } from "../context/authContext"
+import { useWebsiteFilter } from "../context/websiteContext"
 import { useEffect, useState } from "react"
 import type { Websites } from "@/types/website"
 import { ensureFullPeriodFormat } from "@/utils/data"

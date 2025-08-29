@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/hooks/useAuth"
+import { useAuth } from "@/context/authContext"
 import Link from "next/link"
 
 export function SolutionsButton({ item }: { item: string }) {

@@ -13,10 +13,12 @@ type MergedSystem = {
 const systemsMap: Record<string, string> = {
   "iOS": "iOS",
   "Macintosh": "iOS",
-  "Windows": "Windows",
   "Linux": "Linux",
   "Android": "Android",
   "ChromeOS": "ChromeOS",
+  "Chrome OS": "ChromeOS",
+  "Windows": "Windows",
+  "(not set)": "Windows",
 }
 
 const systemsIcons: Record<string, React.JSX.Element> = {
@@ -83,7 +85,7 @@ const systemsIcons: Record<string, React.JSX.Element> = {
   ),
 }
 
-export default function SystemStatistics({ system, devices }: { system: SystemData[] | undefined, devices: DeviceData[] | undefined }) {
+export function SystemStatistics({ system, devices }: { system: SystemData[] | undefined, devices: DeviceData[] | undefined }) {
   const { deviceStats, systemStats, totalSystemUsers } = useMemo(() => {
     const deviceTotal = devices?.reduce((sum, d) => sum + Number(d.activeUsers), 0) || 0
     const deviceStats = devices?.reduce((acc, d) => {
@@ -115,16 +117,18 @@ export default function SystemStatistics({ system, devices }: { system: SystemDa
   const mobilePercent = deviceStats["mobile"]?.percentage.toFixed(1) || "0"
 
   return (
-    <div className="col-span-8 p-4 md:col-span-4 flex flex-col justify-between rounded-xl border border-surface bg-light">
-      <div className="flex items-center gap-2">
-        <MonitorSmartphone className="size-5 text-accent" />
-        <h2 className="text-md font-medium">Usuários por Plataforma</h2>
+    <div className="col-span-8 p-4 md:col-span-4 flex flex-col rounded-xl border border-surface bg-light">
+      <div>
+        <div className="flex items-center gap-2">
+          <MonitorSmartphone className="size-5 text-accent" />
+          <h2 className="text-md font-medium">Usuários por Plataforma</h2>
+        </div>
+        <p className="text-xs text-gray-500 mb-4">Dispositivos e sistemas utilizados nas sessões</p>
       </div>
-      <p className="text-xs text-gray-500 mb-4">Dispositivos e sistemas utilizados nas sessões</p>
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full">
         <h4 className="text-4xl font-medium text-accent">{mobilePercent}%</h4>
         <p className="text-sm text-gray-500 mt-2">Dos usuários acessaram o site pelo celular e {desktopPercent}% acessaram pelo computador.</p>
-        <div className="grid grid-cols-2 md:grid-cols-1 gap-2 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-1 gap-2 mt-6 h-full place-content-end">
           {systemStats.map((os) => (
             <div key={os.label} className="flex items-center gap-2 p-2 md:p-4 rounded-xl border border-surface bg-light">
               <Icon icon={systemsIcons[os.label]} style="bg-surface/50" />

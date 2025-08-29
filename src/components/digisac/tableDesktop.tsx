@@ -1,5 +1,5 @@
 import { useDigisacData } from "@/hooks/useDigisac"
-import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
+import { useDigisacFilter } from "@/context/digisacContext"
 import type { DigisacReportEntry } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"
 import { UsersRound } from "lucide-react"

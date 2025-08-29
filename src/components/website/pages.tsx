@@ -4,12 +4,11 @@ import { useMediaQuery } from "@/hooks/useMediaQuery"
 import type { PageData } from "@/types/website"
 import { BarChart2, ChevronDown, ExternalLink, Eye, FileText, UsersRound } from "lucide-react"
 import { useState } from "react"
-import { Card } from "../ui/cards"
 import Link from "next/link"
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
 import { Icon } from "../ui/icon"
 
-export default function PagesStatistics({ site, pages }: { site: string, pages: PageData[] | undefined }) {
+export function PagesStatistics({ site, pages }: { site: string, pages: PageData[] | undefined }) {
   const isMobile = useMediaQuery("(max-width: 1079px)")
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
@@ -37,7 +36,7 @@ export default function PagesStatistics({ site, pages }: { site: string, pages: 
             const isExpanded = expandedKey === page.pagePath
 
             return (
-              <Card key={index}>
+              <div className="p-4 rounded-xl border border-surface bg-light" key={index}>
                 <div className="flex items-center justify-between" onClick={() => toggleExpand(page.pagePath)}>
                   <div className="flex items-center gap-2">
                     <Icon icon={<ExternalLink className="size-4" />} />
@@ -75,7 +74,7 @@ export default function PagesStatistics({ site, pages }: { site: string, pages: 
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             )
           })}
         </div>

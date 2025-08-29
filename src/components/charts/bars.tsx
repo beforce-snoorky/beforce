@@ -52,6 +52,7 @@ export function BarChart({
       axisLabel: {
         fontSize: 10,
         interval: 0,
+        hideOverlap: true,
       },
     },
     yAxis: {
@@ -74,7 +75,13 @@ export function BarChart({
     ]
   }
 
+  const pxPerBar = 80
+
   return (
-    <ReactECharts option={options} style={{ height, width: "100%" }} />
+    <div style={{ overflowX: "auto" }}>
+      <div style={{ minWidth: categories.length * pxPerBar }}>
+        <ReactECharts option={options} style={{ height, width: "100%" }} />
+      </div>
+    </div>
   )
 }

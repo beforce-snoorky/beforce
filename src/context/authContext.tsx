@@ -45,10 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     async function loadCompany(currentUser: User) {
-      const domain = currentUser.email?.split("@")[1]
+      const domain = currentUser.email?.trim().toLowerCase()
       if (!domain) return
 
-      const { data: businessData, error: businessError } = await supabaseClient.from("business").select("id").ilike("email", `%@${domain}`).single()
+      const { data: businessData, error: businessError } = await supabaseClient.from("business").select("id").eq("email", domain).single()
       if (!isMounted || businessError || !businessData) return
 
       const { data: companyData, error: profileError } = await supabaseClient.rpc("get_user_profile", { business_uuid: businessData?.id }).single<Company>()

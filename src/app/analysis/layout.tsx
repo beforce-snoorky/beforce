@@ -1,8 +1,8 @@
 import { Header } from "@/components/header"
 import { NavBar } from "@/components/navbar"
-import { AuthProvider } from "@/hooks/useAuth"
-import { DigisacFilterProvider } from "@/hooks/useDigisacFilterContext"
-import { WebsiteFilterProvider } from "@/hooks/useWebsiteFilterContext"
+import { AuthProvider } from "@/context/authContext"
+import { DigisacFilterProvider } from "@/context/digisacContext"
+import { WebsiteFilterProvider } from "@/context/websiteContext"
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

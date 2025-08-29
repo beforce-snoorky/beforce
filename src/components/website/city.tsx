@@ -4,11 +4,10 @@ import { useMediaQuery } from "@/hooks/useMediaQuery"
 import type { CityData } from "@/types/website"
 import { ChevronDown, MapPin, MousePointerClick, UserPlus, UsersRound } from "lucide-react"
 import { useState } from "react"
-import { Card } from "../ui/cards"
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
 import { Icon } from "../ui/icon"
 
-export default function CitiesStatistics({ cities }: { cities: CityData[] | undefined }) {
+export function CitiesStatistics({ cities }: { cities: CityData[] | undefined }) {
   const isMobile = useMediaQuery("(max-width: 1079px)")
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
@@ -35,7 +34,7 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
           const isExpanded = expandedKey === city.city
 
           return (
-            <Card key={index}>
+            <div className="p-4 rounded-xl border border-surface bg-light" key={index}>
               <div className="flex items-center justify-between" onClick={() => toggleExpand(city.city)}>
                 <div className="flex items-center gap-2">
                   <Icon icon={<MapPin className="size-4" />} />
@@ -71,7 +70,7 @@ export default function CitiesStatistics({ cities }: { cities: CityData[] | unde
                   </div>
                 </div>
               )}
-            </Card>
+            </div>
           )
         })}
       </div>

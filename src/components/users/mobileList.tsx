@@ -1,8 +1,7 @@
 "use client"
 
-import type { User } from "@/hooks/useUsers" // ajuste o path se precisar
+import type { User } from "@/hooks/useUsers"
 import { useState } from "react"
-import { Card } from "../ui/cards"
 import { Icon } from "../ui/icon"
 import { UserRound, ChevronDown, ChevronLeft, ChevronRight, UserRoundPen, Trash2 } from "lucide-react"
 import { UserActionButton } from "./actions"
@@ -33,7 +32,7 @@ export function UsersMobileList({
   const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleDateString("pt-BR") : "—")
 
   return (
-    <Card>
+    <div className="p-4 rounded-xl border border-surface bg-light">
       <div className="space-y-2">
         {loading && <div className="text-sm text-gray-500 py-4">Carregando...</div>}
 
@@ -46,7 +45,7 @@ export function UsersMobileList({
             const isExpanded = expandedUserId === user.id
 
             return (
-              <Card key={user.id}>
+              <div className="p-4 rounded-xl border border-surface bg-light" key={user.id}>
                 <button
                   type="button"
                   className="w-full flex items-center justify-between text-left"
@@ -101,7 +100,7 @@ export function UsersMobileList({
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             )
           })
         )}
@@ -139,6 +138,6 @@ export function UsersMobileList({
           </button>
         </nav>
       </div>
-    </Card>
+    </div>
   )
 }

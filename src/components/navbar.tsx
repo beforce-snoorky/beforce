@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/hooks/useAuth"
+import { useAuth } from "@/context/authContext"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { Globe2, Headphones, LayoutDashboard, LockKeyholeIcon, MonitorSmartphone, Server, SlidersHorizontal, UserPlus } from "lucide-react"
 import Link from "next/link"

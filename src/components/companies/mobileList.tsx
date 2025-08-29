@@ -2,7 +2,6 @@
 
 import { Company } from "@/types/company"
 import { useState } from "react"
-import { Card } from "../ui/cards"
 import Image from "next/image"
 import { Icon } from "../ui/icon"
 import { Building2, ChevronDown, ChevronLeft, ChevronRight, PenLine, Trash2 } from "lucide-react"
@@ -28,7 +27,7 @@ export function UsersMobileList({ companies, loading, onSuccess, pagination }: U
   const toggleExpand = (id: string) => setExpandedCompanyId(prev => (prev === id ? null : id))
 
   return (
-    <Card>
+    <div className="p-4 rounded-xl border border-surface bg-light">
       <div className="space-y-2">
         {loading && <div className="text-sm text-gray-500 py-4">Carregando...</div>}
 
@@ -41,7 +40,7 @@ export function UsersMobileList({ companies, loading, onSuccess, pagination }: U
             const isExpanded = expandedCompanyId === company.id
 
             return (
-              <Card key={company.id}>
+              <div className="p-4 rounded-xl border border-surface bg-light" key={company.id}>
                 <div className="flex items-center justify-between" onClick={() => toggleExpand(company.id)}>
                   <div className="flex items-center gap-2">
                     {company.logo ? (
@@ -102,7 +101,7 @@ export function UsersMobileList({ companies, loading, onSuccess, pagination }: U
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             )
           }))}
 
@@ -134,6 +133,6 @@ export function UsersMobileList({ companies, loading, onSuccess, pagination }: U
           </button>
         </nav>
       </div>
-    </Card>
+    </div>
   )
 }

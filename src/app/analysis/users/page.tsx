@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { AddUserButton } from "@/components/users/addUserButton";
-import UsersDesktopTable from "@/components/users/desktopList";
+import { UsersDesktopTable } from "@/components/users/desktopList";
 import { UsersMobileList } from "@/components/users/mobileList";
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { useUsers } from "@/hooks/useUsers";

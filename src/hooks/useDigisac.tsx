@@ -1,8 +1,8 @@
 "use client"
 
 import { getSupabaseClient } from "@/utils/supabase/client"
-import { useAuth } from "./useAuth"
-import { useDigisacFilter } from "./useDigisacFilterContext"
+import { useAuth } from "../context/authContext"
+import { useDigisacFilter } from "../context/digisacContext"
 import { useEffect, useMemo, useState } from "react"
 import type { DigisacReportEntry, DigisacReports } from "@/types/digisac"
 import { ensureFullPeriodFormat } from "@/utils/data"

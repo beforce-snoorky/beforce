@@ -3,7 +3,6 @@
 import type { DigisacReportEntry } from "@/types/digisac"
 import { EChartsOption } from "echarts-for-react"
 import { MessageCircleMore, MessageCircleOff, MessageCirclePlus, UsersRound } from "lucide-react"
-import { Card } from "../ui/cards"
 import dynamic from "next/dynamic"
 
 const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false })
@@ -38,7 +37,7 @@ export function PerformanceMetrics({ digisacReports }: { digisacReports: Digisac
         }
 
         return (
-          <Card key={index}>
+          <div className="p-4 rounded-xl border border-surface bg-light" key={index}>
             <div className="flex max-lg:flex-col lg:items-center justify-between lg:gap-4">
               <div className="lg:w-1/2">
                 <div className="flex items-center gap-2 mb-1">
@@ -53,7 +52,7 @@ export function PerformanceMetrics({ digisacReports }: { digisacReports: Digisac
                 <ReactECharts option={option} style={{ height: 60, width: "100%" }} />
               </div>
             </div>
-          </Card>
+          </div>
         )
       })}
     </>

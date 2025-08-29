@@ -1,7 +1,7 @@
 "use client"
 
 import { useDigisacData } from "@/hooks/useDigisac"
-import { useDigisacFilter } from "@/hooks/useDigisacFilterContext"
+import { useDigisacFilter } from "@/context/digisacContext"
 import { useEffect, useState } from "react"
 import { Select } from "../ui/select"
 import { formatPeriodToMonthYear } from "@/utils/data"

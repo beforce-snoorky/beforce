@@ -6,7 +6,7 @@ import { UserActionButton } from "./actions"
 import { User } from "@/hooks/useUsers"
 import { Icon } from "../ui/icon"
 
-export default function UsersDesktopTable({
+export function UsersDesktopTable({
   users,
   loading,
   onSuccess,

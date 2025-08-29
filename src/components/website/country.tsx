@@ -4,38 +4,10 @@ import { countryNameToCode } from "@/utils/countries"
 import { CountryData } from "@/types/website"
 import { useEffect, useState } from "react"
 
-export default function WorldMap({ country }: { country: CountryData[] }) {
+export function WorldMap({ country }: { country: CountryData[] }) {
   const [svgContent, setSvgContent] = useState<string>("")
 
   const activeCountryCodes = country.map((countryItem) => countryNameToCode[countryItem.country]).filter(Boolean)
-  // const activeCountries = [
-  //   "ARG", "AGO", "AUT", "ALB", "ARE", "ARM", "AZE", "AFG", "AUS", "ATF",
-  //   "BHS", "BLZ", "BOL", "BRA", "BEL", "BFA", "BEN", "BWA", "BDI", "BIH", "BGR", "BLR", "BTN", "BGD", "BRN",
-  //   "CAN", "CUB", "CRI", "COL", "CHL", "CIV", "CMR", "CAF", "CHE", "CZE", "CHN", "COG", "COD", "CYP",
-  //   "DOM", "DNK", "DEU", "DZA", "DJI",
-  //   "ECU", "ESP", "ESH", "ETH", "ERI", "EGY", "EST",
-  //   "FLK", "FRA", "FIN", "FJI",
-  //   "GRL", "GTM", "GUY", "GUF", "GBR", "GNB", "GIN", "GHA", "GNQ", "GAB", "GRC", "GEO", "GMB",
-  //   "HND", "HTI", "HUN", "HRV",
-  //   "ISL", "IRL", "ITA", "ISR", "IRQ", "IRN", "IND", "IDN",
-  //   "JAM", "JOR", "JPN",
-  //   "KEN", "KWT", "KAZ", "KGZ", "KHM", "KOR",
-  //   "LBR", "LSO", "LBY", "LTU", "LVA", "LKA", "LAO", "LBN",
-  //   "MEX", "MAR", "MRT", "MLI", "MOZ", "MWI", "MDG", "MNE", "MKD", "MDA", "MNG", "MMR", "MYS",
-  //   "NIC", "NOR", "NLD", "NGA", "NER", "NAM", "NPL", "NZL", "NCL",
-  //   "OMN",
-  //   "PRI", "PAN", "PER", "PRY", "PRT", "POL", "PSE", "PAK", "PNG", "PHL", "PRK",
-  //   "QAT",
-  //   "RWA", "ROU", "RUS",
-  //   "SLV", "SUR", "SWE", "SEN", "SLE", "SWZ", "SSD", "SOM", "SDN", "SVK", "SVN", "SRB", "SYR", "SAU", "SLB",
-  //   "TGO", "TZA", "TCD", "TUN", "TUR", "TKM", "TJK", "THA", "TWN", "TLS", "TTO",
-  //   "USA", "URY", "UGA", "UKR", "UZB",
-  //   "VEN", "VNM", "VUT",
-  //   "W",
-  //   "XKX",
-  //   "YEM",
-  //   "ZAF", "ZWE", "ZMB",
-  // ]
 
   useEffect(() => {
     const fetchSvg = async () => {
