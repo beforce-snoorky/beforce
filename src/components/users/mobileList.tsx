@@ -1,6 +1,6 @@
 "use client"
 
-import type { User } from "./userModal"
+import type { User } from "@supabase/supabase-js"
 import { useState } from "react"
 import { Icon } from "../ui/icon"
 import { UserRound, ChevronDown, ChevronLeft, ChevronRight, UserRoundPen, Trash2 } from "lucide-react"

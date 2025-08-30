@@ -5,22 +5,13 @@ import { useEffect, useState } from "react"
 import { X, Mail, KeyRound, Phone } from "lucide-react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
+import type { User } from "@supabase/supabase-js"
 
 type Props = {
   onClose: () => void
   onSuccess?: () => void
   mode: "create" | "update"
   user?: User
-}
-
-export type User = {
-  id: string
-  email: string
-  email_confirmed_at?: string
-  phone: string
-  confirmed_at?: string
-  last_sign_in_at?: string
-  created_at: string
 }
 
 type CreatePayload = {

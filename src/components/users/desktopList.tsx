@@ -4,7 +4,7 @@ import { UserRound, UserRoundPen, Trash2, ChevronLeft, ChevronRight } from "luci
 import { Table, TableHead, TableRow, TableHeaderCell, TableBody, TableDataCell } from "../ui/table"
 import { UserActionButton } from "./actions"
 import { Icon } from "../ui/icon"
-import type { User } from "./userModal"
+import type { User } from "@supabase/supabase-js"
 
 export function UsersDesktopTable({
   users,
@@ -98,7 +98,6 @@ export function UsersDesktopTable({
         </div>
       </div>
 
-      {/* Footer de paginação — igual ao de Companies */}
       <div className="flex items-center justify-between mt-4">
         <span className="text-sm text-gray-500">
           Mostrando {Math.min(pagination.total, pagination.page * pagination.perPage)} de {pagination.total}

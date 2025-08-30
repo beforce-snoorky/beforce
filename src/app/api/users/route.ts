@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { User } from "@supabase/supabase-js"
+import type { User } from "@supabase/supabase-js"
 import { getSupabaseAdmin } from "@/utils/supabase/admin"
 
 type ListUsersPayload = {

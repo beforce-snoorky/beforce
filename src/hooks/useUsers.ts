@@ -1,6 +1,6 @@
 "use client"
 
-import { type User } from "@supabase/supabase-js"
+import type { User } from "@supabase/supabase-js"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export function useUsers(initialPerPage = 10) {

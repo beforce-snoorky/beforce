@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { User, UserFormModal } from "./userModal"
+import { UserFormModal } from "./userModal"
 import toast from "react-hot-toast"
 import { handleUserAction } from "@/utils/userActions"
+import type { User } from "@supabase/supabase-js"
 
 type UserActionButtonProps = {
   icon: React.ReactNode
