@@ -8,21 +8,11 @@ type ListCompaniesPayload = {
   query?: string
 }
 
-type CreateCompanyPayload = {
-  business_name: string
-  email: string
-  logo: string | null
-  has_website: boolean
-  website_domain?: string
-  website_analytics_id?: string
-  has_digisac: boolean
-  digisac_token?: string
-  digisac_url?: string
-  has_cloud_server: boolean
-  has_email_corporate: boolean
-  has_ia: boolean
-  has_management_system: boolean
-  has_marketing: boolean
+type CreateCompanyPayload = Omit<Company, "id"> & {
+  website_domain?: string | null
+  website_analytics_id?: string | null
+  digisac_token?: string | null
+  digisac_url?: string | null
 }
 
 type UpdateCompanyPayload = CreateCompanyPayload & { id: string; remove_logo?: boolean }
@@ -31,11 +21,11 @@ type DeleteCompanyPayload = { id: string }
 function extractStoragePathFromPublicUrl(publicUrl: string): string | null {
   try {
     const url = new URL(publicUrl)
-    // Formato típico: /storage/v1/object/public/<bucket>/<path>
-    const prefix = "/storage/v1/object/public/business-logo/"
-    const idx = url.pathname.indexOf(prefix)
-    if (idx === -1) return null
-    return decodeURIComponent(url.pathname.slice(idx + prefix.length))
+    const bucketPrefix = "/storage/v1/object/public/business-logo/"
+    const startIndex = url.pathname.indexOf(bucketPrefix)
+
+    if (startIndex === -1) return null
+    return decodeURIComponent(url.pathname.slice(startIndex + bucketPrefix.length))
   } catch {
     return null
   }
@@ -53,16 +43,17 @@ export async function POST(req: NextRequest) {
       case "listCompanies": {
         const { page: pageRaw, per_page: perPageRaw, query: queryRaw } = payload as ListCompaniesPayload
 
-        const page = Number(pageRaw ?? 1)
+        const pageNumber = Number(pageRaw ?? 1)
         const per_page = Number(perPageRaw ?? 10)
-        const query = String(queryRaw ?? "").trim()
+        const searchQuery = String(queryRaw ?? "").trim()
 
-        if (Number.isNaN(page) || Number.isNaN(per_page) || page < 1 || per_page < 1) return NextResponse.json({ error: "Parâmetros inválidos" }, { status: 400 })
+        if (Number.isNaN(pageNumber) || Number.isNaN(per_page) || pageNumber < 1 || per_page < 1)
+          return NextResponse.json({ error: "Parâmetros inválidos" }, { status: 400 })
 
-        const from = (page - 1) * per_page
-        const to = from + per_page - 1
+        const startIndex = (pageNumber - 1) * per_page
+        const endIndex = startIndex + per_page - 1
 
-        const selectClause = `
+        const companySelectColumns = `
           id,
           business_name,
           email,
@@ -76,29 +67,29 @@ export async function POST(req: NextRequest) {
           marketing (id)
         `
 
-        let queryBuilder = supabaseAdmin.from("business").select(selectClause, { count: "exact" })
+        let companiesQuery = supabaseAdmin.from("business").select(companySelectColumns, { count: "estimated" })
 
-        if (query.length > 0) queryBuilder = queryBuilder.ilike("business_name", `%${query}%`)
+        if (searchQuery.length > 0) companiesQuery = companiesQuery.ilike("business_name", `%${searchQuery}%`)
 
-        const { data, count, error } = await queryBuilder.range(from, to)
+        const { data, count, error } = await companiesQuery.range(startIndex, endIndex)
         if (error) throw error
 
-        const companies: Company[] = (data ?? []).map((b) => ({
-          id: b.id,
-          business_name: b.business_name,
-          email: b.email,
-          logo: b.logo,
-          has_website: !!(b.websites && b.websites.length > 0),
-          website_domain: b.websites?.[0]?.domain ?? "",
-          website_analytics_id: b.websites?.[0]?.analytics_id ?? "",
-          has_digisac: !!(b.digisac && b.digisac.length > 0),
-          digisac_token: b.digisac?.[0]?.token ?? "",
-          digisac_url: b.digisac?.[0]?.url ?? "",
-          has_cloud_server: !!(b.cloud_server && b.cloud_server.length > 0),
-          has_email_corporate: !!(b.email_corporate && b.email_corporate.length > 0),
-          has_ia: !!(b.ia && b.ia.length > 0),
-          has_management_system: !!(b.management_system && b.management_system.length > 0),
-          has_marketing: !!(b.marketing && b.marketing.length > 0),
+        const companies: Company[] = (data ?? []).map((row) => ({
+          id: row.id,
+          business_name: row.business_name,
+          email: row.email,
+          logo: row.logo,
+          has_website: !!(row.websites && row.websites.length > 0),
+          website_domain: row.websites?.[0]?.domain ?? "",
+          website_analytics_id: row.websites?.[0]?.analytics_id ?? "",
+          has_digisac: !!(row.digisac && row.digisac.length > 0),
+          digisac_token: row.digisac?.[0]?.token ?? "",
+          digisac_url: row.digisac?.[0]?.url ?? "",
+          has_cloud_server: !!(row.cloud_server && row.cloud_server.length > 0),
+          has_email_corporate: !!(row.email_corporate && row.email_corporate.length > 0),
+          has_ia: !!(row.ia && row.ia.length > 0),
+          has_management_system: !!(row.management_system && row.management_system.length > 0),
+          has_marketing: !!(row.marketing && row.marketing.length > 0),
         }))
 
         return NextResponse.json({ companies, total: count ?? 0 })
@@ -122,20 +113,20 @@ export async function POST(req: NextRequest) {
           has_marketing,
         } = payload as CreateCompanyPayload
 
-        const { data: business, error: businessError } = await supabaseAdmin.from("business").insert([{ business_name, email, logo }]).select().single()
-        if (businessError) throw businessError
+        const { data: createdCompany, error: createCompanyError } = await supabaseAdmin.from("business").insert([{ business_name, email, logo }]).select().single()
+        if (createCompanyError) throw createCompanyError
 
-        const business_id: string = business.id
+        const companyId: string = createdCompany.id
 
-        if (has_website) await supabaseAdmin.from("websites").insert([{ business_id, domain: website_domain, analytics_id: website_analytics_id }])
-        if (has_digisac) await supabaseAdmin.from("digisac").insert([{ business_id, token: digisac_token, url: digisac_url }])
-        if (has_cloud_server) await supabaseAdmin.from("cloud_server").insert([{ business_id }])
-        if (has_email_corporate) await supabaseAdmin.from("email_corporate").insert([{ business_id }])
-        if (has_ia) await supabaseAdmin.from("ia").insert([{ business_id }])
-        if (has_management_system) await supabaseAdmin.from("management_system").insert([{ business_id }])
-        if (has_marketing) await supabaseAdmin.from("marketing").insert([{ business_id }])
+        if (has_website) await supabaseAdmin.from("websites").insert([{ companyId, domain: website_domain, analytics_id: website_analytics_id }])
+        if (has_digisac) await supabaseAdmin.from("digisac").insert([{ companyId, token: digisac_token, url: digisac_url }])
+        if (has_cloud_server) await supabaseAdmin.from("cloud_server").insert([{ companyId }])
+        if (has_email_corporate) await supabaseAdmin.from("email_corporate").insert([{ companyId }])
+        if (has_ia) await supabaseAdmin.from("ia").insert([{ companyId }])
+        if (has_management_system) await supabaseAdmin.from("management_system").insert([{ companyId }])
+        if (has_marketing) await supabaseAdmin.from("marketing").insert([{ companyId }])
 
-        return NextResponse.json({ success: true, id: business_id })
+        return NextResponse.json({ success: true, id: companyId })
       }
 
       case "updateCompany": {
@@ -161,11 +152,11 @@ export async function POST(req: NextRequest) {
         if (!id) throw new Error("ID da empresa não fornecido")
 
         if (remove_logo) {
-          const { data: prev, error: getErr } = await supabaseAdmin.from("business").select("logo").eq("id", id).single()
-          if (getErr) throw getErr
+          const { data: previousCompany, error: getPreviousError } = await supabaseAdmin.from("business").select("logo").eq("id", id).single()
+          if (getPreviousError) throw getPreviousError
 
-          const path = prev?.logo ? extractStoragePathFromPublicUrl(prev.logo) : null
-          if (path) await supabaseAdmin.storage.from("business-logo").remove([path])
+          const previousLogoPath = previousCompany?.logo ? extractStoragePathFromPublicUrl(previousCompany.logo) : null
+          if (previousLogoPath) await supabaseAdmin.storage.from("business-logo").remove([previousLogoPath])
         }
 
         await supabaseAdmin.from("business").update({ business_name, email, logo: remove_logo ? null : logo }).eq("id", id)
@@ -182,18 +173,18 @@ export async function POST(req: NextRequest) {
           else await supabaseAdmin.from("digisac").update({ token: digisac_token, url: digisac_url }).eq("business_id", id)
         } else await supabaseAdmin.from("digisac").delete().eq("business_id", id)
 
-        const toggleTables: Array<{ name: "cloud_server" | "email_corporate" | "ia" | "management_system" | "marketing"; flag: boolean }> = [
-          { name: "cloud_server", flag: has_cloud_server },
-          { name: "email_corporate", flag: has_email_corporate },
-          { name: "ia", flag: has_ia },
-          { name: "management_system", flag: has_management_system },
-          { name: "marketing", flag: has_marketing },
+        const featureTables: Array<{ tableName: "cloud_server" | "email_corporate" | "ia" | "management_system" | "marketing"; isEnabled: boolean }> = [
+          { tableName: "cloud_server", isEnabled: has_cloud_server },
+          { tableName: "email_corporate", isEnabled: has_email_corporate },
+          { tableName: "ia", isEnabled: has_ia },
+          { tableName: "management_system", isEnabled: has_management_system },
+          { tableName: "marketing", isEnabled: has_marketing },
         ]
 
-        for (const { name, flag } of toggleTables) {
-          const { count } = await supabaseAdmin.from(name).select("*", { count: "exact", head: true }).eq("business_id", id)
-          if (flag && count === 0) await supabaseAdmin.from(name).insert([{ business_id: id }])
-          if (!flag && (count ?? 0) > 0) await supabaseAdmin.from(name).delete().eq("business_id", id)
+        for (const { tableName, isEnabled } of featureTables) {
+          const { count } = await supabaseAdmin.from(tableName).select("*", { count: "exact", head: true }).eq("business_id", id)
+          if (isEnabled && count === 0) await supabaseAdmin.from(tableName).insert([{ business_id: id }])
+          if (!isEnabled && (count ?? 0) > 0) await supabaseAdmin.from(tableName).delete().eq("business_id", id)
         }
 
         return NextResponse.json({ success: true })
@@ -203,13 +194,13 @@ export async function POST(req: NextRequest) {
         const { id } = payload as DeleteCompanyPayload
         if (!id) throw new Error("ID não fornecido")
 
-        const { data: prev, error: getErr } = await supabaseAdmin.from("business").select("logo").eq("id", id).single()
-        if (getErr) throw getErr
+        const { data: previousCompany, error: getPreviousError } = await supabaseAdmin.from("business").select("logo").eq("id", id).single()
+        if (getPreviousError) throw getPreviousError
 
-        const path = prev?.logo ? extractStoragePathFromPublicUrl(prev.logo) : null
-        if (path) await supabaseAdmin.storage.from("business-logo").remove([path])
+        const previousLogoPath = previousCompany?.logo ? extractStoragePathFromPublicUrl(previousCompany.logo) : null
+        if (previousLogoPath) await supabaseAdmin.storage.from("business-logo").remove([previousLogoPath])
 
-        const tables = [
+        const relatedTables = [
           "websites",
           "digisac",
           "cloud_server",
@@ -219,7 +210,7 @@ export async function POST(req: NextRequest) {
           "marketing",
         ] as const
 
-        for (const table of tables) await supabaseAdmin.from(table).delete().eq("business_id", id)
+        for (const tableName of relatedTables) await supabaseAdmin.from(tableName).delete().eq("business_id", id)
         await supabaseAdmin.from("business").delete().eq("id", id)
         return NextResponse.json({ success: true })
       }

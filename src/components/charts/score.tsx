@@ -8,7 +8,7 @@ import type { EChartsOption } from "echarts-for-react"
 
 const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false })
 
-function getMessage(score: number) {
+function getScoreMessage(score: number) {
   if (score >= 100) return "Parabéns! Você ativou todas as soluções digitais disponíveis."
   if (score >= 75) return "Falta pouco! Continue contratando soluções para atingir o nível máximo."
   if (score >= 50) return "Bom progresso! Continue crescendo."
@@ -17,20 +17,20 @@ function getMessage(score: number) {
 
 export function DigitalScoreGauge() {
   const { company } = useAuth()
-  const [height, setHeight] = useState(150)
+  const [gaugeHeight, setGaugeHeight] = useState(150)
 
   useEffect(() => {
-    function updateHeight() {
+    function updateGaugeHeight() {
       const width = window.innerWidth
-      if (width >= 1280) setHeight(275)
-      else if (width >= 1024) setHeight(275)
-      else if (width >= 768) setHeight(275)
-      else setHeight(150)
+      if (width >= 1280) setGaugeHeight(275)
+      else if (width >= 1024) setGaugeHeight(275)
+      else if (width >= 768) setGaugeHeight(275)
+      else setGaugeHeight(150)
     }
 
-    updateHeight()
-    window.addEventListener("resize", updateHeight)
-    return () => window.removeEventListener("resize", updateHeight)
+    updateGaugeHeight()
+    window.addEventListener("resize", updateGaugeHeight)
+    return () => window.removeEventListener("resize", updateGaugeHeight)
   }, [])
 
   if (!company) return (
@@ -40,9 +40,9 @@ export function DigitalScoreGauge() {
   )
 
   const { score, activeCount, total } = calculateScore(company)
-  const gaugeValue = Math.min(Math.max(score, 0), 100)
+  const clampedGaugeValue = Math.min(Math.max(score, 0), 100)
 
-  const option: EChartsOption = {
+  const gaugeOptions: EChartsOption = {
     series: [{
       type: "gauge",
       startAngle: 180,
@@ -74,7 +74,7 @@ export function DigitalScoreGauge() {
       axisLabel: { show: false },
       title: { show: false },
       detail: { show: false },
-      data: [{ value: gaugeValue }]
+      data: [{ value: clampedGaugeValue }]
     }]
   }
 
@@ -84,10 +84,10 @@ export function DigitalScoreGauge() {
       <div className="max-w-xl mx-auto">
         <div className="w-full max-w-4xl mx-auto mt-6 px-4">
           <ReactECharts
-            option={option}
+            option={gaugeOptions}
             notMerge={true}
             lazyUpdate={true}
-            style={{ width: "100%", height }}
+            style={{ width: "100%", height: gaugeHeight }}
           />
         </div>
         <div className="text-center">
@@ -95,7 +95,7 @@ export function DigitalScoreGauge() {
             Você ativou <strong className="font-semibold text-dark">{activeCount}</strong> de <strong className="font-semibold text-dark">{total}</strong> soluções digitais disponíveis.
           </p>
           <p className="text-xs text-dark/50">
-            {getMessage(score)}
+            {getScoreMessage(score)}
           </p>
         </div>
       </div>

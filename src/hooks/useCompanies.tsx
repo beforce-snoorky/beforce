@@ -1,23 +1,9 @@
 "use client"
 
-import { Company } from "@/types/company"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { type Company } from "@/types/company"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-type UseCompaniesReturn = {
-  companies: Company[]
-  total: number
-  page: number
-  perPage: number
-  search: string
-  loading: boolean
-  totalPages: number
-  setPage: (p: number) => void
-  setPerPage: (p: number) => void
-  setSearch: (s: string) => void
-  refetch: () => void
-}
-
-export function useCompanies(initialPerPage = 10): UseCompaniesReturn {
+export function useCompanies(initialPerPage = 10) {
   const [companies, setCompanies] = useState<Company[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -25,22 +11,30 @@ export function useCompanies(initialPerPage = 10): UseCompaniesReturn {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const fetchCompanies = useCallback(async (p: number, pp: number, q: string) => {
+  const abortRef = useRef<AbortController | null>(null)
+
+  const fetchCompanies = useCallback(async (pageNumber: number, pageSize: number, searchQuery: string) => {
+    abortRef.current?.abort()
+    const abortController = new AbortController()
+    abortRef.current = abortController
+
     setLoading(true)
     try {
-      const res = await fetch("/api/companies", {
+      const response = await fetch("/api/companies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
         body: JSON.stringify({
           action: "listCompanies",
-          payload: { page: p, per_page: pp, query: q }
-        })
+          payload: { page: pageNumber, per_page: pageSize, query: searchQuery }
+        }),
+        signal: abortController.signal
       })
-      if (!res.ok) throw new Error("Erro ao carregar empresas")
-      const data = await res.json()
-      setCompanies(data.companies || [])
-      setTotal(data.total ?? 0)
+
+      if (!response.ok) throw new Error("Erro ao carregar empresas")
+      const result = await response.json()
+      setCompanies(result.companies || [])
+      setTotal(result.total ?? 0)
     } catch {
       setCompanies([])
       setTotal(0)
@@ -50,24 +44,30 @@ export function useCompanies(initialPerPage = 10): UseCompaniesReturn {
   }, [])
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (page !== 1) setPage(1)
-      else fetchCompanies(1, perPage, search)
+    const debounceTimerId = setTimeout(() => {
+      setPage(1)
+      fetchCompanies(1, perPage, search)
     }, 350)
-    return () => clearTimeout(t)
-  }, [search, perPage, fetchCompanies, page])
+    return () => clearTimeout(debounceTimerId)
+  }, [search, perPage, fetchCompanies])
 
   useEffect(() => {
     fetchCompanies(page, perPage, search)
-  }, [page, perPage, search, fetchCompanies])
-
-  const refetch = useCallback(() => {
-    fetchCompanies(page, perPage, search)
-  }, [page, perPage, search, fetchCompanies])
+  }, [page, fetchCompanies, perPage, search])
 
   const totalPages = useMemo(() => Math.max(1, Math.ceil(total / perPage)), [total, perPage])
 
   return {
-    companies, total, page, perPage, setPage, setPerPage, search, setSearch, loading, refetch, totalPages
+    companies,
+    total,
+    page,
+    perPage,
+    setPage,
+    setPerPage,
+    search,
+    setSearch,
+    loading,
+    refetch: () => fetchCompanies(page, perPage, search),
+    totalPages
   }
 }

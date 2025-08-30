@@ -1,32 +1,9 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { type User } from "@supabase/supabase-js"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-export type User = {
-  id: string
-  email: string
-  email_confirmed_at?: string
-  phone: string
-  confirmed_at?: string
-  last_sign_in_at?: string
-  created_at: string
-}
-
-type UseUsersReturn = {
-  users: User[]
-  total: number
-  page: number
-  perPage: number
-  search: string
-  loading: boolean
-  totalPages: number
-  setPage: (p: number) => void
-  setPerPage: (p: number) => void
-  setSearch: (s: string) => void
-  refetch: () => void
-}
-
-export function useUsers(initialPerPage = 10): UseUsersReturn {
+export function useUsers(initialPerPage = 10) {
   const [users, setUsers] = useState<User[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -34,22 +11,30 @@ export function useUsers(initialPerPage = 10): UseUsersReturn {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const fetchUsers = useCallback(async (p: number, pp: number, q: string) => {
+  const abortRef = useRef<AbortController | null>(null)
+
+  const fetchUsers = useCallback(async (pageNumber: number, pageSize: number, searchQuery: string) => {
+    abortRef.current?.abort()
+    const abortController = new AbortController()
+    abortRef.current = abortController
+
     setLoading(true)
     try {
-      const res = await fetch("/api/users", {
+      const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
         body: JSON.stringify({
           action: "listUsers",
-          payload: { page: p, per_page: pp, query: q }
-        })
+          payload: { page: pageNumber, per_page: pageSize, query: searchQuery }
+        }),
+        signal: abortController.signal
       })
-      if (!res.ok) throw new Error("Erro ao carregar usuários")
-      const data = await res.json()
-      setUsers((data.users as User[]) || [])
-      setTotal(data.total ?? 0)
+
+      if (!response.ok) throw new Error("Erro ao carregar usuários")
+      const result = await response.json()
+      setUsers(result.users || [])
+      setTotal(result.total ?? 0)
     } catch {
       setUsers([])
       setTotal(0)
@@ -59,25 +44,18 @@ export function useUsers(initialPerPage = 10): UseUsersReturn {
   }, [])
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (page !== 1) setPage(1)
-      else fetchUsers(1, perPage, search)
+    const debounceTimerId = setTimeout(() => {
+      setPage(1)
+      fetchUsers(1, perPage, search)
     }, 350)
-    return () => clearTimeout(t)
-  }, [search, perPage, fetchUsers, page])
+    return () => clearTimeout(debounceTimerId)
+  }, [search, perPage, fetchUsers])
 
   useEffect(() => {
     fetchUsers(page, perPage, search)
-  }, [page, perPage, search, fetchUsers])
+  }, [page, fetchUsers, perPage, search])
 
-  const refetch = useCallback(() => {
-    fetchUsers(page, perPage, search)
-  }, [page, perPage, search, fetchUsers])
-
-  const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(total / perPage)),
-    [total, perPage]
-  )
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(total / perPage)), [total, perPage])
 
   return {
     users,
@@ -89,7 +67,7 @@ export function useUsers(initialPerPage = 10): UseUsersReturn {
     search,
     setSearch,
     loading,
-    refetch,
+    refetch: () => fetchUsers(page, perPage, search),
     totalPages
   }
 }

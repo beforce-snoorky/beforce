@@ -7,37 +7,40 @@ import Image from "next/image"
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from "../ui/table"
 import { Icon } from "../ui/icon"
 
-export function UsersDesktopTable({ companies, onSuccess, pagination }:
-  {
-    companies: Company[]
-    loading?: boolean
-    onSuccess?: () => void
-    pagination: {
-      page: number
-      perPage: number
-      setPage: (p: number) => void
-      setPerPage: (p: number) => void
-      total: number
-      totalPages: number
-    }
-  }) {
-  const serviceFlags = [
-    { key: "has_website", label: "Website" },
-    { key: "has_email_corporate", label: "Email" },
-    { key: "has_cloud_server", label: "Nuvem" },
-    { key: "has_management_system", label: "Sistema" },
-    { key: "has_digisac", label: "WhatsApp" },
-    { key: "has_ia", label: "Automação" },
-    { key: "has_marketing", label: "Marketing" },
-  ] as const
+type UsersDesktopTableProps = {
+  companies: Company[]
+  loading?: boolean
+  onSuccess?: () => void
+  pagination: {
+    page: number
+    perPage: number
+    setPage: (nextPage: number) => void
+    setPerPage: (nextPerPage: number) => void
+    total: number
+    totalPages: number
+  }
+}
 
-  const ToggleDisplay = ({ active }: { active: boolean }) => (
-    <div className="relative flex items-center">
+function ServiceToggleIndicator({ active }: { active: boolean }) {
+  return (
+    <div className="relative flex items-center" aria-label={active ? "Ativo" : "Inativo"}>
       <div className={`w-10 h-5 rounded-full ${active ? "bg-emerald-400" : "bg-gray-300"} opacity-70`} />
       <div className={`absolute size-4 rounded-full shadow bg-light transition-all ${active ? "left-5" : "left-1"}`} />
     </div>
   )
+}
 
+const serviceFlags = [
+  { key: "has_website", label: "Website" },
+  { key: "has_email_corporate", label: "Email" },
+  { key: "has_cloud_server", label: "Nuvem" },
+  { key: "has_management_system", label: "Sistema" },
+  { key: "has_digisac", label: "WhatsApp" },
+  { key: "has_ia", label: "Automação" },
+  { key: "has_marketing", label: "Marketing" }
+] as const
+
+export function UsersDesktopTable({ companies, onSuccess, pagination }: UsersDesktopTableProps) {
   return (
     <section className="w-full flex-col mt-4">
       <div className="overflow-auto max-h-116 rounded-xl border border-surface bg-light">
@@ -63,7 +66,7 @@ export function UsersDesktopTable({ companies, onSuccess, pagination }:
                     </TableDataCell>
                     {serviceFlags.map(flag => (
                       <TableDataCell key={flag.key} style="w-12">
-                        <ToggleDisplay active={!!company[flag.key]} />
+                        <ServiceToggleIndicator active={!!company[flag.key]} />
                       </TableDataCell>
                     ))}
                     <TableDataCell style="flex items-center gap-2 w-14">

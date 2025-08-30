@@ -32,111 +32,99 @@ type UserMetadata = {
 
 type DeleteUserPayload = { id: string }
 
-function mapSupabaseUser(u: User) {
-  const meta = u.user_metadata as UserMetadata
+function mapSupabaseUser(user: User) {
+  const userMetadata = user.user_metadata as UserMetadata
 
   return {
-    id: u.id,
-    email: u.email ?? undefined,
-    email_confirmed_at: u.email_confirmed_at ?? meta.email_confirmed_at,
-    phone: u.phone ?? "",
-    confirmed_at: u.confirmed_at ?? undefined,
-    last_sign_in_at: u.last_sign_in_at ?? undefined,
-    created_at: u.created_at
+    id: user.id,
+    email: user.email ?? undefined,
+    email_confirmed_at: user.email_confirmed_at ?? userMetadata.email_confirmed_at,
+    phone: user.phone ?? "",
+    confirmed_at: user.confirmed_at ?? undefined,
+    last_sign_in_at: user.last_sign_in_at ?? undefined,
+    created_at: user.created_at
   }
 }
 
-function norm(v: unknown) {
-  const s = String(v ?? "").trim()
-  return s.toLowerCase()
+function normalizeToLowercase(value: unknown) {
+  const stringValue = String(value ?? "").trim()
+  return stringValue.toLowerCase()
 }
 
-// Removi o per_page porque não era usado aqui
-async function estimateTotal(
+async function hasNextUsersPage(
   supabaseAdmin: ReturnType<typeof getSupabaseAdmin>,
-  page: number
+  currentPage: number
 ) {
-  const next = await supabaseAdmin.auth.admin.listUsers({ page: page + 1, perPage: 1 })
-  const hasNext = (next?.data?.users?.length ?? 0) > 0
+  const nextPageResult = await supabaseAdmin.auth.admin.listUsers({ page: currentPage + 1, perPage: 1 })
+  const hasNext = (nextPageResult?.data?.users?.length ?? 0) > 0
   return { hasNext }
 }
 
 export async function POST(req: NextRequest) {
   const supabaseAdmin = getSupabaseAdmin()
+  const body = await req.json()
+  const { action, payload } = body as { action?: string; payload?: unknown }
+
+  if (!action || payload === undefined) return NextResponse.json({ error: "Ação não especificada" }, { status: 400 })
 
   try {
-    const { action, payload } = (await req.json()) as {
-      action?: string
-      payload?: unknown
-    }
-
-    if (!action || payload === undefined) {
-      return NextResponse.json({ error: "Ação não especificada" }, { status: 400 })
-    }
-
     switch (action) {
       case "listUsers": {
         const { page: pageRaw, per_page: perPageRaw, query: queryRaw } = payload as ListUsersPayload
 
         const page = Math.max(1, Number(pageRaw ?? 1))
         const per_page = Math.max(1, Number(perPageRaw ?? 10))
-        const query = String(queryRaw ?? "").trim()
+        const searchQuery = String(queryRaw ?? "").trim()
 
-        if (query.length > 0) {
-          const MAX_PER_PAGE = 1000
-          let acc: User[] = []
-          let cur = 1
+        if (searchQuery.length > 0) {
+          const supabasePageSize = 1000
+          let allUsers: User[] = []
+          let currentPage = 1
 
-          while (cur <= 10) {
-            const { data, error } = await supabaseAdmin.auth.admin.listUsers({
-              page: cur,
-              perPage: MAX_PER_PAGE
-            })
+          while (currentPage <= 10) {
+            const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page: currentPage, perPage: supabasePageSize })
             if (error) throw error
+
             const batch: User[] = (data?.users ?? []) as User[]
-            acc = acc.concat(batch)
-            if (batch.length < MAX_PER_PAGE) break
-            cur += 1
+            allUsers = allUsers.concat(batch)
+
+            if (batch.length < supabasePageSize) break
+            currentPage += 1
           }
 
-          const q = norm(query)
-          const filtered = acc.filter((u: User) => norm(u.email).includes(q))
+          const normalizedQuery = normalizeToLowercase(searchQuery)
+          const filteredUsers = allUsers.filter((u: User) => normalizeToLowercase(u.email).includes(normalizedQuery))
 
-          const total = filtered.length
+          const total = filteredUsers.length
           const totalPages = Math.max(1, Math.ceil(total / per_page))
-          const from = (page - 1) * per_page
-          const to = from + per_page
-          const pageItems = filtered.slice(from, to).map(mapSupabaseUser)
+          const startIndex = (page - 1) * per_page
+          const endIndex = startIndex + per_page
+          const pageItems = filteredUsers.slice(startIndex, endIndex).map(mapSupabaseUser)
 
           return NextResponse.json({ users: pageItems, total, totalPages })
         }
 
-        const { data, error } = await supabaseAdmin.auth.admin.listUsers({
-          page,
-          perPage: per_page
-        })
+        const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: per_page })
         if (error) throw error
 
-        const usersRaw: User[] = (data?.users ?? []) as User[]
-        const users = usersRaw.map(mapSupabaseUser)
+        const fetchedUsers: User[] = (data?.users ?? []) as User[]
+        const users = fetchedUsers.map(mapSupabaseUser)
 
-        const { hasNext } = await estimateTotal(supabaseAdmin, page)
-        const totalApprox = (page - 1) * per_page + users.length + (hasNext ? per_page : 0)
-        const totalPagesApprox = hasNext ? page + 1 : page
+        const { hasNext } = await hasNextUsersPage(supabaseAdmin, page)
+        const approximateTotal = (page - 1) * per_page + users.length + (hasNext ? per_page : 0)
+        const approximateTotalPages = hasNext ? page + 1 : page
 
         return NextResponse.json({
           users,
-          total: totalApprox,
-          totalPages: totalPagesApprox
+          total: approximateTotal,
+          totalPages: approximateTotalPages
         })
       }
 
       case "createUser": {
         const { email, password, phone, email_confirm, phone_confirm } = payload as CreateUserPayload
 
-        if (!email || !password) {
-          return NextResponse.json({ error: "Email e senha são obrigatórios" }, { status: 400 })
-        }
+        if (!email || !password) return NextResponse.json({ error: "Email e senha são obrigatórios" }, { status: 400 })
 
         const { data, error } = await supabaseAdmin.auth.admin.createUser({
           email,

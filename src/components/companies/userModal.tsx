@@ -11,7 +11,7 @@ import { FileUploadNice } from "../ui/fileUpload"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 
-type Props = {
+type CompanyFormModalProps = {
   onClose: () => void
   onSuccess?: () => void
   mode: "create" | "update"
@@ -20,14 +20,14 @@ type Props = {
 
 const supabase = getSupabaseClient()
 
-export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
-  const [isLoading, setIsLoading] = useState(false)
+export function CompanyFormModal({ onClose, onSuccess, mode, company }: CompanyFormModalProps) {
+  const [isSaving, setIsSaving] = useState(false)
 
   const [businessName, setBusinessName] = useState("")
   const [email, setEmail] = useState("")
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
-  const [removeLogo, setRemoveLogo] = useState(false)
+  const [shouldRemoveLogo, setShouldRemoveLogo] = useState(false)
 
   const [hasWebsite, setHasWebsite] = useState(false)
   const [websiteDomain, setWebsiteDomain] = useState("")
@@ -38,7 +38,7 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
   const [digisacUrl, setDigisacUrl] = useState("")
 
   const [hasEmailCorporate, setHasEmailCorporate] = useState(false)
-  const [hasIa, setHasIa] = useState(false)
+  const [hasAutomations, setHasAutomations] = useState(false)
   const [hasCloudServer, setHasCloudServer] = useState(false)
   const [hasManagementSystem, setHasManagementSystem] = useState(false)
   const [hasMarketing, setHasMarketing] = useState(false)
@@ -57,57 +57,73 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
       setBusinessName(company.business_name || "")
       setEmail(company.email || "")
       setLogoPreview(company.logo || null)
-      setRemoveLogo(false)
+      setShouldRemoveLogo(false)
+
       setHasWebsite(company.has_website || false)
       setWebsiteDomain(company.website_domain || "")
       setWebsiteAnalyticsId(company.website_analytics_id || "")
+
       setHasDigisac(company.has_digisac || false)
       setDigisacToken(company.digisac_token || "")
       setDigisacUrl(company.digisac_url || "")
+
       setHasEmailCorporate(company.has_email_corporate || false)
-      setHasIa(company.has_ia || false)
+      setHasAutomations(company.has_ia || false)
       setHasCloudServer(company.has_cloud_server || false)
       setHasManagementSystem(company.has_management_system || false)
       setHasMarketing(company.has_marketing || false)
     }
   }, [mode, company])
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
+  const uploadLogoIfNeeded = async (): Promise<string | null> => {
+    if (!logoFile || !businessName) return company?.logo || null
 
-    let logo = company?.logo || null
+    const fileExtension = logoFile.name.split(".").pop()
+    const safeCompanyName = slugify(businessName)
+    const filePath = `${safeCompanyName}.${fileExtension}`
 
-    if (logoFile && businessName) {
-      const fileExt = logoFile.name.split(".").pop()
-      const safeName = slugify(businessName)
-      const filePath = `${safeName}.${fileExt}`
+    const { data: existingFiles, error: listError } = await supabase.storage.from("business-logo").list("", { search: filePath })
 
-      const { data: existing, error: listError } = await supabase.storage.from("business-logo").list("", { search: filePath })
+    if (listError) console.error("Erro ao verificar arquivos existentes:", listError)
 
-      if (listError) console.error("Erro ao verificar arquivos existentes:", listError)
-
-      if (existing && existing.length > 0) {
-        toast.error("Já existe um logo com esse nome. Por favor, renomeie a empresa ou use outro arquivo.")
-        setIsLoading(false)
-        return
-      }
-
-      const { error: uploadError } = await supabase.storage.from("business-logo").upload(filePath, logoFile)
-
-      if (!uploadError) {
-        const { data } = supabase.storage.from("business-logo").getPublicUrl(filePath)
-        logo = data.publicUrl
-      }
+    if (existingFiles && existingFiles.length > 0) {
+      toast.error("Já existe um logo com esse nome. Por favor, renomeie a empresa ou use outro arquivo.")
+      return null
     }
 
-    if (removeLogo && !logoFile) logo = null
+    const { error: uploadError } = await supabase.storage.from("business-logo").upload(filePath, logoFile)
 
-    const payload = {
+    if (uploadError) {
+      toast.error("Não foi possível enviar o logo. Tente novamente.")
+      return null
+    }
+
+    const { data } = supabase.storage.from("business-logo").getPublicUrl(filePath)
+    return data.publicUrl
+  }
+
+  const handleSaveCompany = async () => {
+    setIsSaving(true)
+
+    let logoUrl: string | null = company?.logo || null
+
+    if (logoFile && businessName) {
+      const uploadedLogo = await uploadLogoIfNeeded()
+      if (!uploadedLogo) {
+        setIsSaving(false)
+        return
+      }
+      logoUrl = uploadedLogo
+    }
+
+    if (shouldRemoveLogo && !logoFile) logoUrl = null
+
+    const requestPayload = {
       ...(mode === "update" ? { id: company?.id } : {}),
       business_name: businessName,
       email,
-      logo,
-      remove_logo: removeLogo,
+      logo: logoUrl,
+      remove_logo: shouldRemoveLogo,
 
       has_website: hasWebsite,
       website_domain: websiteDomain,
@@ -118,17 +134,17 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
       digisac_url: digisacUrl,
 
       has_email_corporate: hasEmailCorporate,
-      has_ia: hasIa,
+      has_ia: hasAutomations,
       has_cloud_server: hasCloudServer,
       has_management_system: hasManagementSystem,
       has_marketing: hasMarketing
     }
 
-    const success = await handleCompanyAction(mode === "create" ? "createCompany" : "updateCompany", payload)
+    const wasSuccessful = await handleCompanyAction(mode === "create" ? "createCompany" : "updateCompany", requestPayload)
 
-    setIsLoading(false)
+    setIsSaving(false)
 
-    if (success) {
+    if (wasSuccessful) {
       onSuccess?.()
       onClose()
     }
@@ -137,10 +153,10 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
   const handleRemoveLogo = () => {
     setLogoFile(null)
     setLogoPreview(null)
-    setRemoveLogo(true)
+    setShouldRemoveLogo(true)
   }
 
-  const tabBtnClass = (id: string) => `py-3 px-2 inline-flex items-center gap-2 text-sm whitespace-nowrap ${activeTab === id ? "text-accent" : "text-gray-500"}`
+  const getTabButtonClassName = (id: string) => `py-3 px-2 inline-flex items-center gap-2 text-sm whitespace-nowrap ${activeTab === id ? "text-accent" : "text-gray-500"}`
 
   return (
     <>
@@ -172,7 +188,7 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
                   aria-controls={id}
                   aria-selected={activeTab === id}
                   role="tab"
-                  className={tabBtnClass(id)}
+                  className={getTabButtonClassName(id)}
                   onClick={() => setActiveTab(id)}
                 >
                   <IconTab className="shrink-0 size-4" />
@@ -190,11 +206,11 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
                   maxSizeMB={2}
                   value={logoFile}
                   previewUrl={logoPreview}
-                  disabled={isLoading}
+                  disabled={isSaving}
                   onChange={(file, url) => {
                     setLogoFile(file)
                     setLogoPreview(url)
-                    setRemoveLogo(false)
+                    setShouldRemoveLogo(false)
                   }}
                   onRemove={handleRemoveLogo}
                 />
@@ -285,7 +301,7 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
             <div id="tab-servicos" role="tabpanel" aria-labelledby="tab-servicos-btn" className={activeTab === "tab-servicos" ? "" : "hidden"}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <ToggleRow label="Email Corporativo" checked={hasEmailCorporate} onChange={setHasEmailCorporate} />
-                <ToggleRow label="IA / Automações" checked={hasIa} onChange={setHasIa} />
+                <ToggleRow label="IA / Automações" checked={hasAutomations} onChange={setHasAutomations} />
                 <ToggleRow label="Servidor em Nuvem" checked={hasCloudServer} onChange={setHasCloudServer} />
                 <ToggleRow label="Sistema de Gestão" checked={hasManagementSystem} onChange={setHasManagementSystem} />
                 <ToggleRow label="Marketing Digital" checked={hasMarketing} onChange={setHasMarketing} />
@@ -295,8 +311,8 @@ export function CompanyFormModal({ onClose, onSuccess, mode, company }: Props) {
 
           <div className="flex justify-end items-center gap-4 py-3 px-4 border-t border-surface">
             <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
-            <Button type="button" variant="primary" onClick={handleSubmit} isPending={isLoading} className="min-w-32">
-              {isLoading ? "Salvando..." : "Salvar"}
+            <Button type="button" variant="primary" onClick={handleSaveCompany} isPending={isSaving} className="min-w-32">
+              {isSaving ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </div>

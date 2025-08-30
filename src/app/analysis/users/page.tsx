@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { Input } from "@/components/ui/input";
-import { AddUserButton } from "@/components/users/addUserButton";
-import { UsersDesktopTable } from "@/components/users/desktopList";
-import { UsersMobileList } from "@/components/users/mobileList";
+import { Input } from "@/components/ui/input"
+import { AddUserButton } from "@/components/users/addUserButton"
+import { UsersDesktopTable } from "@/components/users/desktopList"
+import { UsersMobileList } from "@/components/users/mobileList"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { useUsers } from "@/hooks/useUsers";
-import { Search, Users2 } from "lucide-react";
-import { useMemo } from "react";
+import { useUsers } from "@/hooks/useUsers"
+import { Search, Users2 } from "lucide-react"
+import { useMemo } from "react"
 
 export default function Users() {
   const isMobileViewport = useMediaQuery("(max-width: 767px)")

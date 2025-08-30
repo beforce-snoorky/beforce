@@ -12,7 +12,7 @@ export function handleUserAction(action: UserActionType, payload: UserPayload) {
   return handleAction<UserActionType, UserPayload>({
     action,
     payload,
-    apiRoute: "/api/admin",
+    apiRoute: "/api/users",
     toastMessages: {
       createUser: "Criando usuário...",
       updateUser: "Atualizando usuário...",

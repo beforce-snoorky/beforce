@@ -8,23 +8,23 @@ import { Building2, ChevronDown, ChevronLeft, ChevronRight, PenLine, Trash2 } fr
 import { solutions } from "@/constants/solutions"
 import { CompanyActionButton } from "./actions"
 
-type UserMobileListProps = {
+type CompaniesMobileListProps = {
   companies: Company[]
   loading?: boolean
   onSuccess?: () => void
   pagination: {
     page: number
     perPage: number
-    setPage: (p: number) => void
-    setPerPage: (p: number) => void
+    setPage: (nextPage: number) => void
+    setPerPage: (nextPerPage: number) => void
     total: number
     totalPages: number
   }
 }
 
-export function UsersMobileList({ companies, loading, onSuccess, pagination }: UserMobileListProps) {
+export function UsersMobileList({ companies, loading, onSuccess, pagination }: CompaniesMobileListProps) {
   const [expandedCompanyId, setExpandedCompanyId] = useState<string | null>(null)
-  const toggleExpand = (id: string) => setExpandedCompanyId(prev => (prev === id ? null : id))
+  const toggleCompanyExpansion = (companyId: string) => setExpandedCompanyId(prev => (prev === companyId ? null : companyId))
 
   return (
     <div className="p-4 rounded-xl border border-surface bg-light">
@@ -41,7 +41,7 @@ export function UsersMobileList({ companies, loading, onSuccess, pagination }: U
 
             return (
               <div className="p-4 rounded-xl border border-surface bg-light" key={company.id}>
-                <div className="flex items-center justify-between" onClick={() => toggleExpand(company.id)}>
+                <div className="flex items-center justify-between" onClick={() => toggleCompanyExpansion(company.id)}>
                   <div className="flex items-center gap-2">
                     {company.logo ? (
                       <Image
