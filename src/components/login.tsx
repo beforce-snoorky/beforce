@@ -21,7 +21,7 @@ export function Login() {
       if (session?.user) router.replace("/analysis")
     }
     checkSession()
-  }, [router])
+  }, [supabaseClient, router])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()

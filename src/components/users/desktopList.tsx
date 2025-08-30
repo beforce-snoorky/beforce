@@ -3,8 +3,8 @@
 import { UserRound, UserRoundPen, Trash2, ChevronLeft, ChevronRight } from "lucide-react"
 import { Table, TableHead, TableRow, TableHeaderCell, TableBody, TableDataCell } from "../ui/table"
 import { UserActionButton } from "./actions"
-import { User } from "@/hooks/useUsers"
 import { Icon } from "../ui/icon"
+import type { User } from "./userModal"
 
 export function UsersDesktopTable({
   users,
