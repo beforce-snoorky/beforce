@@ -77,7 +77,7 @@ export function TableDesktop({ reportData, reportFilters }: TableDesktopProps) {
                         <Icon icon={<UsersRound className="size-4" />} />
                         <span className="truncate w-48 max-w-48 block">{operator}</span>
                       </TableDataCell>
-                      <TableDataCell style="w-48 max-w-48">{department}</TableDataCell>
+                      <TableDataCell style="w-48 max-w-48 truncate">{department}</TableDataCell>
                       {values.map((value, index) => (
                         <TableDataCell key={index} style="w-24">
                           <div className="w-24">{value}</div>
