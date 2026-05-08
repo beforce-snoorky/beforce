@@ -1,23 +1,25 @@
-export function Table({ style, children }: { style?: string, children: React.ReactNode }) {
-  return <table className={`divide-y divide-surface ${style}`}>{children}</table>
+export function Table({ children }: { children: React.ReactNode }) {
+	return <table className="min-w-full text-left text-sm">{children}</table>
+}
+
+export function TableHeader({ background, children }: { background?: string; children: React.ReactNode }) {
+	return (
+		<thead
+			className={`sticky top-0 uppercase text-xs tracking-wide text-foreground-muted ${background ? background : "bg-background"}`}
+		>
+			{children}
+		</thead>
+	)
 }
 
 export function TableHead({ children }: { children: React.ReactNode }) {
-  return <thead className="sticky top-0 z-10 bg-gray-50">{children}</thead>
+	return <th className="px-4 py-3 font-medium">{children}</th>
 }
 
-export function TableRow({ style, children }: { style?: string, children: React.ReactNode }) {
-  return <tr className={style}>{children}</tr>
-}
-
-export function TableHeaderCell({ style, children }: { style?: string, children: React.ReactNode }) {
-  return <th className={`py-3 px-4 text-start text-xs font-medium uppercase text-gray-500 ${style}`}>{children}</th>
-}
-
-export function TableBody({ children }: { children: React.ReactNode }) {
-  return <tbody className="divide-y divide-gray-200">{children}</tbody>
-}
-
-export function TableDataCell({ style, children }: { style?: string, children: React.ReactNode }) {
-  return <td className={`py-3 px-4 whitespace-nowrap text-sm text-gray-800 ${style}`}>{children}</td>
+export function TableCell({ width, children }: { width?: string; children: React.ReactNode }) {
+	return (
+		<td>
+			<div className={`${width} px-4 py-5 whitespace-nowrap`}>{children}</div>
+		</td>
+	)
 }

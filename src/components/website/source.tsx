@@ -1,53 +1,87 @@
 "use client"
 
-import { SourceData } from "@/types/website"
-import { useMemo } from "react"
-import { BarChart } from "../charts/bars"
+import type { SourceStatisticsProps } from "@/types/website"
+import { toNumber, translateSourceChannel } from "@/utils/website"
+import { SafeEChart } from "@/components/ui/safeEChart"
+import type { EChartsOption } from "echarts-for-react"
 import { Network } from "lucide-react"
+import { useMemo } from "react"
+import { ChartCard } from "./charts"
 
-export function SourceStatistics({ origem }: { origem: SourceData[] | undefined }) {
-  const chartData = useMemo(() => {
-    if (!origem) return { categories: [], values: [] }
+export function SourceStatistics({ origem, translate }: SourceStatisticsProps) {
+	const chartData = useMemo(() => {
+		const sorted = [...origem].sort((left, right) => toNumber(right.sessions) - toNumber(left.sessions))
 
-    const sorted = [...origem].sort((a, b) => Number(b.sessions) - Number(a.sessions))
+		return {
+			categories: sorted.map((item) => translateSourceChannel(item.sessionDefaultChannelGroup, translate)),
+			values: sorted.map((item) => toNumber(item.sessions)),
+		}
+	}, [origem, translate])
 
-    return {
-      categories: sorted.map(item => translateChannel(item.sessionDefaultChannelGroup)),
-      values: sorted.map(item => Number(item.sessions)),
-    }
-  }, [origem])
+	const option = useMemo<EChartsOption>(() => {
+		if (!chartData.categories.length) return {}
 
-  function translateChannel(channel: string): string {
-    const map: Record<string, string> = {
-      "Organic Social": "Social",
-      "Organic Search": "Orgânico",
-      "Referral": "Referência",
-      "Direct": "Direto",
-      "Paid Search": "Pago",
-      "Paid Social": "Social Pago",
-      "Display": "Display",
-      "Email": "Email",
-      "Affiliates": "Afiliados",
-      "Other": "Outro",
-      "Unassigned": "Não Atribuído"
-    }
+		const colors = [
+			"#155dfc",
+			"#00a63e",
+			"#9810fa",
+			"#e60076",
+			"#8b5cf6",
+			"#14b8a6",
+			"#e11d48",
+			"#7c3aed",
+			"#f97316",
+			"#0ea5e9",
+			"#10b981",
+			"#f43f5e",
+			"#6366f1",
+			"#22c55e",
+			"#a855f7",
+			"#ec4899",
+		]
 
-    return map[channel] || channel
-  }
+		const coloredData = chartData.values.map((item, index) => ({
+			value: item,
+			itemStyle: { color: colors[index % colors.length] },
+		}))
 
-  return (
-    <div className="col-span-8 md:col-span-4 p-4 pb-0 rounded-xl border border-surface bg-light">
-      <div className="flex items-center gap-2">
-        <Network className="size-5 text-accent" />
-        <h2 className="text-md font-medium">Sessões por Origem</h2>
-      </div>
-      <p className="text-xs text-gray-500 mb-4">Distribuição das sessões por canal de aquisição</p>
-      <BarChart
-        categories={chartData.categories}
-        values={chartData.values}
-        tooltipFormatter={(item) => `${item.value} sessões`}
-        labelFormatter={(item) => `${item.value} sessões`}
-      />
-    </div>
-  )
+		return {
+			tooltip: { trigger: "item", formatter: "{c}" },
+			grid: { top: 40, right: 8, bottom: 0, left: 0, containLabel: true },
+			legend: { left: "center", right: "center", bottom: 0, textStyle: { fontSize: 10, overflow: "truncate", width: 70 } },
+
+			xAxis: {
+				type: "category",
+				data: chartData.categories,
+				axisLabel: { fontSize: 10, interval: 0, hideOverlap: true },
+				axisLine: { lineStyle: { color: "#80828d22" } },
+			},
+			yAxis: {
+				type: "value",
+				axisLabel: { formatter: "{value}" },
+				splitLine: { lineStyle: { color: "#80828d22", type: "dashed" } },
+			},
+			series: [
+				{
+					type: "bar",
+					data: coloredData,
+					itemStyle: { borderRadius: [32, 32, 0, 0] },
+					label: { show: true, position: "top", formatter: "{c} min", fontSize: 10, color: "#80828d" },
+				},
+			],
+		}
+	}, [chartData])
+
+	return (
+		<ChartCard
+			title={translate("source.title")}
+			subtitle={translate("source.subtitle")}
+			icon={<Network className="size-5" />}
+		>
+			<SafeEChart
+				option={option}
+				height={280}
+			/>
+		</ChartCard>
+	)
 }

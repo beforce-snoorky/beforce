@@ -1,52 +1,35 @@
-import "./globals.css"
-import type { Metadata } from "next"
-import { Analytics } from "@vercel/analytics/next"
+import "@/app/globals.css"
 
-export const metadata: Metadata = {
-  title: "Relatórios Mensais | Beforce Dashboard",
-  description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
-  keywords: ["dashboard", "relatórios", "atendimentos", "Beforce", "automação", "n8n", "Supabase"],
-  openGraph: {
-    title: "Relatórios Mensais | Beforce Dashboard",
-    description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
-    url: "https://dashboard.beforce.com.br",
-    siteName: "Beforce Dashboard",
-    locale: "pt_BR",
-    type: "website",
-    images: [
-      {
-        url: "https://dashboard.beforce.com.br/beforce.png",
-        alt: "Relatório Mensal de Atendimento",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Relatórios Mensais | Beforce Dashboard",
-    description: "Acompanhe relatórios mensais de desempenho de forma inteligente e automatizada.",
-    images: [
-      {
-        url: "https://dashboard.beforce.com.br/beforce.png",
-        alt: "Relatório Mensal de Atendimento",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+import { QueryProvider } from "@/components/queryProvider"
+import { ThemeProvider } from "@/components/themeProvider"
+import { resolveTheme, themeCookieName } from "@/types/theme"
+import { buildLocaleLayoutMetadata } from "@/utils/metadata"
+import type { Metadata } from "next"
+import { cookies } from "next/headers"
+import { getLocale } from "next-intl/server"
+
+export async function generateMetadata(): Promise<Metadata> {
+	const locale = await getLocale()
+	return buildLocaleLayoutMetadata(locale)
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="pt-BR">
-      <body>
-        {children}
-        <Analytics /></body>
-    </html>
-  )
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+	const locale = await getLocale()
+	const cookieStore = await cookies()
+	const theme = resolveTheme(cookieStore.get(themeCookieName)?.value)
+	const documentLanguage = locale === "pt" ? "pt-BR" : locale
+
+	return (
+		<html
+			lang={documentLanguage}
+			className={theme}
+			suppressHydrationWarning
+		>
+			<body>
+				<ThemeProvider initialTheme={theme}>
+					<QueryProvider>{children}</QueryProvider>
+				</ThemeProvider>
+			</body>
+		</html>
+	)
 }

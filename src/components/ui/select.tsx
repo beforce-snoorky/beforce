@@ -1,63 +1,167 @@
 "use client"
 
-import { ChevronDown } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
+import type { DropdownPosition, SelectProps } from "@/types/ui"
+import { ChevronsUpDown } from "lucide-react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 
-type SelectProps = {
-  id: string
-  label: string
-  options: { label: string, value: string }[]
-  value: string
-  onChange: (value: string) => void
-}
+export function Select({
+	options,
+	name,
+	defaultValue,
+	value,
+	onValueChange,
+	icon,
+	error,
+	primary,
+	disabled,
+	placeholder = "Selecione...",
+}: SelectProps) {
+	const [open, setOpen] = useState(false)
+	const [dropdownPosition, setDropdownPosition] = useState<DropdownPosition | null>(null)
+	const [internalValue, setInternalValue] = useState<string | undefined>(undefined)
+	const canUsePortal = typeof document !== "undefined"
+	const isControlled = typeof value !== "undefined"
+	const selectedValue = isControlled ? value : (internalValue ?? defaultValue)
 
-export function Select(props: SelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
+	const triggerRef = useRef<HTMLButtonElement>(null)
+	const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const selectedOption = props.options.find((opt) => opt.value === props.value)
-  const displayLabel = selectedOption ? selectedOption.label : "Selecione..."
+	const selected = options.find((opt) => opt.value === selectedValue)
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) setIsOpen(false)
-    }
+	const updateDropdownPosition = useCallback(() => {
+		if (!triggerRef.current) return
 
-    if (isOpen) document.addEventListener("mousedown", handleClickOutside)
-    else document.removeEventListener("mousedown", handleClickOutside)
+		const rect = triggerRef.current.getBoundingClientRect()
+		const viewportPadding = 8
+		const dropdownGap = 4
+		const viewportHeight = window.innerHeight
+		const availableBelow = viewportHeight - rect.bottom - viewportPadding
+		const availableAbove = rect.top - viewportPadding
+		const openUp = availableBelow < 220 && availableAbove > availableBelow
+		const maxHeight = Math.max(120, Math.min(320, openUp ? availableAbove : availableBelow))
 
-    return () => { document.removeEventListener("mousedown", handleClickOutside) }
-  }, [isOpen])
+		setDropdownPosition({
+			top: openUp ? rect.top - dropdownGap : rect.bottom + dropdownGap,
+			left: rect.left,
+			width: rect.width,
+			maxHeight,
+			openUp,
+		})
+	}, [])
 
-  return (
-    <div className="relative w-full inline-flex flex-col" ref={ref}>
-      <button
-        id={props.id}
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="py-3 px-4 inline-flex items-center justify-between gap-x-2 text-sm rounded-lg border border-surface bg-light text-gray-800"
-      >
-        <span className="">{displayLabel}</span>
-        <ChevronDown className={`size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-      </button>
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			const targetNode = e.target as Node
+			if (containerRef.current?.contains(targetNode)) return
+			if (dropdownRef.current?.contains(targetNode)) return
+			setOpen(false)
+		}
 
-      {isOpen && (
-        <div className="absolute bottom-0 lg:bottom-auto lg:top-full z-50 mt-2 min-w-full shadow-md rounded-lg overflow-hidden border border-surface bg-light">
-          <div className="p-1 space-y-0.5 max-h-40 overflow-y-auto">
-            {props.options.map((option) => (
-              <button key={option.value}
-                className="w-full text-left flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                onClick={() => {
-                  props.onChange(option.value)
-                  setIsOpen(false)
-                }}
-              >
-                <span>{option.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
+		document.addEventListener("mousedown", handleClickOutside)
+		return () => document.removeEventListener("mousedown", handleClickOutside)
+	}, [])
+
+	useEffect(() => {
+		if (!open || disabled) return
+
+		updateDropdownPosition()
+
+		function handleViewportChange() {
+			updateDropdownPosition()
+		}
+
+		window.addEventListener("resize", handleViewportChange)
+		window.addEventListener("scroll", handleViewportChange, true)
+
+		return () => {
+			window.removeEventListener("resize", handleViewportChange)
+			window.removeEventListener("scroll", handleViewportChange, true)
+		}
+	}, [open, disabled, updateDropdownPosition])
+
+	return (
+		<div
+			ref={containerRef}
+			className="relative w-full"
+		>
+			<input
+				type="hidden"
+				name={name}
+				value={selectedValue ?? ""}
+			/>
+
+			<button
+				id="select"
+				type="button"
+				ref={triggerRef}
+				disabled={disabled}
+				className={`w-full ${primary ? "bg-background" : "bg-background-muted"}
+				   ${error ? "border-error placeholder:text-error" : ""}
+				   ${disabled ? "opacity-60 cursor-not-allowed" : ""}
+				`}
+				onClick={() =>
+					setOpen((prev) => {
+						const nextOpen = !prev
+						if (nextOpen) updateDropdownPosition()
+						return nextOpen
+					})
+				}
+			>
+				{icon && <span className="text-foreground-muted">{icon}</span>}
+
+				{selected ? (
+					<div className="flex items-center gap-2">
+						<span>{selected.label}</span>
+					</div>
+				) : (
+					<span className="text-foreground-muted">{placeholder}</span>
+				)}
+
+				<span className="ml-auto">
+					<ChevronsUpDown className="size-4" />
+				</span>
+			</button>
+
+			{open && !disabled && canUsePortal && dropdownPosition
+				? createPortal(
+						<div
+							ref={dropdownRef}
+							className="fixed z-70"
+							style={{
+								top: dropdownPosition.top,
+								left: dropdownPosition.left,
+								width: dropdownPosition.width,
+								transform: dropdownPosition.openUp ? "translateY(-100%)" : undefined,
+							}}
+						>
+							<div className="w-full rounded-3xl bg-background p-2 shadow-md border border-border">
+								<ul
+									className="flex flex-col gap-1 overflow-auto"
+									style={{ maxHeight: dropdownPosition.maxHeight }}
+								>
+									{options.map((opt) => (
+										<li key={opt.value}>
+											<button
+												type="button"
+												onClick={() => {
+													if (!isControlled) setInternalValue(opt.value)
+													onValueChange?.(opt.value)
+													setOpen(false)
+												}}
+												className="w-full flex items-center gap-2 p-2 rounded-4xl hover:bg-background-muted text-left"
+											>
+												<span className="text-foreground">{opt.label}</span>
+											</button>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>,
+						document.body
+					)
+				: null}
+		</div>
+	)
 }

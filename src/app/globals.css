@@ -1,11 +1,98 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark-theme));
+
 @theme {
-	--color-accent-dark: oklch(32.749% 0.13359 27.308);
-	--color-accent: oklch(62.197% 0.25019 27.366);
-	--color-accent-light: oklch(94.486% 0.02639 11.633);
-	--color-surface: oklch(92.758% 0.00592 264.656);
-	--color-light: oklch(100% 0.00011 271.152);
-	--color-dark: oklch(17.764% 0.00002 271.152);
-	--color-background: oklch(98.212% 0.00011 271.152);
+	--color-background: var(--background);
+	--color-background-muted: var(--background-muted);
+
+	--color-foreground: var(--foreground);
+	--color-foreground-muted: var(--foreground-muted);
+
+	--color-primary: var(--primary);
+	--color-primary-hover: var(--primary-hover);
+	--color-primary-foreground: var(--primary-foreground);
+
+	--color-from: var(--from);
+	--color-to: var(--to);
+
+	--color-border: var(--border);
+	--color-error: var(--error);
+}
+
+.light {
+	--background: #fcfcfd;
+	--background-muted: #eff0f3;
+
+	--foreground: #1e1f24;
+	--foreground-muted: #80828d;
+
+	--primary: #fa0d1d;
+	--primary-hover: #e20000;
+	--primary-foreground: #ffffff;
+
+	--from: #007e4d;
+	--to: #193b2b;
+
+	--border: #cdced7;
+}
+
+.dark {
+	--background: #111113;
+	--background-muted: #19191b;
+
+	--foreground: #eeeef0;
+	--foreground-muted: #b2b3bd;
+
+	--primary: #fa0d1d;
+	--primary-hover: #ea0004;
+	--primary-foreground: #ffffff;
+
+	--from: #0c130f;
+	--to: #103b28;
+
+	--border: #393a40;
+}
+
+@layer components {
+	input {
+		@apply rounded-4xl py-2 px-4;
+		@apply outline-none border border-border;
+		@apply text-foreground placeholder:text-foreground-muted;
+	}
+
+	button {
+		@apply rounded-4xl py-2 px-4;
+		@apply flex items-center justify-center gap-2;
+		@apply cursor-pointer text-primary-foreground;
+	}
+
+	textarea {
+		@apply rounded-4xl py-2 px-4;
+		@apply outline-none border border-border;
+		@apply text-foreground placeholder:text-foreground-muted;
+	}
+}
+
+@layer utilities {
+	#select {
+		@apply rounded-4xl py-2 px-4;
+		@apply outline-none border border-border;
+		@apply text-foreground placeholder:text-foreground-muted;
+	}
+}
+
+@layer base {
+	* {
+		scrollbar-width: none;
+		scrollbar-color: transparent;
+	}
+
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		@apply select-none;
+	}
 }

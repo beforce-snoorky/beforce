@@ -1,70 +1,99 @@
 "use client"
 
-import { getSupabaseClient } from "@/utils/supabase/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import toast, { Toaster } from "react-hot-toast"
-import { Input } from "./ui/input"
-import { LockKeyhole, User } from "lucide-react"
+import { signInWithPassword } from "@/features/auth"
+import type { SignInActionState } from "@/types/auth"
+import { UserRound, KeyRound } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useActionState, useRef, useMemo, useEffect } from "react"
 import { Button } from "./ui/button"
+import { Input } from "./ui/input"
 
-export function Login() {
-  const supabaseClient = getSupabaseClient()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+const initialState: SignInActionState = { status: "idle" }
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabaseClient.auth.getSession()
-      if (session?.user) router.replace("/analysis")
-    }
-    checkSession()
-  }, [supabaseClient, router])
+export function LoginForm({ locale }: { locale: string }) {
+	const translate = useTranslations("Auth")
+	const [state, formAction, isPending] = useActionState(signInWithPassword, initialState)
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setIsLoading(true)
+	const errorRef = useRef<HTMLDivElement>(null)
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
-    if (error) toast.error("Credenciais inválidas")
-    else router.push("/analysis")
+	const errorMessage = useMemo(() => {
+		if (state.status !== "error") return null
 
-    setIsLoading(false)
-  }
+		switch (state.reason) {
+			case "missing_fields":
+				return translate("loginErrorMissing")
+			case "invalid_credentials":
+				return translate("loginErrorInvalid")
+			case "rate_limited":
+				return translate("loginErrorRateLimit")
+			default:
+				return translate("loginErrorGeneric")
+		}
+	}, [state, translate])
 
-  return (
-    <>
-      <Toaster position="bottom-center" />
-      <form onSubmit={handleSubmit} className="w-sm md:w-md p-8 space-y-4 rounded-2xl backdrop-blur-xl border border-surface/10 bg-white/5 text-white">
-        <h1 className="sr-only">Acesse sua conta!</h1>
-        <label htmlFor="email" className="block mb-1">Email</label>
-        <Input
-          id="email"
-          icon={<User className="size-5 text-gray-500" />}
-          name="email"
-          type="email"
-          placeholder="seu@email.com"
-          autoComplete="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password" className="block mb-1">Senha</label>
-        <Input
-          id="password"
-          icon={<LockKeyhole className="size-5 text-gray-500" />}
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button isPending={isLoading} type="submit" variant="primary">Entrar</Button>
-      </form>
-    </>
-  )
+	useEffect(() => {
+		if (errorMessage) errorRef.current?.focus()
+	}, [errorMessage])
+
+	const errorId = errorMessage ? "login-error" : undefined
+	const hasError = Boolean(errorMessage)
+
+	return (
+		<form
+			action={formAction}
+			className="w-full max-w-sm space-y-4"
+		>
+			<div className="p-6 rounded-4xl space-y-4 bg-background">
+				<input
+					type="hidden"
+					name="locale"
+					value={locale}
+				/>
+
+				<Input
+					id="email"
+					name="email"
+					type="email"
+					autoComplete="email"
+					placeholder={translate("emailPlaceholder")}
+					icon={<UserRound className="size-4" />}
+					error={hasError}
+				/>
+
+				<Input
+					id="password"
+					name="password"
+					type="password"
+					autoComplete="current-password"
+					placeholder={translate("passwordPlaceholder")}
+					icon={<KeyRound className="size-4" />}
+					error={hasError}
+				/>
+
+				<Button
+					type="submit"
+					variant="primary"
+					loading={isPending}
+					disabled={isPending}
+					aria-disabled={isPending}
+					fullWidth
+				>
+					{isPending ? translate("loginLoading") : translate("loginSubmit")}
+				</Button>
+			</div>
+
+			{errorMessage ? (
+				<div
+					id={errorId}
+					ref={errorRef}
+					tabIndex={-1}
+					role="alert"
+					aria-live="assertive"
+					className="text-center text-primary-foreground"
+				>
+					{errorMessage}
+				</div>
+			) : null}
+		</form>
+	)
 }

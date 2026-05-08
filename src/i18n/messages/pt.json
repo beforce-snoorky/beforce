@@ -1,0 +1,627 @@
+{
+	"Layout": {
+		"title": "Beforce Dashboard",
+		"description": "Painel Beforce",
+		"auth": { "title": "Login", "description": "description" },
+		"companies": { "title": "Companies", "description": "description" },
+		"crm": { "title": "CRM", "description": "description" },
+		"dashboard": { "title": "Painel", "description": "description" },
+		"builder": { "title": "Builder", "description": "description" },
+		"colors": { "title": "Cores", "description": "description" },
+		"typography": { "title": "Tipografia", "description": "description" },
+		"digisac": { "title": "Digisac", "description": "description" },
+		"email": { "title": "Email", "description": "description" },
+		"ia": { "title": "IA", "description": "description" },
+		"marketing": { "title": "Marketing", "description": "description" },
+		"resource": { "title": "Recursos", "description": "description" },
+		"server": { "title": "Servidor", "description": "description" },
+		"settings": { "title": "Ajustes", "description": "description" },
+		"website": { "title": "Website", "description": "description" }
+	},
+	"Metadata": {
+		"appName": "Beforce",
+		"defaultTitle": "Beforce Dashboard",
+		"defaultDescription": "Painel da Beforce para acompanhar serviços digitais, métricas operacionais e roadmap de produto.",
+		"routes": {
+			"home": {
+				"title": "Beforce Dashboard",
+				"description": "Acesse rapidamente seu ambiente Beforce com visão consolidada dos módulos disponíveis."
+			},
+			"auth": {
+				"title": "Entrar na plataforma Beforce",
+				"description": "Faça login com segurança para acessar seu painel, métricas e recursos da plataforma."
+			},
+			"companies": {
+				"title": "Seleção de empresa",
+				"description": "Escolha a empresa ativa para continuar no painel e visualizar os dados corretos."
+			},
+			"dashboard": {
+				"title": "Painel de score digital",
+				"description": "Acompanhe a maturidade digital da empresa, serviços ativos e próximos passos de evolução."
+			},
+			"digisac": {
+				"title": "Métricas de atendimento Digisac",
+				"description": "Monitore atendimentos, operadores e indicadores mensais da operação Digisac."
+			},
+			"website": {
+				"title": "Analytics de website",
+				"description": "Visualize performance do site, origem de tráfego e comportamento de navegação por período."
+			},
+			"settings": {
+				"title": "Ajustes e permissões",
+				"description": "Gerencie membros, papéis e acessos da empresa ativa com controle administrativo."
+			},
+			"resource": {
+				"title": "Sugestões e roadmap",
+				"description": "Envie sugestões de melhoria e acompanhe o avanço das funcionalidades no roadmap."
+			},
+			"crm": {
+				"title": "Módulo CRM em atualização",
+				"description": "Acompanhe novidades do CRM enquanto preparamos o funil comercial para próximas versões."
+			},
+			"email": {
+				"title": "Módulo Email em atualização",
+				"description": "Estamos preparando recursos de email corporativo para centralizar comunicação e operação."
+			},
+			"ia": {
+				"title": "Módulo IA em atualização",
+				"description": "Novas automações com inteligência artificial estão sendo estruturadas para acelerar processos."
+			},
+			"marketing": {
+				"title": "Módulo Marketing em atualização",
+				"description": "Estamos evoluindo o workspace de campanhas para gestão e análise de marketing digital."
+			},
+			"server": {
+				"title": "Módulo Servidor em atualização",
+				"description": "A camada de infraestrutura em nuvem está em construção para oferecer mais escala e estabilidade."
+			},
+			"internalAdmin": {
+				"title": "Painel interno administrativo",
+				"description": "Área interna da equipe Beforce para gestão avançada de empresas, serviços e integrações."
+			}
+		}
+	},
+	"Language": { "pt": "Português", "en": "Inglês" },
+	"Brand": { "logoAlt": "Logo da Beforce" },
+	"Auth": {
+		"loginErrorMissing": "Digite seu email e senha para continuar",
+		"loginErrorInvalid": "Credenciais inválidas",
+		"loginErrorRateLimit": "Muitas tentativas. Aguarde um momento e tente novamente.",
+		"loginErrorGeneric": "Não foi possível conectar você. Tente novamente.",
+		"emailPlaceholder": "seu@email.com",
+		"passwordPlaceholder": "Sua senha",
+		"loginSubmit": "Acessar conta",
+		"loginLoading": "Carregando..."
+	},
+	"Companies": {
+		"errorNotMember": "Você não tem acesso a esta empresa.",
+		"legend": "Empresas disponíveis",
+		"listLabel": "Lista de empresas",
+		"confirmButton": "Acessar Painel",
+		"confirmLoading": "Carregando..."
+	},
+	"Sidebar": {
+		"crm": "CRM",
+		"dashboard": "Painel",
+		"builder": "Builder",
+		"colors": "Colors",
+		"typography": "Tipografia",
+		"digisac": "Digisac",
+		"email": "Email",
+		"ia": "IA",
+		"marketing": "Marketing",
+		"resource": "Sugestões",
+		"server": "Servidor",
+		"settings": "Ajustes",
+		"website": "Website",
+		"searchPlaceholder": "Buscar empresa",
+		"noFoundCompanies": "Nenhuma empresa encontrada",
+		"theme": "Tema",
+		"switchToLightTheme": "Mudar para o tema claro",
+		"switchToDarkTheme": "Mudar para o tema escuro",
+		"menu": "Menu",
+		"language": "Idioma",
+		"company": "Empresa",
+		"companyFallback": "Empresa",
+		"selectCompany": "Selecionar empresa",
+		"openLanguageMenu": "Abrir seletor de idioma",
+		"openNavigationMenu": "Abrir menu de navegação",
+		"companyInitialFallback": "CO",
+		"brandLogoAlt": "Logo da Beforce",
+		"companyLogoAlt": "Logo de {name}",
+		"navigation": "Navegação"
+	},
+	"Dashboard": {
+		"title": "Seu Score Digital",
+		"subtitle": "Descubra como está sua transformação digital",
+		"Gauge": {
+			"digitalPoint": "Pontuação Digital",
+			"status": "Você ativou {activeCount} de {total} soluções digitais disponíveis.",
+			"scores": {
+				"moreThan100": "Parabéns! Você ativou todas as soluções digitais disponíveis.",
+				"moreThan75": "Falta pouco! Continue contratando soluções para atingir o nível máximo.",
+				"moreThan50": "Bom progresso! Continue crescendo.",
+				"noScore": "Você está só começando. Há muito espaço para crescimento com as soluções BEFORCE!"
+			}
+		},
+		"services": {
+			"title": "Seus serviços contratados",
+			"website": { "title": "Site Corporativo", "description": "Aumente sua presença online com um domínio profissional." },
+			"email": {
+				"title": "Email Corporativo",
+				"description": "Reforce a credibilidade da sua marca com um e-mail profissional."
+			},
+			"server": { "title": "Servidor em Nuvem", "description": "Proteja e acesse seus dados com segurança, de onde estiver." },
+			"system": { "title": "Sistema de Gestão", "description": "Organize processos e tome decisões com base em dados." },
+			"digisac": { "title": "WhatsApp Business", "description": "Facilite a comunicação com seus clientes em tempo real." },
+			"ia": { "title": "Automações", "description": "Automatize tarefas e ganhe eficiência com soluções inteligentes." },
+			"marketing": { "title": "Marketing Digital", "description": "Atraia mais clientes com campanhas online bem direcionadas." }
+		},
+		"contact": "Contratar",
+		"support": {
+			"title": "Precisa de ajuda?",
+			"description": "Nossa equipe está pronta para atender você rapidamente.",
+			"contactAction": "Falar com o suporte",
+			"imageAlt": "Mascote da Beforce"
+		},
+		"states": {
+			"failedToLoadTitle": "Não foi possível carregar seu dashboard.",
+			"failedToLoadDescription": "Tente novamente para atualizar seu score digital e os serviços ativos.",
+			"retry": "Tentar novamente"
+		}
+	},
+	"Digisac": {
+		"title": "Atendimento",
+		"subtitle": "Acompanhe as métricas de atendimento",
+		"filters": {
+			"operator": "Atendente",
+			"allOperators": "Todos os atendentes",
+			"referenceMonth": "Período",
+			"apply": "Aplicar filtros",
+			"appliedMonth": "Mês aplicado: {month}",
+			"noMonth": "Nenhum mês selecionado"
+		},
+		"cards": {
+			"openedTickets": "Chamados abertos",
+			"closedTickets": "Chamados fechados",
+			"totalMessages": "Total mensagens",
+			"totalContacts": "Total contatos"
+		},
+		"charts": {
+			"byDepartment": "Atendimento por Departamento",
+			"byDepartmentDescription": "Média de tempo de atendimento por departamento",
+			"minutes": "Min",
+			"topOperators": "Melhores atendentes",
+			"topOperatorsDescription": "Top 5 por volume de chamados",
+			"noData": "Sem dados para exibir"
+		},
+		"table": {
+			"title": "Detalhamento por Atendente",
+			"caption": "Tabela de métricas de atendimento Digisac",
+			"empty": "Nenhum resultado encontrado para os filtros aplicados.",
+			"unknownOperator": "Atendente não identificado",
+			"noDepartment": "Sem departamento",
+			"columns": {
+				"operator": "Usuário",
+				"department": "Departamento",
+				"ticketTime": "Média de chamados",
+				"waitingTime": "Média da 1ª Espera",
+				"waitingTimeAfterBot": "Média Após BOT",
+				"waitingTimeAvg": "Médio de Espera",
+				"sentMessages": "Mensagens Enviadas",
+				"receivedMessages": "Mensagens Recebidas",
+				"totalMessages": "Total Chamados",
+				"openedTickets": "Chamados abertos",
+				"closedTickets": "Chamados fechados",
+				"totalTickets": "Total chamados",
+				"contacts": "Contatos"
+			}
+		},
+		"mobile": { "totalMessages": "Mensagens: {value}" },
+		"states": {
+			"failedToLoad": "Não foi possível carregar o relatório deste mês. Tente novamente.",
+			"failedToLoadDescription": "Atualize a página ou tente novamente em instantes.",
+			"noMonthsAvailable": "Ainda não há relatórios Digisac disponíveis para esta empresa.",
+			"noReportForMonth": "Não existe relatório Digisac para o mês selecionado.",
+			"loading": "Carregando relatório de atendimento...",
+			"retry": "Tentar novamente"
+		}
+	},
+	"Website": {
+		"title": "Site Corporativo",
+		"subtitle": "Acompanhe as métricas do seu site",
+		"filters": { "period": "Período" },
+		"actions": { "visitSite": "Ver site" },
+		"states": {
+			"applying": "Aplicando período...",
+			"failedToLoad": "Não foi possível carregar o relatório do site.",
+			"failedToLoadDescription": "Atualize a página ou tente novamente em instantes.",
+			"noMonthsAvailable": "Ainda não há relatórios Website disponíveis para esta empresa.",
+			"noReportForMonth": "Não existe relatório Website para o período selecionado.",
+			"noData": "Nenhum dado encontrado.",
+			"loading": "Carregando relatório do site...",
+			"retry": "Tentar novamente"
+		},
+		"users": {
+			"totalUsers": "Total de Usuários",
+			"newUsers": "Novos Usuários",
+			"averageSessionDuration": "Tempo por sessão",
+			"engagementRate": "Taxa de Retenção"
+		},
+		"source": { "title": "Sessões por Origem", "subtitle": "Distribuição das sessões por canal de aquisição" },
+		"channels": {
+			"organicSocial": "Social",
+			"organicSearch": "Orgânico",
+			"referral": "Referência",
+			"direct": "Direto",
+			"paidSearch": "Pago",
+			"paidSocial": "Social Pago",
+			"display": "Display",
+			"email": "Email",
+			"affiliates": "Afiliados",
+			"other": "Outro",
+			"unassigned": "Não Atribuído"
+		},
+		"system": {
+			"title": "Usuários por Plataforma",
+			"subtitle": "Dispositivos e sistemas utilizados nas sessões",
+			"distribution": "Dos usuários acessaram o site pelo celular e {desktop}% acessaram pelo computador."
+		},
+		"pages": {
+			"title": "Páginas Visualizadas",
+			"subtitle": "Distribuição de páginas mais acessadas",
+			"page": "Página",
+			"activeUsers": "Usuários",
+			"views": "Visualizações",
+			"viewsPerUser": "Média Sessões"
+		},
+		"cities": {
+			"title": "Cidades com Mais Acessos",
+			"subtitle": "Distribuição de acessos por localização",
+			"city": "Cidade",
+			"users": "Usuários",
+			"newUsers": "Novos Usuários",
+			"activeUsers": "Usuários Ativos",
+			"sessions": "Sessões Engajadas"
+		},
+		"map": { "placeholder": "Mapa em destaque com países ativos", "country": "País", "users": "Usuários" }
+	},
+	"Settings": {
+		"title": "Ajustes",
+		"subtitle": "Gerencie os membros e as permissões da empresa ativa.",
+		"pwa": {
+			"title": "Notificações",
+			"description": "Receba alertas quando novos relatórios estiverem disponíveis.",
+			"helper": "Você pode desativar a qualquer momento.",
+			"installHint": "Para uma melhor experiência, instale o app no seu dispositivo.",
+			"unsupported": "As notificações não estão disponíveis neste dispositivo ou navegador.",
+			"push": { "subscribe": "Ativar notificações", "unsubscribe": "Desativar notificações" },
+			"states": {
+				"permissionDenied": "A permissão para notificações não foi concedida.",
+				"subscribed": "Notificações ativadas neste dispositivo.",
+				"unsubscribed": "Notificações desativadas neste dispositivo."
+			},
+			"errors": {
+				"missingVapidPublicKey": "As notificações não estão disponíveis no momento.",
+				"secureContextRequired": "Abra o app em uma conexão segura para ativar notificações.",
+				"standaloneRequired": "Instale o app na tela inicial para ativar notificações.",
+				"serviceWorkerUnavailable": "Não foi possível preparar as notificações agora. Recarregue a página e tente novamente.",
+				"subscriptionFailed": "Não foi possível concluir a assinatura de notificações neste dispositivo.",
+				"invalidSubscription": "Não foi possível validar este dispositivo para receber notificações.",
+				"backendFailed": "Não foi possível concluir a ativação das notificações agora.",
+				"subscribeFailed": "Não foi possível ativar as notificações.",
+				"unsubscribeFailed": "Não foi possível desativar as notificações."
+			}
+		},
+		"members": {
+			"title": "Membros",
+			"subtitle": "Gerencie acessos e permissões da empresa ativa.",
+			"empty": "Nenhum membro encontrado."
+		},
+		"search": { "placeholder": "Buscar membro" },
+		"actions": { "addUser": "Novo usuário", "createUser": "Criar usuário", "cancel": "Cancelar" },
+		"table": { "columns": { "user": "Usuário", "role": "Permissão", "edit": "Editar", "active": "Ativo" } },
+		"mobile": { "role": "Permissão", "active": "Ativo" },
+		"modal": { "title": "Criar usuário" },
+		"fields": {
+			"emailPlaceholder": "email@empresa.com",
+			"passwordPlaceholder": "Senha temporária",
+			"roles": { "owner": "Proprietário", "admin": "Administrador", "member": "Membro", "viewer": "Visualizador" }
+		},
+		"states": {
+			"emailRequired": "Digite um e-mail para adicionar.",
+			"passwordRequired": "Digite uma senha para o novo usuário.",
+			"failedToLoadTitle": "Não foi possível carregar as Ajustes.",
+			"failedToLoadDescription": "Tente novamente para atualizar os membros e as permissões da empresa.",
+			"retry": "Tentar novamente"
+		},
+		"server": {
+			"errors": {
+				"invalidMember": "Membro inválido.",
+				"invalidRole": "Permissão inválida.",
+				"memberNotFound": "Membro não encontrado na empresa.",
+				"noPermissionToUpdateUser": "Você não tem permissão para alterar este usuário.",
+				"updateRoleFailed": "Não foi possível atualizar a permissão do membro.",
+				"toggleStatusAdminOnly": "Apenas admins podem alterar o status de membros.",
+				"cannotDeactivateSelf": "Você não pode desativar o próprio acesso.",
+				"updateStatusFailed": "Não foi possível atualizar o status do membro.",
+				"invalidEmail": "E-mail inválido.",
+				"passwordMin": "A senha deve ter pelo menos 8 caracteres.",
+				"addMemberAdminOnly": "Apenas admins podem adicionar membros.",
+				"adminConfigUnavailable": "Configuração do Supabase Admin indisponível no servidor.",
+				"createAuthUserFailed": "Não foi possível criar o usuário no Auth.",
+				"userIdMissing": "Usuário sem identificador válido.",
+				"validateMembershipFailed": "Não foi possível validar o vínculo atual do usuário.",
+				"userAlreadyActiveMember": "Este usuário já faz parte da empresa ativa.",
+				"reactivateMemberFailed": "Não foi possível reativar este membro.",
+				"linkUserFailed": "Não foi possível vincular o usuário à empresa.",
+				"selectActiveCompany": "Selecione uma empresa ativa para continuar.",
+				"noCompanyManagePermission": "Você não tem permissão para gerenciar esta empresa."
+			}
+		}
+	},
+	"Resource": {
+		"title": "Sugestões",
+		"subtitle": "Envie ideias, relate problemas e acompanhe o progresso.",
+		"status": { "backlog": "Ideias", "planned": "Em análise", "inProgress": "Em desenvolvimento", "done": "No ar" },
+		"actions": {
+			"newSuggestion": "Nova sugestão",
+			"edit": "Editar",
+			"cancel": "Cancelar",
+			"sendSuggestion": "Enviar sugestão",
+			"save": "Salvar"
+		},
+		"modal": {
+			"create": {
+				"title": "Nova sugestão",
+				"titlePlaceholder": "Sugestão",
+				"descriptionPlaceholder": "Descreva sua ideia e o problema que ela resolve"
+			},
+			"edit": {
+				"title": "Editar feature",
+				"titlePlaceholder": "Título",
+				"descriptionPlaceholder": "Descrição da feature",
+				"visibleLabel": "Visível para usuários"
+			}
+		},
+		"feedback": {
+			"createSuccess": "Sugestão enviada com sucesso.",
+			"createUnexpectedError": "Não foi possível enviar sua sugestão agora. Tente novamente.",
+			"updateUnexpectedError": "Não foi possível salvar a feature agora. Tente novamente.",
+			"moveUnexpectedError": "Não foi possível mover a feature agora. Tente novamente."
+		},
+		"states": {
+			"failedToLoadTitle": "Não foi possível carregar o roadmap.",
+			"failedToLoadDescription": "Tente novamente para buscar as sugestões e o andamento das features.",
+			"retry": "Tentar novamente"
+		},
+		"validation": {
+			"title_min": "Informe um título com pelo menos 3 caracteres.",
+			"description_min": "Informe uma descrição com pelo menos 8 caracteres."
+		},
+		"server": {
+			"validation": {
+				"title_min": "Informe um título com pelo menos 3 caracteres.",
+				"description_min": "Informe uma descrição com pelo menos 8 caracteres."
+			},
+			"errors": {
+				"resourcesTableMissing": "Tabela resources não encontrada no banco.",
+				"createFailed": "Não foi possível enviar sua sugestão.",
+				"invalidFeature": "Feature inválida.",
+				"invalidStatus": "Status inválido.",
+				"updateStatusAdminOnly": "Apenas admins podem atualizar status de features.",
+				"updateStatusFailed": "Não foi possível atualizar o status da feature.",
+				"updateFeatureAdminOnly": "Apenas admins podem editar features.",
+				"titleMin": "Título deve ter pelo menos 3 caracteres.",
+				"descriptionMin": "Descrição deve ter pelo menos 8 caracteres.",
+				"noValidChanges": "Nenhuma alteração válida para salvar.",
+				"updateFeatureFailed": "Não foi possível atualizar a feature.",
+				"selectActiveCompany": "Selecione uma empresa ativa para continuar.",
+				"noCompanyPermission": "Você não tem permissão para acessar esta empresa.",
+				"sessionExpired": "Sua sessão expirou. Faça login novamente para continuar."
+			},
+			"fallback": { "untitled": "Sem título", "globalCompany": "Global" }
+		}
+	},
+	"PwaInstall": {
+		"iconAlt": "Ícone do app Beforce",
+		"headline": "Instale o app no seu celular",
+		"description": "Acesse mais rápido e tenha uma experiência mais fluida no dia a dia.",
+		"benefits": {
+			"fasterAccess": "Abra direto pela tela inicial.",
+			"betterNotifications": "Receba notificações e acesse mais rápido quando precisar.",
+			"fullscreenExperience": "Use sem barra do navegador, como um app de verdade."
+		},
+		"actions": { "install": "Instalar", "continueInBrowser": "Continuar no navegador" },
+		"status": {
+			"androidReady": "Seu celular já permite instalar o app.",
+			"androidPreparing": "Preparando a opção de instalação...",
+			"iosHint": "No iPhone, a instalação é feita pelo botão de compartilhar."
+		},
+		"instructions": {
+			"title": "Como instalar",
+			"android": {
+				"stepOne": "Toque em “Instalar.",
+				"stepTwo": "Confirme quando aparecer na tela.",
+				"stepThree": "Depois, é só abrir pela tela inicial."
+			},
+			"ios": {
+				"stepOne": "Abra este site no Safari.",
+				"stepTwo": "Toque no botão de compartilhar.",
+				"stepThree": "Toque em “Adicionar à Tela de Início”."
+			}
+		}
+	},
+	"InternalAdmin": {
+		"title": "Painel Interno",
+		"subtitle": "Acesso interno para gestão de usuários, empresas e integrações.",
+		"loggedAs": "Logado como: {email}",
+		"tabs": { "users": "Usuários", "companies": "Empresas" },
+		"actions": {
+			"search": "Buscar",
+			"clear": "Limpar",
+			"loadMore": "Carregar mais",
+			"back": "Voltar",
+			"close": "Fechar",
+			"saveCompany": "Salvar empresa",
+			"saveDigisac": "Salvar Digisac",
+			"saveWebsite": "Salvar Website",
+			"createDigisacIntegration": "Criar integração Digisac",
+			"createWebsiteIntegration": "Criar integração Website"
+		},
+		"feedback": {
+			"credentialsRequired": "Preencha e-mail e senha para continuar.",
+			"userCreated": "Usuário criado e vinculado com sucesso."
+		},
+		"roles": { "owner": "Proprietário", "admin": "Administrador", "member": "Membro", "viewer": "Visualizador" },
+		"companies": {
+			"listTitle": "Empresas ({count})",
+			"listSubtitle": "Busca por nome com paginação por cursor.",
+			"searchPlaceholder": "Buscar empresa por nome",
+			"title": "Empresas",
+			"subtitle": "Clique em uma empresa para carregar detalhes e integrar serviços.",
+			"id": "ID: {id}",
+			"details": "Detalhes"
+		},
+		"users": {
+			"title": "Criação de usuário multi-tenant",
+			"step": "Etapa {step} de {total}",
+			"emailPlaceholder": "email@empresa.com",
+			"passwordPlaceholder": "Senha inicial",
+			"continueToCompanies": "Continuar para empresas",
+			"selectedCompanies": "Empresas selecionadas: {count}",
+			"selectLoaded": "Selecionar carregadas",
+			"clearLoaded": "Limpar carregadas",
+			"createAndLink": "Criar usuário e vincular empresas"
+		},
+		"modal": {
+			"companyFallback": "Empresa",
+			"loadingCompanyDetails": "Carregando detalhes da empresa...",
+			"integrationNotCreated": "Serviço ativo, integração ainda não criada.",
+			"sections": {
+				"companyData": { "title": "Dados da empresa", "namePlaceholder": "Nome da empresa", "logoPlaceholder": "URL da logo" },
+				"services": {
+					"title": "Serviços da empresa",
+					"hint": "Marcar adiciona em <code>company_services</code>. Desmarcar remove da empresa."
+				},
+				"digisac": {
+					"title": "Integração Digisac",
+					"enableServiceHint": "Ative o serviço Digisac na seção de serviços para habilitar a integração.",
+					"tokenPlaceholder": "Token Digisac",
+					"baseUrlPlaceholder": "Base URL Digisac"
+				},
+				"website": {
+					"title": "Integração Website",
+					"enableServiceHint": "Ative o serviço Website na seção de serviços para habilitar a integração.",
+					"domainPlaceholder": "Domínio",
+					"analyticsPlaceholder": "Analytics ID"
+				}
+			}
+		},
+		"server": {
+			"fallback": { "company": "Empresa" },
+			"errors": {
+				"invalidCompany": "Empresa inválida.",
+				"invalidEmail": "E-mail inválido.",
+				"passwordMin": "A senha deve ter pelo menos 8 caracteres.",
+				"selectAtLeastOneCompany": "Selecione ao menos uma empresa.",
+				"userAlreadyExists": "Já existe um usuário com este e-mail.",
+				"createAuthUserFailed": "Não foi possível criar o usuário no Auth.",
+				"createdUserIdMissing": "Usuário criado sem identificador válido.",
+				"linkUserToCompaniesFailed": "Não foi possível vincular o usuário às empresas selecionadas.",
+				"companyNameMin": "Nome da empresa deve ter pelo menos 2 caracteres.",
+				"updateCompanyFailed": "Não foi possível atualizar os dados da empresa.",
+				"invalidService": "Serviço inválido.",
+				"serviceNotFound": "Serviço não encontrado.",
+				"activateServiceFailed": "Não foi possível adicionar o serviço para esta empresa.",
+				"deactivateServiceFailed": "Não foi possível remover o serviço da empresa.",
+				"removeDigisacIntegrationAfterServiceFailed": "Serviço removido, mas não foi possível remover a integração Digisac.",
+				"removeWebsiteIntegrationAfterServiceFailed": "Serviço removido, mas não foi possível remover a integração Website.",
+				"invalidIntegration": "Integração inválida.",
+				"enableServiceBeforeIntegrationCreate": "Ative o serviço antes de criar a integração.",
+				"createDigisacIntegrationFailed": "Não foi possível criar a integração Digisac.",
+				"createWebsiteIntegrationFailed": "Não foi possível criar a integração Website.",
+				"enableServiceBeforeIntegrationSave": "Ative o serviço antes de salvar a integração.",
+				"noInternalAdminPermission": "Você não tem permissão para acessar o painel interno.",
+				"serviceRoleConfigUnavailable": "Configuração do service role indisponível no servidor.",
+				"loadCompaniesFailed": "Não foi possível carregar a lista de empresas.",
+				"companyNotFound": "Empresa não encontrada.",
+				"loadCompanyServicesFailed": "Não foi possível carregar os serviços da empresa.",
+				"loadDigisacIntegrationFailed": "Não foi possível carregar a integração Digisac.",
+				"loadWebsiteIntegrationFailed": "Não foi possível carregar a integração Website.",
+				"loadServiceCatalogFailed": "Não foi possível carregar o catálogo de serviços.",
+				"serviceCodeNotFoundInCatalog": "Serviço {code} não encontrado no catálogo.",
+				"validateCompanyServiceFailed": "Não foi possível validar o serviço da empresa.",
+				"digisacTokenRequired": "Token Digisac é obrigatório.",
+				"digisacBaseUrlRequired": "Base URL Digisac é obrigatória.",
+				"saveDigisacIntegrationFailed": "Não foi possível salvar a integração Digisac.",
+				"websiteDomainRequired": "Domínio do Website é obrigatório.",
+				"websiteAnalyticsIdRequired": "Analytics ID é obrigatório.",
+				"saveWebsiteIntegrationFailed": "Não foi possível salvar a integração Website."
+			}
+		}
+	},
+	"EmptyStates": {
+		"server": {
+			"badge": "Em atualização",
+			"title": "Servidor em nuvem em construção estratégica",
+			"description": "Estamos preparando uma camada robusta de infraestrutura para centralizar operações, monitorar estabilidade e acelerar novos deploys com segurança.",
+			"chips": { "network": "Rede privada", "security": "Segurança ativa", "uptime": "Alta disponibilidade" },
+			"cards": {
+				"infrastructure": { "title": "Cluster em preparação", "description": "Ambientes isolados para workloads críticos." },
+				"hardening": { "title": "Hardening contínuo", "description": "Políticas de acesso e camadas extras de proteção." },
+				"backup": { "title": "Rotina de backup", "description": "Estratégia de contingência e recuperação automática." }
+			}
+		},
+		"marketing": {
+			"badge": "Em breve",
+			"title": "Marketing pronto para escalar campanhas de ponta a ponta",
+			"description": "Estamos estruturando um workspace de mídia com execução, otimização e leitura de performance para decisões mais rápidas e assertivas.",
+			"chips": { "media": "Mídia paga", "optimization": "Otimização contínua", "analytics": "Visão analítica" },
+			"cards": {
+				"campaigns": { "title": "Campanhas orquestradas", "description": "Planejamento e publicação com controle unificado." },
+				"performance": { "title": "Performance em foco", "description": "Monitoramento de CTR, alcance e conversão." },
+				"insights": { "title": "Insights acionáveis", "description": "Leituras rápidas para ajustar estratégia em tempo real." }
+			}
+		},
+		"email": {
+			"badge": "Em atualização",
+			"title": "Email corporativo com experiência de caixa de entrada premium",
+			"description": "Estamos finalizando um hub para organizar mensagens, automatizar fluxos e elevar a confiabilidade das comunicações da sua operação.",
+			"chips": { "inbox": "Inbox inteligente", "flow": "Fluxos automáticos", "delivery": "Entrega monitorada" },
+			"cards": {
+				"inbox": { "title": "Fila organizada", "description": "Priorização de mensagens por contexto e urgência." },
+				"automation": { "title": "Cadências em construção", "description": "Sequências e gatilhos para contatos recorrentes." },
+				"reliability": {
+					"title": "Confiabilidade de envio",
+					"description": "Camadas para reduzir rejeições e ruídos de entrega."
+				}
+			}
+		},
+		"crm": {
+			"badge": "Em breve",
+			"title": "CRM comercial com pipeline claro e oportunidades visíveis",
+			"description": "Estamos montando um módulo focado em gestão de funil, acompanhamento de negociações e previsibilidade de receita para o time de vendas.",
+			"chips": { "contacts": "Base de contatos", "pipeline": "Pipeline comercial", "negotiations": "Negociações ativas" },
+			"cards": {
+				"opportunities": { "title": "Novas oportunidades", "description": "Cadastro e qualificação com visão contextual." },
+				"pipeline": { "title": "Etapas do funil", "description": "Colunas configuráveis para cada jornada comercial." },
+				"followUp": {
+					"title": "Follow-up centralizado",
+					"description": "Histórico de contatos e próximos passos em um só lugar."
+				}
+			}
+		},
+		"ia": {
+			"badge": "Em atualização",
+			"title": "IA aplicada para assistência e automações inteligentes",
+			"description": "Estamos construindo experiências com assistente conversacional, sugestões contextuais e automação de tarefas para acelerar sua operação.",
+			"chips": { "context": "Contexto em tempo real", "assistant": "Assistente ativo", "learning": "Aprendizado contínuo" },
+			"cards": {
+				"assistant": { "title": "Assistente conversacional", "description": "Respostas orientadas por dados do seu ambiente." },
+				"automation": { "title": "Automações assistidas", "description": "Execução de fluxos com revisão e controle humano." },
+				"models": { "title": "Modelos em evolução", "description": "Estrutura preparada para melhorias contínuas." }
+			}
+		}
+	}
+}

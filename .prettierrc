@@ -1,0 +1,12 @@
+{
+	"jsxSingleQuote": false,
+	"objectWrap": "collapse",
+	"printWidth": 130,
+	"proseWrap": "always",
+	"quoteProps": "consistent",
+	"semi": false,
+	"singleAttributePerLine": true,
+	"tabWidth": 2,
+	"trailingComma": "es5",
+	"useTabs": true
+}
