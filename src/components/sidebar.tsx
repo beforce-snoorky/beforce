@@ -4,7 +4,7 @@ import type { CompanySwitcherProps, SidebarNavigationItem, SidebarProps } from "
 import Image from "next/image"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTheme } from "./themeProvider"
-import { ChevronDown, ChevronFirst, ChevronsUpDown, GitGraph, Moon, Search, SlidersHorizontal, Sun } from "lucide-react"
+import { ChevronDown, ChevronFirst, ChevronsUpDown, GitGraph, LogOut, Moon, Search, SlidersHorizontal, Sun } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { serviceRouteByCode, sidebarMainServiceOrder } from "@/features/services"
 import { resolveActiveSidebarItem, serviceIcons } from "@/features/navigation"
@@ -15,11 +15,24 @@ import { routing } from "@/i18n/routing"
 import { switchCompanyFromSidebar } from "@/features/companies"
 import { getCompanyInitials } from "@/utils/company"
 import { Input } from "./ui/input"
+import { createClient } from "@/supabase/client"
 
 export function Sidebar({ locale, companies, activeCompanyId, enabledServices }: SidebarProps) {
 	const pathname = usePathname()
 	const [collapse, setCollapse] = useState(true)
 	const activeItem = useMemo(() => resolveActiveSidebarItem(pathname), [pathname])
+	const supabase = createClient()
+
+	const handleLogout = async () => {
+	const { error } = await supabase.auth.signOut()
+
+	if (error) {
+		console.error("Erro ao fazer logout:", error)
+		return
+	}
+
+	window.location.href = `/${locale}/auth`
+}
 
 	const { theme } = useTheme()
 	const translate = useTranslations("Sidebar")
@@ -129,6 +142,21 @@ export function Sidebar({ locale, companies, activeCompanyId, enabledServices }:
 						activeCompanyId={activeCompanyId}
 						collapse={collapse}
 					/>
+
+					<button
+	type="button"
+	onClick={handleLogout}
+	className={`flex items-center gap-2 rounded-xl p-2 hover:bg-background-muted ${
+		collapse ? "mx-auto" : "w-full px-3"
+	}`}
+	aria-label="Sair"
+>
+	<LogOut className="size-5" />
+
+	{!collapse && (
+		<span>Sair</span>
+	)}
+</button>
 				</div>
 			</div>
 		</aside>
